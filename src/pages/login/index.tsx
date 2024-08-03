@@ -1,10 +1,10 @@
-"use client";
 import LoginModal from "@/src/components/LoginModal";
+
 export default function Home() {
   return (
     <div className="bg-green-800 min-h-screen flex flex-col relative">
       <div className="pt-[74px] pl-[37px]">
-        <p className="text-[32px] font-inter text-white font-[Inter] leading-[41px] font-normal">
+        <p className="text-[32px] font-inter text-white leading-[41px] font-normal">
           노년의 정,
           <br />
           인생이 담긴

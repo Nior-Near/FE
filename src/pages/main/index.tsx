@@ -1,5 +1,3 @@
-"use client";
-
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
@@ -45,7 +43,7 @@ export default function Main() {
   ];
 
   return (
-    <div className="bg-white ">
+    <div>
       <Header />
       <Banner />
 
@@ -84,11 +82,7 @@ export default function Main() {
         {chefs.map((chef, index) => (
           <div key={index} className="flex flex-col items-center">
             <div className="w-[90px] h-[90px] rounded-full bg-[#D9D9D9] flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
-              <img
-                src={chef.image}
-                alt={chef.name}
-                className="w-full h-full object-cover"
-              />
+              <img src={chef.image} alt={chef.name} className="w-full h-full object-cover" />
             </div>
             <div className="mt-[8px] text-center font-pretendard text-[12px] leading-[19px]">
               {chef.name} 요리사

@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 
 export default function Banner() {
@@ -32,9 +31,7 @@ export default function Banner() {
       <h1 className="text-white font-pretendard text-[22px] leading-[35px] font-semibold mb-[12px]">
         {slides[currentSlide].title}
       </h1>
-      <p className="text-white text-[12px] leading-[19px]">
-        {slides[currentSlide].description}
-      </p>
+      <p className="text-white text-[12px] leading-[19px]">{slides[currentSlide].description}</p>
       <div className="flex items-center justify-between mt-[19px]">
         <button onClick={handlePrev}>
           <svg
@@ -45,10 +42,7 @@ export default function Banner() {
             fill="none"
           >
             <rect width="24" height="24" fill="white" />
-            <path
-              d="M14 18L8 12L14 6L15.4 7.4L10.8 12L15.4 16.6L14 18Z"
-              fill="#222224"
-            />
+            <path d="M14 18L8 12L14 6L15.4 7.4L10.8 12L15.4 16.6L14 18Z" fill="#222224" />
           </svg>
         </button>
         <button onClick={handleNext}>
@@ -60,10 +54,7 @@ export default function Banner() {
             fill="none"
           >
             <rect width="24" height="24" fill="white" />
-            <path
-              d="M12.6 12L8 7.4L9.4 6L15.4 12L9.4 18L8 16.6L12.6 12Z"
-              fill="#222224"
-            />
+            <path d="M12.6 12L8 7.4L9.4 6L15.4 12L9.4 18L8 16.6L12.6 12Z" fill="#222224" />
           </svg>
         </button>
       </div>
