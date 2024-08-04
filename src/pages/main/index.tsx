@@ -1,8 +1,20 @@
+import { useState } from "react";
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
+import LoginModal from "@/src/components/LoginModal";
 
 export default function Main() {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleRegionSelect = () => {
+    const isLoggedIn = false; //임시로 비로그인 상태로 설정
+    if (!isLoggedIn) {
+      setShowModal(true);
+    } else {
+      // 지역 선택화면으로 이동
+    }
+  };
   const chefs = [
     {
       name: "이영자",
@@ -44,7 +56,7 @@ export default function Main() {
 
   return (
     <div>
-      <Header />
+      <Header onRegionSelect={handleRegionSelect} />
       <Banner />
 
       <div className="flex justify-center">
@@ -82,7 +94,11 @@ export default function Main() {
         {chefs.map((chef, index) => (
           <div key={index} className="flex flex-col items-center">
             <div className="w-[90px] h-[90px] rounded-full bg-[#D9D9D9] flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
-              <img src={chef.image} alt={chef.name} className="w-full h-full object-cover" />
+              <img
+                src={chef.image}
+                alt={chef.name}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="mt-[8px] text-center font-pretendard text-[12px] leading-[19px]">
               {chef.name} 요리사
@@ -114,6 +130,7 @@ export default function Main() {
           ))}
         </div>
       </div>
+      {showModal && <LoginModal isLoginRequired={true} />}
     </div>
   );
 }
