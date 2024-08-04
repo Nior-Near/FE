@@ -1,3 +1,4 @@
+import Avatar from "../assets/avatar.svg";
 interface HeaderProps {
   isLoggedIn: boolean;
   selectedRegion: string | null;
@@ -10,7 +11,7 @@ export default function Header({
   onRegionSelect,
 }: HeaderProps) {
   return (
-    <header className="bg-white flex justify-between items-center py-[9px]">
+    <header className="bg-white flex justify-between items-center py-[9px] relative">
       <div className="flex flex-row items-center ml-[26px]">
         <div className="text-green-700 text-2xl font-reenie font-medium mr-[11px]">
           Nior
@@ -37,11 +38,12 @@ export default function Header({
           </button>
         )}
         <div className="ml-[21px] mr-[19px]">
-          <img
+          {/* <img
             src="/profile.png"
             alt="Profile"
             className="h-[40px] w-[40px] rounded-full"
-          />
+          /> */}
+          <Avatar className="h-[40px] w-[40px] rounded-full" />
         </div>
       </div>
     </header>

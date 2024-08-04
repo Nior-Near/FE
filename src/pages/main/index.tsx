@@ -12,8 +12,8 @@ export default function Main() {
   const chefs = [
     {
       name: "이영자",
-      certification: "경력인증",
-      kitchen: "니어키친",
+      certification: "자격증 보유",
+      kitchen: "니어요리사",
       image: "/chef1.jpg",
     },
     {
