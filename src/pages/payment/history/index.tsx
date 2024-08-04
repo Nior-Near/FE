@@ -1,6 +1,36 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
+import { useState } from "react";
 
 export default function Payment_History() {
+  const list = [
+    {
+      name: "주문접수",
+      message: "주문을 접수했어요",
+      description: "요리사님께서 주문을 수락하면 상품 제작에 들어가요.",
+      barWidth: "83px",
+    },
+    {
+      name: "상품제작",
+      message: "상품 제작을 시작했어요",
+      description: "요리와 편지를 정성스럽게 만들고 있습니다.",
+      barWidth: "163px",
+    },
+    {
+      name: "픽업",
+      message: "상품을 픽업해주세요",
+      description: "픽업 장소에서 요리와 편지를 받아주세요.",
+      barWidth: "301px",
+    },
+    {
+      name: "픽업",
+      message: "맛있게 드세요 :)",
+      description: "맛있는 하루 세끼 잘 챙겨드세요!",
+      barWidth: "327px",
+    },
+  ];
+
+  const [status, setStatus] = useState<number>(0);
+
   return (
     <div>
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
@@ -12,66 +42,55 @@ export default function Payment_History() {
       <div className="w-[375px] h-[163px] p-6 bg-[#638404] flex-col justify-start items-start gap-5 inline-flex">
         <div className="self-stretch h-[52px] flex-col justify-start items-start gap-1 flex">
           <div className="self-stretch text-white text-lg font-semibold font-pretendard leading-[28.80px]">
-            주문을 접수했어요
+            {list[status]?.message}
           </div>
           <div className="self-stretch text-white text-[12px] font-[400] font-pretendard leading-[19.2px]">
-            요리사님께서 주문을 수락하면 상품 제작에 들어가요
+            {list[status]?.description}
           </div>
         </div>
         <div className="h-[43px] flex-col justify-start items-center gap-2 flex">
           <div className="self-stretch justify-start items-center gap-[88px] inline-flex">
-            <div className="w-[50px] flex-col justify-start items-center inline-flex">
-              <div className="self-stretch px-1 py-0.5 bg-white rounded justify-center items-center gap-1 inline-flex">
-                <div className="text-[#344800] text-[12px] font-[400] font-pretendard leading-[19.2px]">
-                  주문접수
+            {[0, 1, 2].map((value, index) => (
+              <div key={value} className="w-[50px] flex-col justify-start items-center inline-flex">
+                <div
+                  className="self-stretch px-1 py-0.5 rounded justify-center items-center gap-1 inline-flex transition-all duration-500"
+                  style={{
+                    background:
+                      value === status || (status === 3 && value === 2) ? "white" : "#486300",
+                  }}
+                >
+                  <div
+                    className="text-[12px] font-[400] font-pretendard leading-[19.2px] transition-all duration-500"
+                    style={{
+                      color:
+                        value === status || (status === 3 && value === 2) ? "#354800" : "#638404",
+                    }}
+                  >
+                    {list[value]?.name}
+                  </div>
                 </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="6"
+                  height="4"
+                  viewBox="0 0 6 4"
+                  fill="none"
+                >
+                  <path
+                    d="M6 0H0L3 4L6 0Z"
+                    fill={value === status || (status === 3 && value === 2) ? "white" : "#486300"}
+                    className="transition-all duration-500"
+                  />
+                </svg>
               </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="6"
-                height="4"
-                viewBox="0 0 6 4"
-                fill="none"
-              >
-                <path d="M6 0H0L3 4L6 0Z" fill="white" />
-              </svg>
-            </div>
-            <div className="w-[50px] flex-col justify-start items-center inline-flex">
-              <div className="self-stretch px-1 py-0.5 bg-[#486200] rounded justify-center items-center gap-1 inline-flex">
-                <div className="text-[#638404] text-[12px] font-[400] font-pretendard leading-[19.2px]">
-                  상품제작
-                </div>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="6"
-                height="4"
-                viewBox="0 0 6 4"
-                fill="none"
-              >
-                <path d="M6 0H0L3 4L6 0Z" fill="#486300" />
-              </svg>
-            </div>
-            <div className="w-[50px] flex-col justify-start items-center inline-flex">
-              <div className="self-stretch px-1 py-0.5 bg-[#486200] rounded justify-center items-center gap-1 inline-flex">
-                <div className="text-[#638404] text-[12px] font-[400] font-pretendard leading-[19.2px]">
-                  픽업
-                </div>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="6"
-                height="4"
-                viewBox="0 0 6 4"
-                fill="none"
-              >
-                <path d="M6 0H0L3 4L6 0Z" fill="#486300" />
-              </svg>
-            </div>
+            ))}
           </div>
           <div className="w-[327px] h-2 relative">
             <div className="w-[327px] h-2 left-0 top-0 absolute bg-[#486200] rounded-[999px]" />
-            <div className="w-[83px] h-2 left-0 top-0 absolute bg-[#eef3e2] rounded-[999px]" />
+            <div
+              className="h-2 left-0 top-0 absolute bg-[#eef3e2] rounded-[999px] transition-all duration-500"
+              style={{ width: list[status]?.barWidth || 0 }}
+            />
           </div>
         </div>
       </div>
