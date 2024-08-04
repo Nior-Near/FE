@@ -1,8 +1,14 @@
+import { useState } from "react";
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
+import RegionSelect from "@/src/components/RegionSelect";
 
 export default function Main() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [isRegionSelectOpen, setIsRegionSelectOpen] = useState(false);
+
   const chefs = [
     {
       name: "이영자",
@@ -42,9 +48,21 @@ export default function Main() {
     },
   ];
 
+  const handleRegionSelectClose = () => {
+    setIsRegionSelectOpen(false);
+  };
+
+  const handleSetSelectedRegion = (region: string | null) => {
+    setSelectedRegion(region);
+  };
+
   return (
     <div>
-      <Header />
+      <Header
+        isLoggedIn={isLoggedIn}
+        selectedRegion={selectedRegion}
+        onRegionSelect={() => setIsRegionSelectOpen(true)}
+      />
       <Banner />
 
       <div className="flex justify-center">
@@ -82,7 +100,11 @@ export default function Main() {
         {chefs.map((chef, index) => (
           <div key={index} className="flex flex-col items-center">
             <div className="w-[90px] h-[90px] rounded-full bg-[#D9D9D9] flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
-              <img src={chef.image} alt={chef.name} className="w-full h-full object-cover" />
+              <img
+                src={chef.image}
+                alt={chef.name}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="mt-[8px] text-center font-pretendard text-[12px] leading-[19px]">
               {chef.name} 요리사
@@ -114,6 +136,15 @@ export default function Main() {
           ))}
         </div>
       </div>
+
+      {isRegionSelectOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          <RegionSelect
+            setSelectedRegion={handleSetSelectedRegion}
+            onClose={handleRegionSelectClose}
+          />
+        </div>
+      )}
     </div>
   );
 }

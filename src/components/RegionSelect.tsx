@@ -1,7 +1,16 @@
 import React from "react";
-import Link from "next/link";
 
-const regions = [
+interface RegionSelectProps {
+  setSelectedRegion: (region: string | null) => void;
+  onClose: () => void;
+}
+
+interface Region {
+  name: string;
+  areas: string[];
+}
+
+const regions: Region[] = [
   {
     name: "서울",
     areas: [
@@ -30,29 +39,37 @@ const regions = [
   { name: "다른지역", areas: [] },
 ];
 
-export default function RegionSelectPage() {
-  const [selectedRegion, setSelectedRegion] = React.useState(regions[0]);
+export default function RegionSelect({ setSelectedRegion, onClose }: RegionSelectProps) {
+  const [selectedRegion, setSelectedRegionState] = React.useState<Region>(regions[0]);
   const [selectedArea, setSelectedArea] = React.useState<string | null>(null);
 
+  const handleRegionClick = (region: Region) => {
+    setSelectedRegionState(region);
+    setSelectedArea(null);
+  };
+
+  const handleAreaClick = (area: string) => {
+    setSelectedArea(area);
+    setSelectedRegion(area);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="fixed inset-0 bg-white flex flex-col">
       <header className="bg-[#638404] h-[56px] pl-[28px] text-white flex items-center">
-        <Link href="/" legacyBehavior>
-          <a className="mr-[30px]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="25"
-              viewBox="0 0 24 25"
-              fill="none"
-            >
-              <path
-                d="M4 12.5L3.29289 13.2071L2.58579 12.5L3.29289 11.7929L4 12.5ZM19 11.5C19.5523 11.5 20 11.9477 20 12.5C20 13.0523 19.5523 13.5 19 13.5V11.5ZM9.29289 19.2071L3.29289 13.2071L4.70711 11.7929L10.7071 17.7929L9.29289 19.2071ZM3.29289 11.7929L9.29289 5.79289L10.7071 7.20711L4.70711 13.2071L3.29289 11.7929ZM4 11.5H19V13.5H4V11.5Z"
-                fill="white"
-              />
-            </svg>
-          </a>
-        </Link>
+        <button onClick={onClose} className="mr-[30px]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="25"
+            viewBox="0 0 24 25"
+            fill="none"
+          >
+            <path
+              d="M4 12.5L3.29289 13.2071L2.58579 12.5L3.29289 11.7929L4 12.5ZM19 11.5C19.5523 11.5 20 11.9477 20 12.5C20 13.0523 19.5523 13.5 19 13.5V11.5ZM9.29289 19.2071L3.29289 13.2071L4.70711 11.7929L10.7071 17.7929L9.29289 19.2071ZM3.29289 11.7929L9.29289 5.79289L10.7071 7.20711L4.70711 13.2071L3.29289 11.7929ZM4 11.5H19V13.5H4V11.5Z"
+              fill="white"
+            />
+          </svg>
+        </button>
         <h1 className="text-[18px] font-medium font-pretendard leading-[28px]">
           어느 지역에서 음식을 받을건가요?
         </h1>
@@ -68,10 +85,7 @@ export default function RegionSelectPage() {
                     ? "text-[#638404] text-[18px] font-pretendard font-medium leading-[29px]"
                     : "text-[#333E4E] text-[18px] font-pretendard leading-[29px]"
                 }`}
-                onClick={() => {
-                  setSelectedRegion(region);
-                  setSelectedArea(null);
-                }}
+                onClick={() => handleRegionClick(region)}
               >
                 {region.name}
               </li>
@@ -88,7 +102,7 @@ export default function RegionSelectPage() {
                     ? "text-[#638404] text-[16px] font-pretendard font-medium leading-[29px]"
                     : "text-[#333E4E] text-[16px] font-pretendard leading-[29px]"
                 }`}
-                onClick={() => setSelectedArea(area)}
+                onClick={() => handleAreaClick(area)}
               >
                 {area}
               </li>
