@@ -2,24 +2,18 @@ import { useState } from "react";
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
-import LoginModal from "@/src/components/LoginModal";
+import RegionSelect from "@/src/components/RegionSelect";
 
 export default function Main() {
-  const [showModal, setShowModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [isRegionSelectOpen, setIsRegionSelectOpen] = useState(false);
 
-  const handleRegionSelect = () => {
-    const isLoggedIn = false; //임시로 비로그인 상태로 설정
-    if (!isLoggedIn) {
-      setShowModal(true);
-    } else {
-      // 지역 선택화면으로 이동
-    }
-  };
   const chefs = [
     {
       name: "이영자",
-      certification: "경력인증",
-      kitchen: "니어키친",
+      certification: "자격증 보유",
+      kitchen: "니어요리사",
       image: "/chef1.jpg",
     },
     {
@@ -54,9 +48,21 @@ export default function Main() {
     },
   ];
 
+  const handleRegionSelectClose = () => {
+    setIsRegionSelectOpen(false);
+  };
+
+  const handleSetSelectedRegion = (region: string | null) => {
+    setSelectedRegion(region);
+  };
+
   return (
     <div>
-      <Header onRegionSelect={handleRegionSelect} />
+      <Header
+        isLoggedIn={isLoggedIn}
+        selectedRegion={selectedRegion}
+        onRegionSelect={() => setIsRegionSelectOpen(true)}
+      />
       <Banner />
 
       <div className="flex justify-center">
@@ -130,7 +136,15 @@ export default function Main() {
           ))}
         </div>
       </div>
-      {showModal && <LoginModal isLoginRequired={true} />}
+
+      {isRegionSelectOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          <RegionSelect
+            setSelectedRegion={handleSetSelectedRegion}
+            onClose={handleRegionSelectClose}
+          />
+        </div>
+      )}
     </div>
   );
 }
