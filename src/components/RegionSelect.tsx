@@ -29,18 +29,35 @@ const regions: Region[] = [
       "여의도/영등포",
       "강서/목동",
       "노원/강북",
+      "수유/동대문",
+      "종로/대학로",
     ],
   },
-  { name: "경기-인천", areas: [] },
-  { name: "대전-충청", areas: [] },
-  { name: "대구-경북", areas: [] },
-  { name: "부산-경남", areas: [] },
-  { name: "광주-전라", areas: [] },
-  { name: "다른지역", areas: [] },
+  {
+    name: "경기-인천",
+    areas: [
+      "전체",
+      "일산/파주",
+      "용인/분당/수원",
+      "인천/부천",
+      "남양주/구리/하남",
+      "안양/안산/광명",
+    ],
+  },
+  { name: "대전-충청", areas: ["전체", "대전", "충청"] },
+  { name: "대구-경북", areas: ["전체", "대구", "경북"] },
+  { name: "부산-경남", areas: ["전체", "부산", "경남"] },
+  { name: "광주-전라", areas: ["전체", "광주", "전라"] },
+  { name: "다른지역", areas: ["전체", "강원", "제주"] },
 ];
 
-export default function RegionSelect({ setSelectedRegion, onClose }: RegionSelectProps) {
-  const [selectedRegion, setSelectedRegionState] = React.useState<Region>(regions[0]);
+export default function RegionSelect({
+  setSelectedRegion,
+  onClose,
+}: RegionSelectProps) {
+  const [selectedRegion, setSelectedRegionState] = React.useState<Region>(
+    regions[0]
+  );
   const [selectedArea, setSelectedArea] = React.useState<string | null>(null);
 
   const handleRegionClick = (region: Region) => {
