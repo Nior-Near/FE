@@ -1,6 +1,5 @@
 import React from "react";
 import Food from "../assets/food.jpg";
-import Fav from "../assets/favorite.svg";
 
 export interface Chef {
   name: string;
@@ -34,7 +33,6 @@ const ChefCard: React.FC<CardProps> = ({
           alt="이미지 들어가요 여기"
           className="w-[322px] h-[179px] object-cover"
         />
-        <Fav className="absolute top-[12px] right-[11px]" />
       </div>
       <div className="p-[16px]">
         <div className="flex items-center">
