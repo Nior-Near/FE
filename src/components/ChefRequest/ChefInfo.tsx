@@ -2,10 +2,10 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 
 interface ChefInfoFormProps {
-  nextStep: () => void;
+  nextStep: (data: FormData) => void;
 }
 
-interface FormData {
+export interface FormData {
   name: string;
   shortIntro: string;
   detailedIntro: string;
@@ -32,7 +32,8 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
   });
 
   const onSubmit = (data: FormData) => {
-    nextStep();
+    console.log("Form submitted:", data);
+    nextStep(data);
     console.log(data);
   };
 
@@ -108,7 +109,7 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
               </filter>
             </defs>
           </svg>
-          
+
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="41"
@@ -353,16 +354,16 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
           </label>
           <input type="file" id="fileUpload" className="hidden" />
         </div>
+        <button
+          type="submit"
+          className={`flex w-[329px] h-[51px] mt-[2px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
+            isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
+          } text-white font-semibold leading-[28px]`}
+          disabled={!isValid}
+        >
+          다음으로
+        </button>
       </form>
-      <button
-        type="submit"
-        className={`flex w-[329px] h-[51px] mt-[2px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
-          isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
-        } text-white font-semibold leading-[28px]`}
-        disabled={!isValid}
-      >
-        다음으로
-      </button>
     </div>
   );
 };
