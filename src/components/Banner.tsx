@@ -29,6 +29,10 @@ export default function Banner() {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  const handleLearnMoreClick = () => {
+    window.location.href = "http://absorbing-galley-4af.notion.site";
+  };
+
   return (
     <div
       className="relative w-full h-[261px] flex flex-col px-[29px] pt-[30px] pb-[28px]"
@@ -52,7 +56,10 @@ export default function Banner() {
           <RightArrow />
         </button>
       </div>
-      <button className="flex justify-center items-center whitespace-nowrap self-end py-[10px] px-[24px] bg-[#EEF3E2] rounded-full text-[#638404] font-pretendard text-[14px] font-semibold mt-[19px]">
+      <button
+        onClick={handleLearnMoreClick}
+        className="flex justify-center items-center whitespace-nowrap self-end py-[10px] px-[24px] bg-[#EEF3E2] rounded-full text-[#638404] font-pretendard text-[14px] font-semibold mt-[19px]"
+      >
         더 알아보기
       </button>
     </div>
