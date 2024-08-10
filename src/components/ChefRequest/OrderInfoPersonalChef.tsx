@@ -3,12 +3,12 @@ import { useForm, Controller } from "react-hook-form";
 
 interface FormData {
   name: string;
-  location: string;
-  locationdetail: string;
-  area1: string;
-  area2: string;
-  area3: string;
-  msg: string;
+  placeName: string;
+  placeAddress: string;
+  regionId1: string;
+  regionId2: string;
+  regionId3: string;
+  message: string;
 }
 
 const OrderInfoPersonalChef = () => {
@@ -20,12 +20,12 @@ const OrderInfoPersonalChef = () => {
     mode: "onChange",
     defaultValues: {
       name: "",
-      location: "",
-      locationdetail: "",
-      area1: "",
-      area2: "",
-      area3: "",
-      msg: "",
+      placeName: "",
+      placeAddress: "",
+      regionId1: "",
+      regionId2: "",
+      regionId3: "",
+      message: "",
     },
   });
 
@@ -56,7 +56,7 @@ const OrderInfoPersonalChef = () => {
             )}
           />
           <Controller
-            name="location"
+            name="placeName"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -67,7 +67,7 @@ const OrderInfoPersonalChef = () => {
             )}
           />
           <Controller
-            name="locationdetail"
+            name="placeAddress"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -84,7 +84,7 @@ const OrderInfoPersonalChef = () => {
             주문 가능 지역 (최대) <span className="text-[#638404]">*</span>
           </label>
           <Controller
-            name="area1"
+            name="regionId1"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -95,7 +95,7 @@ const OrderInfoPersonalChef = () => {
             )}
           />
           <Controller
-            name="area2"
+            name="regionId2"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -106,7 +106,7 @@ const OrderInfoPersonalChef = () => {
             )}
           />
           <Controller
-            name="area3"
+            name="regionId3"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -123,7 +123,7 @@ const OrderInfoPersonalChef = () => {
             <span className="text-[#638404]">*</span>
           </label>
           <Controller
-            name="msg"
+            name="message"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (

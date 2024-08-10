@@ -3,10 +3,10 @@ import { useForm, Controller } from "react-hook-form";
 
 interface FormData {
   name: string;
-  area1: string;
-  area2: string;
-  area3: string;
-  msg: string;
+  regionId1: string;
+  regionId2: string;
+  regionId3: string;
+  message: string;
 }
 
 const OrderInfoNearChef = () => {
@@ -18,10 +18,10 @@ const OrderInfoNearChef = () => {
     mode: "onChange",
     defaultValues: {
       name: "",
-      area1: "",
-      area2: "",
-      area3: "",
-      msg: "",
+      regionId1: "",
+      regionId2: "",
+      regionId3: "",
+      message: "",
     },
   });
 
@@ -38,7 +38,7 @@ const OrderInfoNearChef = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-[20px]">
           <label className="text-[14px] mb-[5px] leading-[22px]">
-            픽업지 주소 <span className="text-[#638404]">*</span>
+            픽업지 정보 <span className="text-[#638404]">*</span>
           </label>
           <Controller
             name="name"
@@ -51,7 +51,6 @@ const OrderInfoNearChef = () => {
               />
             )}
           />
-          
         </div>
 
         <div className="mb-[20px]">
@@ -59,7 +58,7 @@ const OrderInfoNearChef = () => {
             주문 가능 지역 (최대) <span className="text-[#638404]">*</span>
           </label>
           <Controller
-            name="area1"
+            name="regionId1"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -70,7 +69,7 @@ const OrderInfoNearChef = () => {
             )}
           />
           <Controller
-            name="area2"
+            name="regionId2"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -81,7 +80,7 @@ const OrderInfoNearChef = () => {
             )}
           />
           <Controller
-            name="area3"
+            name="regionId3"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -98,7 +97,7 @@ const OrderInfoNearChef = () => {
             <span className="text-[#638404]">*</span>
           </label>
           <Controller
-            name="msg"
+            name="message"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
