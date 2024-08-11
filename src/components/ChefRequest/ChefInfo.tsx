@@ -19,6 +19,8 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
     handleSubmit,
     control,
     formState: { isValid },
+    setValue,
+    watch,
   } = useForm<FormData>({
     mode: "onChange",
     defaultValues: {
@@ -37,7 +39,6 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
   const onSubmit = (data: FormData) => {
     console.log("Form submitted:", data);
     nextStep(data);
-    console.log(data);
   };
 
   const toggleDropdown = () => {
@@ -46,8 +47,18 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
 
   const handleExperienceSelect = (experience: string) => {
     setSelectedExperience(experience);
+    setValue("experience", experience, { shouldValidate: true });
     setDropdownOpen(false);
   };
+
+  const watchFields = watch([
+    "name",
+    "shortIntro",
+    "qualification",
+    "affiliation",
+    "experience",
+  ]);
+  const allFieldsFilled = watchFields.every((field) => field !== "");
 
   return (
     <div className="px-[23px] pb-[43px]">
@@ -336,7 +347,7 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
                     }`}
                   >
                     <span className="text-[#000] font-Pretendard text-[12px] font-[400] leading-[160%]">
-                      자격증 미보유
+                      니어 요리사
                     </span>
                   </div>
                   <div
@@ -348,7 +359,7 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
                     }`}
                   >
                     <span className="text-[#000] font-Pretendard text-[12px] font-[400] leading-[160%]">
-                      자격증 보유
+                      개인 요리사
                     </span>
                   </div>
                 </>
@@ -371,7 +382,6 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
                   onClick={toggleDropdown}
                 >
                   <input
-                    {...field}
                     value={selectedExperience}
                     readOnly
                     placeholder="경력을 입력해주세요."
@@ -448,9 +458,9 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
         <button
           type="submit"
           className={`flex w-[329px] h-[51px] mt-[2px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
-            isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
+            allFieldsFilled && isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
           } text-white font-semibold leading-[28px]`}
-          disabled={!isValid}
+          disabled={!allFieldsFilled || !isValid}
         >
           다음으로
         </button>

@@ -24,7 +24,7 @@ const Header = () => {
         요리사 신청하기
       </h1>
       <div
-        className="absolute bottom-0 w-[329.5px] h-0 border-t"
+        className="absolute bottom-0 w-[100%] h-0 border-t"
         style={{
           borderColor: "rgba(0, 0, 0, 0.10)",
           borderWidth: "1px",
