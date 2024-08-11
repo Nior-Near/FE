@@ -3,6 +3,7 @@ import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
 import RegionSelect from "@/src/components/RegionSelect";
+import Kakao from "../../assets/kakao.svg";
 
 export default function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -56,6 +57,9 @@ export default function Main() {
     setSelectedRegion(region);
   };
 
+  const handleKakaoClick = () => {
+    window.location.href = "http://pf.kakao.com/_qxgcgG/chat";
+  };
   return (
     <div>
       <Header
@@ -145,6 +149,10 @@ export default function Main() {
           />
         </div>
       )}
+      <Kakao
+        className="fixed w-[50px] h-[50px] bottom-[5%] right-[5%] cursor-pointer"
+        onClick={handleKakaoClick}
+      />
     </div>
   );
 }
