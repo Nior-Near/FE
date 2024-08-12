@@ -11,11 +11,13 @@ interface FormData {
 interface MenuRegistrationProps {
   affiliation: string;
   onSubmit: (data: FormData) => void;
+  handleCompleteMenuRegistration: () => void;
 }
 
 const MenuRegistration: React.FC<MenuRegistrationProps> = ({
   affiliation,
   onSubmit,
+  handleCompleteMenuRegistration,
 }) => {
   const [fileName, setFileName] = useState("파일 선택");
   const [menuCount, setMenuCount] = useState(0);
@@ -42,7 +44,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
     }
 
     onSubmit(data);
-    setMenuCount(menuCount + 1);
+    setMenuCount((prevCount) => prevCount + 1);
 
     reset({
       menuName: "",
@@ -172,6 +174,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
             menuCount > 0 ? "bg-[#638404]" : "bg-[#D1D6DB]"
           } text-white font-semibold leading-[28px]`}
           disabled={menuCount === 0}
+          onClick={handleCompleteMenuRegistration}
         >
           총 {menuCount}개 등록하기
         </button>

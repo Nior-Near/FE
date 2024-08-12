@@ -10,6 +10,7 @@ import OrderInfoPersonalChef, {
   OrderInfoPersonalChefFormData,
 } from "@/src/components/ChefRequest/OrderInfoPersonalChef";
 import MenuRegistration from "@/src/components/ChefRequest/MenuRegistration";
+import LetterRegistration from "@/src/components/ChefRequest/LetterRegistration";
 
 const ChefRequest = () => {
   const [step, setStep] = useState(1);
@@ -17,6 +18,7 @@ const ChefRequest = () => {
   const [orderData, setOrderData] = useState<
     OrderInfoNearChefFormData | OrderInfoPersonalChefFormData | null
   >(null);
+  const [menus, setMenus] = useState<FormData[]>([]);
 
   const nextStepFromChefInfo = (data: ChefInfoFormData) => {
     setChefData(data);
@@ -32,7 +34,18 @@ const ChefRequest = () => {
 
   const handleMenuSubmit = (data: any) => {
     console.log("메뉴 등록 완료:", data);
-    // 이후 로직 추가
+    setMenus([...menus, data]);
+  };
+
+  const handleCompleteMenuRegistration = () => {
+    // 메뉴가 하나 이상 등록되었을 때만 다음 단계로 이동
+    if (menus.length > 0) {
+      setStep(step + 1);
+    }
+  };
+  const handleLetterSubmit = (data: any) => {
+    console.log("편지 등록 완료:", data);
+    // 최종
   };
 
   return (
@@ -53,8 +66,10 @@ const ChefRequest = () => {
         <MenuRegistration
           affiliation={chefData!.affiliation}
           onSubmit={handleMenuSubmit}
+          handleCompleteMenuRegistration={handleCompleteMenuRegistration}
         />
       )}
+      {step === 4 && <LetterRegistration onSubmit={handleLetterSubmit} />}{" "}
     </div>
   );
 };
