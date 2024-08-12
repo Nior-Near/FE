@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-
+import axios from "axios";
 interface FormData {
   menuName: string;
-  menuWeight: number | null;
-  menuDescription: string;
+  menuOneServing: number | null;
+  menuIntroduction: string;
   menuImage: File | null;
 }
 
@@ -12,15 +12,47 @@ interface MenuRegistrationProps {
   affiliation: string;
   onSubmit: (data: FormData) => void;
   handleCompleteMenuRegistration: () => void;
+  storeId: string;
 }
+
+const registerMenu = async (
+  storeId: string,
+  formDataList: FormData[]
+) => {
+  const body = new FormData();
+  formDataList.forEach((formData, index) => {
+    body.append(`menus[${index}].menuName`, formData.menuName);
+    body.append(`menus[${index}].menuOneServing`, formData.menuOneServing?.toString() || "0");
+    body.append(`menus[${index}].menuIntroduction`, formData.menuIntroduction);
+    if (formData.menuImage) {
+      body.append(`menus[${index}].menuImage`, formData.menuImage);
+    }
+  });
+
+  try {
+    const response = await axios.post(`http://13.124.232.198/stores/${storeId}/menu`, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("메뉴 등록 성공");
+    return response.data;
+  } catch (error) {
+    console.error("메뉴 등록 실패", error);
+    throw error;
+  }
+};
 
 const MenuRegistration: React.FC<MenuRegistrationProps> = ({
   affiliation,
   onSubmit,
   handleCompleteMenuRegistration,
+  storeId,
 }) => {
   const [fileName, setFileName] = useState("파일 선택");
   const [menuCount, setMenuCount] = useState(0);
+  const [menuList, setMenuList] = useState<FormData[]>([]);
   const {
     handleSubmit,
     control,
@@ -30,8 +62,8 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
     mode: "onChange",
     defaultValues: {
       menuName: "",
-      menuWeight: undefined,
-      menuDescription: "",
+      menuOneServing: undefined,
+      menuIntroduction: "",
       menuImage: null,
     },
   });
@@ -43,16 +75,26 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
       console.log("개인 요리사 메뉴 등록:", data);
     }
 
-    onSubmit(data);
+    setMenuList((prevList) => [...prevList, data]);
     setMenuCount((prevCount) => prevCount + 1);
 
     reset({
       menuName: "",
-      menuWeight: null,
-      menuDescription: "",
+      menuOneServing: null,
+      menuIntroduction: "",
       menuImage: null,
     });
     setFileName("파일 선택");
+  };
+
+  const handleRegisterMenus = async () => {
+    try {
+      await registerMenu(storeId, menuList);
+      handleCompleteMenuRegistration();
+    } catch (error) {
+      console.error("Error:", error);
+      alert("메뉴 등록 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -94,7 +136,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
           </label>
 
           <Controller
-            name="menuWeight"
+            name="menuOneServing"
             control={control}
             rules={{ required: true, min: 1 }}
             render={({ field }) => (
@@ -114,7 +156,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
             메뉴 설명 (최대 30자) <span className="text-[#638404]">*</span>
           </label>
           <Controller
-            name="menuDescription"
+            name="menuIntroduction"
             control={control}
             rules={{ required: true, min: 1 }}
             render={({ field }) => (
@@ -174,7 +216,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
             menuCount > 0 ? "bg-[#638404]" : "bg-[#D1D6DB]"
           } text-white font-semibold leading-[28px]`}
           disabled={menuCount === 0}
-          onClick={handleCompleteMenuRegistration}
+          onClick={handleRegisterMenus}
         >
           총 {menuCount}개 등록하기
         </button>
