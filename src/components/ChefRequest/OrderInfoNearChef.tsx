@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
 
+// 픽업지 정보별 주문 가능 지역 가져와야함
+export const fetchRegionData = async (placeId: string): Promise<string> => {
+  try {
+    const response = await axios.get(`API_ENDPOINT/${placeId}`);
+    return response.data.region;
+  } catch (error) {
+    console.error("Failed to fetch region data:", error);
+    throw error;
+  }
+};
 export interface OrderInfoNearChefFormData {
   regionId1: string;
   regionId2: string;
@@ -19,9 +30,45 @@ const regionOptions: Record<string, string[]> = {
   "니어키친 5(수원시 다다다 345)": ["수원"],
 };
 
+// 임시 데이터
+const determinePlaceId = (place: string): string => {
+  switch (place) {
+    case "니어키친 1(서울시 도담로 454)":
+      return "1L";
+    case "니어키친 2(부산광역시 마마마 646)":
+      return "2L";
+    case "니어키친 3(울산광역시 가가가 123)":
+      return "3L";
+    case "니어키친 4(경기도 라라라 456)":
+      return "4L";
+    case "니어키친 5(수원시 다다다 345)":
+      return "5L";
+    default:
+      return "0L";
+  }
+};
+
+// const determineRegionId = (region: string) => {
+//   switch (region) {
+//     case "서울":
+//       return "1L";
+//     case "부산":
+//       return "2L";
+//     case "울산":
+//       return "3L";
+//     case "경기도":
+//       return "4L";
+//     case "수원":
+//       return "5L";
+//     default:
+//       return "0L";
+//   }
+// };
+
 const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   const [isRegion1DropdownOpen, setRegion1DropdownOpen] = useState(false);
   const [selectedRegion1, setSelectedRegion1] = useState("");
+  const [regionId2, setRegionId2] = useState("");
 
   const {
     handleSubmit,
@@ -38,19 +85,37 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   });
 
   const onSubmit = (data: OrderInfoNearChefFormData) => {
-    console.log("Form submitted:", data);
-    nextStep(data);
+    const placeId = determinePlaceId(data.regionId1);
+
+    const updatedData = {
+      ...data,
+      regionId1: placeId,
+      regionId2,
+    };
+
+    localStorage.setItem("orderInfo", JSON.stringify(updatedData));
+    nextStep(updatedData);
   };
 
   const toggleRegion1Dropdown = () => {
     setRegion1DropdownOpen(!isRegion1DropdownOpen);
   };
 
-  const handleRegion1Select = (region: string) => {
+  const handleRegion1Select = async (region: string) => {
     setSelectedRegion1(region);
     setValue("regionId1", region, { shouldValidate: true });
     setRegion1DropdownOpen(false);
+
+    try {
+      const placeId = determinePlaceId(region);
+      const regionData = await fetchRegionData(placeId);
+      setRegionId2(regionData);
+      setValue("regionId2", regionData, { shouldValidate: true });
+    } catch (error) {
+      console.error("Failed to fetch region data:", error);
+    }
   };
+
   return (
     <div className="px-[23px] pb-[43px]">
       <div className="text-[20px] font-semibold mt-[44px] mb-[36px]">
@@ -156,6 +221,8 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
             render={({ field }) => (
               <input
                 {...field}
+                value={regionId2}
+                readOnly
                 className="flex mb-[11px] w-[321px] h-[40px] flex-col justify-center items-start rounded-[4px] border border-[#D1D6DB] bg-[#FFF] py-[8px] px-[16px]"
               />
             )}
