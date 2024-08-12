@@ -1,18 +1,38 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-interface FormData {
+export interface OrderInfoPersonalChefFormData {
   name: string;
   placeName: string;
   placeAddress: string;
   regionId1: string;
   regionId2: string;
-  regionId3: string;
   message: string;
 }
 
+interface OrderInfoPersonalChefProps {
+  nextStep: (data: OrderInfoPersonalChefFormData) => void;
+}
+
 const regionOptions: Record<string, string[]> = {
-  서울: ["강남/논현", "강동/천호", "강서/목동", "건대/왕십리", "관악/신림", "교대/사당", "노원/강북", "명동/이태원", "삼성/선릉", "송파/잠실", "수유/동대문", "신촌/이대", "압구정/신사", "여의도/영등포", "종로/대학로", "홍대/마포"],
+  서울: [
+    "강남/논현",
+    "강동/천호",
+    "강서/목동",
+    "건대/왕십리",
+    "관악/신림",
+    "교대/사당",
+    "노원/강북",
+    "명동/이태원",
+    "삼성/선릉",
+    "송파/잠실",
+    "수유/동대문",
+    "신촌/이대",
+    "압구정/신사",
+    "여의도/영등포",
+    "종로/대학로",
+    "홍대/마포",
+  ],
   "경기-인천": [
     "일산/파주",
     "용인/분당/수원",
@@ -27,14 +47,16 @@ const regionOptions: Record<string, string[]> = {
   다른지역: ["강원", "제주"],
 };
 
-const OrderInfoPersonalChef = () => {
+const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
+  nextStep,
+}) => {
   const {
     handleSubmit,
     control,
     formState: { isValid },
     setValue,
     watch,
-  } = useForm<FormData>({
+  } = useForm<OrderInfoPersonalChefFormData>({
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -42,7 +64,6 @@ const OrderInfoPersonalChef = () => {
       placeAddress: "",
       regionId1: "",
       regionId2: "",
-      regionId3: "",
       message: "",
     },
   });
@@ -53,8 +74,9 @@ const OrderInfoPersonalChef = () => {
   const [selectedRegion2, setSelectedRegion2] = useState("");
   const [region2Options, setRegion2Options] = useState<string[]>([]);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: OrderInfoPersonalChefFormData) => {
     console.log("Form submitted:", data);
+    nextStep(data);
   };
 
   const toggleRegion1Dropdown = () => {
@@ -309,7 +331,6 @@ const OrderInfoPersonalChef = () => {
             )}
           </div>
         </div>
-
 
         <div className="mb-[190px]">
           <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">

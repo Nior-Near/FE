@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 
-interface ChefInfoFormProps {
-  nextStep: (data: FormData) => void;
-}
-
-export interface FormData {
+export interface ChefInfoFormData {
   name: string;
   shortIntro: string;
   detailedIntro: string;
   qualification: string;
   affiliation: string;
   experience: string;
+}
+
+export interface ChefInfoFormProps {
+  nextStep: (data: ChefInfoFormData) => void;
 }
 
 const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
@@ -21,7 +21,7 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
     formState: { isValid },
     setValue,
     watch,
-  } = useForm<FormData>({
+  } = useForm<ChefInfoFormData>({
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -36,7 +36,7 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState("");
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: ChefInfoFormData) => {
     console.log("Form submitted:", data);
     nextStep(data);
   };
