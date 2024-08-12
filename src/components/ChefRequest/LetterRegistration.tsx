@@ -2,43 +2,7 @@ import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 import letterImg from "../../assets/letter.png";
-import axios from "axios";
 import { useRouter } from "next/router";
-
-const submitApplication = async (letter: File | null) => {
-  const chefInfo = JSON.parse(localStorage.getItem("chefInfo") || "{}");
-  const orderInfo = JSON.parse(localStorage.getItem("orderInfo") || "{}");
-
-  const formData = new FormData();
-  formData.append("name", chefInfo.name);
-  formData.append("shortDescription", chefInfo.shortIntro);
-  formData.append("detailedDescription", chefInfo.detailedIntro);
-  formData.append("qualification", chefInfo.qualification);
-  formData.append("auth", chefInfo.auth);
-  if (letter) {
-    formData.append("letter", letter);
-  }
-  formData.append("placeId", orderInfo.regionId1);
-  formData.append("regionId", orderInfo.regionId2);
-  formData.append("message", orderInfo.message);
-
-  try {
-    const response = await axios.post(
-      "http://13.124.232.198/stores/near-company",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data", // json이면 수정해야함
-          Authorization: `Bearer YOUR_TOKEN`, // 토큰 추가해야됨
-        },
-      }
-    );
-
-    console.log("Response:", response.data);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
 
 interface LetterFormData {
   letterImage: File | null;
@@ -67,7 +31,6 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
 
   const submitHandler = async (data: LetterFormData) => {
     try {
-      await submitApplication(data.letterImage);
       onSubmit(data);
       router.push("/my");
     } catch (error) {

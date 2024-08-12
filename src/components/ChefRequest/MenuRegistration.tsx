@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+
 interface FormData {
   menuName: string;
   menuOneServing: number | null;
@@ -15,35 +15,6 @@ interface MenuRegistrationProps {
   storeId: string;
 }
 
-const registerMenu = async (
-  storeId: string,
-  formDataList: FormData[]
-) => {
-  const body = new FormData();
-  formDataList.forEach((formData, index) => {
-    body.append(`menus[${index}].menuName`, formData.menuName);
-    body.append(`menus[${index}].menuOneServing`, formData.menuOneServing?.toString() || "0");
-    body.append(`menus[${index}].menuIntroduction`, formData.menuIntroduction);
-    if (formData.menuImage) {
-      body.append(`menus[${index}].menuImage`, formData.menuImage);
-    }
-  });
-
-  try {
-    const response = await axios.post(`http://13.124.232.198/stores/${storeId}/menu`, body, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    console.log("메뉴 등록 성공");
-    return response.data;
-  } catch (error) {
-    console.error("메뉴 등록 실패", error);
-    throw error;
-  }
-};
-
 const MenuRegistration: React.FC<MenuRegistrationProps> = ({
   affiliation,
   onSubmit,
@@ -51,8 +22,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
   storeId,
 }) => {
   const [fileName, setFileName] = useState("파일 선택");
-  const [menuCount, setMenuCount] = useState(0);
-  const [menuList, setMenuList] = useState<FormData[]>([]);
+
   const {
     handleSubmit,
     control,
@@ -62,22 +32,14 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
     mode: "onChange",
     defaultValues: {
       menuName: "",
-      menuOneServing: undefined,
+      menuOneServing: null,
       menuIntroduction: "",
       menuImage: null,
     },
   });
 
   const submitHandler = (data: FormData) => {
-    if (affiliation === "니어 요리사") {
-      console.log("니어 요리사 메뉴 등록:", data);
-    } else if (affiliation === "개인 요리사") {
-      console.log("개인 요리사 메뉴 등록:", data);
-    }
-
-    setMenuList((prevList) => [...prevList, data]);
-    setMenuCount((prevCount) => prevCount + 1);
-
+    onSubmit(data); 
     reset({
       menuName: "",
       menuOneServing: null,
@@ -87,140 +49,135 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
     setFileName("파일 선택");
   };
 
-  const handleRegisterMenus = async () => {
-    try {
-      await registerMenu(storeId, menuList);
-      handleCompleteMenuRegistration();
-    } catch (error) {
-      console.error("Error:", error);
-      alert("메뉴 등록 중 오류가 발생했습니다.");
-    }
-  };
-
   return (
-    <div className="px-[23px] pb-[43px]">
-      <div className="text-[20px] font-semibold mt-[44px] mb-[36px]">
-        메뉴 등록
-      </div>
-      <form onSubmit={handleSubmit(submitHandler)}>
-        <div className="mb-[20px]">
-          <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
-            메뉴명 <span className="text-[#638404]">*</span>
-          </label>
-          <Controller
-            name="menuName"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <input
-                {...field}
-                placeholder="메뉴명을 입력해주세요."
-                className="w-[329px] h-[40px] rounded-[4px] border border-[#D1D6DB] py-[8px] px-[16px] text-[12px]"
-              />
-            )}
-          />
-        </div>
-
-        <div className="mb-[20px]">
-          <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
-            메뉴 가격(고정) <span className="text-[#F00]">*</span>
-          </label>
-          <div className="flex items-center w-[329px] h-[40px] rounded-[4px] border border-[#D1D6DB] py-[8px] px-[16px] text-[12px]">
-            니어니어의 1인분 메뉴 가격은 모두 1,000원 입니다.
+    <div className="px-[23px] pb-[43px] h-[765px] flex flex-col justify-between">
+      <form onSubmit={handleSubmit(submitHandler)} className="flex-grow">
+        <div>
+          <div className="text-[20px] font-semibold mt-[44px] mb-[36px]">
+            메뉴 등록
           </div>
-        </div>
-
-        <div className="mb-[20px]">
-          <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
-            1,000원 당 g수 <span className="text-[#638404]">*</span>
-          </label>
-
-          <Controller
-            name="menuOneServing"
-            control={control}
-            rules={{ required: true, min: 1 }}
-            render={({ field }) => (
-              <input
-                {...field}
-                value={field.value || ""}
-                type="number"
-                placeholder="1인분 당 g수를 입력해주세요."
-                className="w-[329px] h-[40px] rounded-[4px] border border-[#D1D6DB] py-[8px] px-[16px] text-[12px]"
-              />
-            )}
-          />
-        </div>
-
-        <div className="mb-[20px]">
-          <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
-            메뉴 설명 (최대 30자) <span className="text-[#638404]">*</span>
-          </label>
-          <Controller
-            name="menuIntroduction"
-            control={control}
-            rules={{ required: true, min: 1 }}
-            render={({ field }) => (
-              <input
-                {...field}
-                type="string"
-                placeholder="메뉴 설명을 입력해주세요."
-                className="w-[329px] h-[40px] rounded-[4px] border border-[#D1D6DB] py-[8px] px-[16px] text-[12px]"
-              />
-            )}
-          />
-        </div>
-
-        <div className="mb-[20px]">
-          <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
-            메뉴 사진 <span className="text-[#638404]">*</span>
-          </label>
-          <Controller
-            name="menuImage"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <label className="block w-[329px] h-[40px] rounded-[4px] border border-[#D1D6DB] py-[8px] px-[16px] text-[12px] cursor-pointer">
-                {fileName}
+          <div className="mb-[20px]">
+            <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
+              메뉴명 <span className="text-[#638404]">*</span>
+            </label>
+            <Controller
+              name="menuName"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
                 <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const files = e.target.files;
-                    if (files && files.length > 0) {
-                      setFileName(files[0].name);
-                      field.onChange(files[0]);
-                    }
+                  {...field}
+                  placeholder="메뉴명을 입력해주세요."
+                  className="w-[329px] h-[40px] rounded-[4px] border border-[#D1D6DB] py-[8px] px-[16px] text-[12px]"
+                />
+              )}
+            />
+          </div>
+
+          <div className="mb-[20px]">
+            <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
+              1,000원 당 g수 <span className="text-[#638404]">*</span>
+            </label>
+            <Controller
+              name="menuOneServing"
+              control={control}
+              rules={{ required: true, min: 1 }}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  value={field.value || ""}
+                  type="number"
+                  placeholder="음식의 g수를 적어주세요."
+                  className="w-[329px] h-[40px] rounded-[4px] border border-[#D1D6DB] py-[8px] px-[16px] text-[12px]"
+                />
+              )}
+            />
+          </div>
+
+          <div className="mb-[20px]">
+            <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
+              메뉴 설명 (최대 30자) <span className="text-[#638404]">*</span>
+            </label>
+            <Controller
+              name="menuIntroduction"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <textarea
+                  {...field}
+                  placeholder="내용을 작성해주세요."
+                  className="w-[329px] h-[60px] rounded-[4px] border border-[#D1D6DB] bg-[#FFF] py-[8px] px-[16px] text-[14px] font-pretendard placeholder-[#707A87] text-[#000]"
+                  style={{
+                    fontFamily: "Pretendard",
+                    fontSize: "14px",
+                    lineHeight: "160%",
                   }}
                 />
-              </label>
-            )}
-          />
+              )}
+            />
+          </div>
+
+          <div className="mb-[6px] flex items-center justify-between">
+            <label className="text-[14px] font-pretendard text-[#222224] leading-[22px]">
+              메뉴 사진 <span className="text-[#638404]">*</span>
+            </label>
+            <Controller
+              name="menuImage"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="fileInput"
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files && files.length > 0) {
+                        setFileName(files[0].name);
+                        field.onChange(files[0]);
+                      }
+                    }}
+                  />
+                  <label
+                    htmlFor="fileInput"
+                    className="cursor-pointer flex items-center whitespace-nowrap px-[12px] py-[8px] justify-center w-[90px] h-[33px] bg-[#97B544] font-semibold text-[12px] text-white rounded-[100px]"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      background: "var(--G--40, #97B544)",
+                    }}
+                  >
+                    사진 첨부하기
+                  </label>
+                </>
+              )}
+            />
+          </div>
+          <div className="mb-[6px]">
+            <div className="block w-[325px] h-[40px] rounded-[4px] border border-[#D1D6DB] py-[8px] px-[16px] font-pretendard text-[14px] text-[#707A87] bg-white">
+              {fileName}
+            </div>
+          </div>
+          <div className="text-[#A8B1B9] text-[12px] font-pretendard leading-[19.2px] mb-[68px]">
+            jpg, png 형식의 파일만 첨부 가능합니다.
+          </div>
         </div>
-
-        <button
-          type="submit"
-          className={`${
-            isValid
-              ? "bg-[#DBE8B6] text-[#354800]"
-              : "bg-[#D1D6DB] text-[#333E4E]"
-          } mb-[160px] w-[321px] h-[42px] rounded-[4px] text-[14px] font-semibold font-pretendard`}
-          disabled={!isValid}
-        >
-          위 메뉴 등록하기
-        </button>
-
-        <button
-          type="button"
-          className={`flex w-[329px] h-[51px] mt-[2px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
-            menuCount > 0 ? "bg-[#638404]" : "bg-[#D1D6DB]"
-          } text-white font-semibold leading-[28px]`}
-          disabled={menuCount === 0}
-          onClick={handleRegisterMenus}
-        >
-          총 {menuCount}개 등록하기
-        </button>
       </form>
+
+      <button
+        type="button"
+        className={`flex w-[329px] h-[51px] mb-[43px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
+          isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
+        } text-white font-semibold leading-[28px]`}
+        disabled={!isValid}
+        onClick={handleSubmit(submitHandler)}
+      >
+        이 메뉴 추가하기
+      </button>
     </div>
   );
 };
