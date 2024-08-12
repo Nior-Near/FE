@@ -119,10 +119,10 @@ export default function Main() {
 
       <div className="flex flex-col px-[24px] mb-[16px]">
         <div className="text-[20px] text-[#222224] font-semibold leading-[32px] font-pretendard">
-          밥 한끼 시키러 가기
+          단돈 천 원으로 밥 한끼 시키러 가기
         </div>
         <div className="text-[12px] text-[#333E4E] font-pretendard leading-[19px]">
-          좋은 가게들의 단골이 되어보세요.
+          1,000원 단위로 먹고싶은 만큼만 음식을 주문하세요
         </div>
       </div>
       <div className="flex justify-center">
@@ -131,8 +131,7 @@ export default function Main() {
             <ChefCard
               key={index}
               chef={chef}
-              title="똥강아지들 밥 한끼 든든하게 먹고 다니고있..."
-              price="9,900"
+              content="똥강아지들 밥 한끼 든든하게 먹고 다니고있..."
               temperature="36.5"
               reviews="14"
               imageUrl="/food.jpg"
@@ -149,10 +148,21 @@ export default function Main() {
           />
         </div>
       )}
-      <Kakao
-        className="fixed w-[50px] h-[50px] bottom-[5%] right-[5%] cursor-pointer"
-        onClick={handleKakaoClick}
-      />
+      <div className="fixed bottom-[5%] right-[8px] cursor-pointer">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="44"
+          height="44"
+          viewBox="0 0 44 44"
+          fill="none"
+        >
+          <circle cx="22" cy="22" r="22" fill="white" fillOpacity="0.5" />
+        </svg>
+        <Kakao
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[32px] h-[31px]"
+          onClick={handleKakaoClick}
+        />
+      </div>
     </div>
   );
 }
