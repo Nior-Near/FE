@@ -1,6 +1,17 @@
 import Link from "next/link";
 
-const Header = () => {
+interface HeaderProps {
+  step: number;
+}
+
+const Header: React.FC<HeaderProps> = ({ step }) => {
+  const progressBarStyles: Record<number, { width: string; height: string }> = {
+    1: { width: "43px", height: "3px" },
+    2: { width: "173px", height: "3px" },
+    3: { width: "280px", height: "3px" },
+    4: { width: "336px", height: "3px" },
+  };
+
   return (
     <header className="relative flex items-center justify-center h-[76px] p-4">
       <Link href="/" legacyBehavior>
@@ -29,6 +40,14 @@ const Header = () => {
           borderColor: "rgba(0, 0, 0, 0.10)",
           borderWidth: "1px",
           opacity: "var(--sds-size-stroke-border)",
+        }}
+      ></div>
+      <div
+        className="absolute bottom-[-1px] left-0"
+        style={{
+          ...progressBarStyles[step],
+          backgroundColor: "var(--G--40, #97B544)",
+          borderRadius: " 0 1.5px 1.5px 0",
         }}
       ></div>
     </header>

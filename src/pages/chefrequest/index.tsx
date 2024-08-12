@@ -38,11 +38,11 @@ const ChefRequest = () => {
   };
 
   const handleCompleteMenuRegistration = () => {
-    // 메뉴가 하나 이상 등록되었을 때만 다음 단계로 이동
     if (menus.length > 0) {
       setStep(step + 1);
     }
   };
+
   const handleLetterSubmit = (data: any) => {
     console.log("편지 등록 완료:", data);
     // 최종
@@ -50,7 +50,7 @@ const ChefRequest = () => {
 
   return (
     <div>
-      <Header />
+      <Header step={step} />
       {step === 1 && <ChefInfo nextStep={nextStepFromChefInfo} />}
       {step === 2 && chefData && (
         <>
@@ -69,7 +69,7 @@ const ChefRequest = () => {
           handleCompleteMenuRegistration={handleCompleteMenuRegistration}
         />
       )}
-      {step === 4 && <LetterRegistration onSubmit={handleLetterSubmit} />}{" "}
+      {step === 4 && <LetterRegistration onSubmit={handleLetterSubmit} />}
     </div>
   );
 };
