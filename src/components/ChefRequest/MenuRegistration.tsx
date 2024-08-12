@@ -38,6 +38,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
     },
   });
 
+  
   const submitHandler = (data: FormData) => {
     onSubmit(data); 
     reset({

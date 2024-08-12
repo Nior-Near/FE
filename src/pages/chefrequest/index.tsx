@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import Header from "@/src/components/ChefRequest/Header";
-import ChefInfo, { ChefInfoFormData } from "@/src/components/ChefRequest/ChefInfo";
-import OrderInfoNearChef, { OrderInfoNearChefFormData } from "@/src/components/ChefRequest/OrderInfoNearChef";
-import OrderInfoPersonalChef, { OrderInfoPersonalChefFormData } from "@/src/components/ChefRequest/OrderInfoPersonalChef";
+import ChefInfo, {
+  ChefInfoFormData,
+} from "@/src/components/ChefRequest/ChefInfo";
+import OrderInfoNearChef, {
+  OrderInfoNearChefFormData,
+} from "@/src/components/ChefRequest/OrderInfoNearChef";
+import OrderInfoPersonalChef, {
+  OrderInfoPersonalChefFormData,
+} from "@/src/components/ChefRequest/OrderInfoPersonalChef";
 import MenuRegistration from "@/src/components/ChefRequest/MenuRegistration";
 import LetterRegistration from "@/src/components/ChefRequest/LetterRegistration";
 import MenuList from "@/src/components/ChefRequest/MenuList";
@@ -17,44 +23,49 @@ interface FormData {
 const ChefRequest = () => {
   const [step, setStep] = useState(1);
   const [chefData, setChefData] = useState<ChefInfoFormData | null>(null);
-  const [orderData, setOrderData] = useState<OrderInfoNearChefFormData | OrderInfoPersonalChefFormData | null>(null);
+  const [orderData, setOrderData] = useState<
+    OrderInfoNearChefFormData | OrderInfoPersonalChefFormData | null
+  >(null);
   const [menus, setMenus] = useState<FormData[]>([]);
 
   const nextStepFromChefInfo = (data: ChefInfoFormData) => {
     setChefData(data);
-    setStep(step + 1);
+    setStep(2); // 다음 단계로 LetterRegistration으로 이동
   };
 
-  const nextStepFromOrderInfo = (data: OrderInfoNearChefFormData | OrderInfoPersonalChefFormData) => {
+  const nextStepFromOrderInfo = (
+    data: OrderInfoNearChefFormData | OrderInfoPersonalChefFormData
+  ) => {
     setOrderData(data);
-    setStep(step + 1);
+    setStep(5); // 다음 단계로 MenuList로 이동
   };
 
   const handleMenuSubmit = (data: FormData) => {
     setMenus([...menus, data]);
-    setStep(3);  
+    setStep(4); // MenuList에서 MenuRegistration로 이동
   };
 
   const handleCompleteMenuRegistration = () => {
     if (menus.length > 0) {
-      setStep(step + 1);
+      setStep(6); // MenuRegistration이 완료된 후
     }
   };
 
   const handleLetterSubmit = (data: any) => {
     console.log("편지 등록 완료:", data);
+    setStep(3); // LetterRegistration이 완료된 후, OrderInfo로 이동
   };
 
-
   const handleBoxClick = () => {
-    setStep(step + 1);
+    setStep(4); // 메뉴 등록 화면으로 이동
   };
 
   return (
     <div>
       <Header step={step} />
       {step === 1 && <ChefInfo nextStep={nextStepFromChefInfo} />}
-      {step === 2 && chefData && (
+      {step === 2 && <LetterRegistration onSubmit={handleLetterSubmit} />}
+      {step === 3 && chefData && (
         <>
           {chefData.affiliation === "니어 요리사" && (
             <OrderInfoNearChef nextStep={nextStepFromOrderInfo} />
@@ -64,10 +75,8 @@ const ChefRequest = () => {
           )}
         </>
       )}
-      {step === 3 && orderData && (
-        <MenuList menus={menus} onBoxClick={handleBoxClick} />
-      )}
-      {step === 4 && (
+      {step === 4 && <MenuList menus={menus} onBoxClick={handleBoxClick} />}
+      {step === 5 && (
         <MenuRegistration
           affiliation={chefData!.affiliation}
           onSubmit={handleMenuSubmit}
@@ -75,7 +84,6 @@ const ChefRequest = () => {
           storeId={"storeId"}
         />
       )}
-      {step === 5 && <LetterRegistration onSubmit={handleLetterSubmit} />}
     </div>
   );
 };

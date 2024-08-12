@@ -32,14 +32,13 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
   const submitHandler = async (data: LetterFormData) => {
     try {
       onSubmit(data);
-      router.push("/my");
     } catch (error) {
       console.error("신청 실패", error);
     }
   };
 
   return (
-    <div className="px-[23px] pb-[40px]">
+    <div className="px-[23px] pb-[40px] h-[765px] overflow-y-auto">
       <div className="text-[20px] font-semibold mt-[44px] mb-[10px]">
         편지를 등록해주세요
       </div>
@@ -121,7 +120,7 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
           } text-white font-semibold leading-[28px]`}
           disabled={!isValid}
         >
-          요리사 신청하기
+          다음으로
         </button>
       </form>
     </div>
