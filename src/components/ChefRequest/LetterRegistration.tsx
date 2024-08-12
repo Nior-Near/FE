@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 import letterImg from "../../assets/letter.png";
-import { useRouter } from "next/router";
 
 interface LetterFormData {
   letterImage: File | null;
@@ -26,15 +25,18 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
       letterImage: null,
     },
   });
-
-  const router = useRouter();
-
-  const submitHandler = async (data: LetterFormData) => {
-    try {
-      onSubmit(data);
-    } catch (error) {
-      console.error("신청 실패", error);
+  const submitHandler = (data: LetterFormData) => {
+    if (data.letterImage) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const fileContent = event.target?.result;
+        if (typeof fileContent === 'string') {
+          localStorage.setItem("letter", fileContent);
+        }
+      };
+      reader.readAsDataURL(data.letterImage);
     }
+    onSubmit(data);
   };
 
   return (

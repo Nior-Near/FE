@@ -71,10 +71,14 @@ const ChefRequest = () => {
             <OrderInfoNearChef nextStep={nextStepFromOrderInfo} />
           )}
           {chefData.affiliation === "개인 요리사" && (
-            <OrderInfoPersonalChef nextStep={nextStepFromOrderInfo} />
+            <OrderInfoPersonalChef
+              nextStep={nextStepFromOrderInfo}
+              // chefData를 전달하지 않음
+            />
           )}
         </>
       )}
+
       {step === 4 && <MenuList menus={menus} onBoxClick={handleBoxClick} />}
       {step === 5 && (
         <MenuRegistration

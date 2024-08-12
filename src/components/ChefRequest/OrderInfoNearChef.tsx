@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-
+import axios from "axios";
 export interface OrderInfoNearChefFormData {
   regionId1: string;
   regionId2: string;
@@ -55,16 +55,64 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     },
   });
 
-  const onSubmit = (data: OrderInfoNearChefFormData) => {
+  const [chefData, setChefData] = useState({
+    name: "",
+    shortIntro: "",
+    detailedIntro: "",
+    qualification: false,
+    auth: "",
+  });
+
+  useEffect(() => {
+    const storedChefInfo = localStorage.getItem("chefInfo");
+    if (storedChefInfo) {
+      const parsedChefInfo = JSON.parse(storedChefInfo);
+      setChefData({
+        name: parsedChefInfo.name || "",
+        shortIntro: parsedChefInfo.shortIntro || "",
+        detailedIntro: parsedChefInfo.detailedIntro || "",
+        qualification: parsedChefInfo.qualification || false,
+        auth: parsedChefInfo.auth || "",
+      });
+    }
+  }, []);
+
+  const letter = localStorage.getItem("letter");
+  const letterFile = letter
+    ? new File([letter], "letter.png", { type: "image/png" })
+    : null;
+
+  const onSubmit = async (data: OrderInfoNearChefFormData) => {
     const placeId = determinePlaceId(data.regionId1);
 
-    const updatedData = {
-      ...data,
-      regionId1: placeId,
-      regionId2,
-    };
+    const formData = new FormData();
+    formData.append("name", chefData.name);
+    formData.append("shortDescription", chefData.shortIntro);
+    formData.append("detailedDescription", chefData.detailedIntro);
+    formData.append("qualification", chefData.qualification.toString());
+    formData.append("auth", chefData.auth);
+    if (letterFile) {
+      formData.append("letter", letterFile);
+    }
+    formData.append("placeId", placeId);
+    formData.append("regionId", regionId2);
+    formData.append("message", data.message);
 
-    nextStep(updatedData);
+    try {
+      const response = await axios.post(
+        "http://13.124.232.198/stores/near-company",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("API 응답 성공:", response.data);
+      nextStep(data); 
+    } catch (error) {
+      console.error("API 요청 실패:", error);
+    }
   };
 
   const toggleRegion1Dropdown = () => {
