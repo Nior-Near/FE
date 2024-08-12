@@ -1,53 +1,97 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
 import RegionSelect from "@/src/components/RegionSelect";
 import Kakao from "../../assets/kakao.svg";
 
+interface Chef {
+  profileImage: string;
+  name: string;
+}
+
+interface Store {
+  profileImage: string;
+  name: string;
+  tags: string[];
+  description: string;
+  lowestPrice: number; //없애기
+  temperature: number;
+  reviewCount: number;
+  isLiked: boolean; //없애기
+}
+
+const fetchHomeData = async () => {
+  try {
+    const response = await axios.get("http://13.124.232.198/home");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch home data:", error);
+    throw new Error("Failed to fetch home data");
+  }
+};
+
 export default function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [isRegionSelectOpen, setIsRegionSelectOpen] = useState(false);
+  const [chefs, setChefs] = useState<Chef[]>([]);
+  const [stores, setStores] = useState<Store[]>([]);
 
-  const chefs = [
-    {
-      name: "이영자",
-      certification: "자격증 보유",
-      kitchen: "니어요리사",
-      image: "/chef1.jpg",
-    },
-    {
-      name: "김춘자",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef2.jpg",
-    },
-    {
-      name: "박철배",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef3.jpg",
-    },
-    {
-      name: "박철배",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef3.jpg",
-    },
-    {
-      name: "박철배",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef3.jpg",
-    },
-    {
-      name: "박철배",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef3.jpg",
-    },
-  ];
+  // const chefs = [
+  //   {
+  //     name: "이영자",
+  //     certification: "자격증 보유",
+  //     kitchen: "니어요리사",
+  //     image: "/chef1.jpg",
+  //   },
+  //   {
+  //     name: "김춘자",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef2.jpg",
+  //   },
+  //   {
+  //     name: "박철배",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef3.jpg",
+  //   },
+  //   {
+  //     name: "박철배",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef3.jpg",
+  //   },
+  //   {
+  //     name: "박철배",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef3.jpg",
+  //   },
+  //   {
+  //     name: "박철배",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef3.jpg",
+  //   },
+  // ];
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await fetchHomeData();
+        setChefs(data.chefs);
+        setStores(data.stores);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getData();
+  }, []);
 
   const handleRegionSelectClose = () => {
     setIsRegionSelectOpen(false);
@@ -60,6 +104,7 @@ export default function Main() {
   const handleKakaoClick = () => {
     window.location.href = "http://pf.kakao.com/_qxgcgG/chat";
   };
+
   return (
     <div>
       <Header
@@ -105,7 +150,7 @@ export default function Main() {
           <div key={index} className="flex flex-col items-center">
             <div className="w-[90px] h-[90px] rounded-full bg-[#D9D9D9] flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
               <img
-                src={chef.image}
+                src={chef.profileImage}
                 alt={chef.name}
                 className="w-full h-full object-cover"
               />
@@ -127,14 +172,15 @@ export default function Main() {
       </div>
       <div className="flex justify-center">
         <div className="grid grid-cols-1 gap-[16px] justify-items-center">
-          {chefs.map((chef, index) => (
+          {stores.map((store, index) => (
             <ChefCard
               key={index}
-              chef={chef}
-              content="똥강아지들 밥 한끼 든든하게 먹고 다니고있..."
-              temperature="36.5"
-              reviews="14"
-              imageUrl="/food.jpg"
+              name={store.name}
+              tags={store.tags}
+              description={store.description}
+              temperature={store.temperature.toString()}
+              reviews={store.reviewCount.toString()}
+              imageUrl={store.profileImage}
             />
           ))}
         </div>

@@ -1,26 +1,22 @@
 import React from "react";
 import Food from "../assets/food.jpg";
 
-export interface Chef {
-  name: string;
-  certification: string;
-  kitchen: string;
-  image: string;
-}
-
 export interface CardProps {
-  chef: Chef;
-  content: string;
+  name: string;
+  tags: string[];
+  description: string;
   temperature: string;
   reviews: string;
   imageUrl: string;
 }
 
 const ChefCard: React.FC<CardProps> = ({
-  chef,
-  content,
+  name,
+  tags,
+  description,
   temperature,
   reviews,
+  imageUrl,
 }) => {
   return (
     <div className="bg-white rounded-[12px] w-[322px] overflow-hidden shadow-md">
@@ -34,23 +30,23 @@ const ChefCard: React.FC<CardProps> = ({
       <div className="p-[16px]">
         <div className="flex items-center">
           <img
-            src={chef.image}
+            src={imageUrl}
             alt="요리사사진"
             className="h-[28px] w-[28px] rounded-full mr-[8px]"
           />
           <div className="font-pretendard text-[14px] leading-[22px]">
-            {chef.name} 요리사
+            {name} 요리사
           </div>
         </div>
         <div className="font-pretendard h-[39px] flex items-center text-[16px] leading-[25px] whitespace-nowrap ">
-          {content}
+          {description}
         </div>
         <div className="flex flex-row items-center gap-[8px] mb-[12px]">
           <div className="w-[63px] px-[4px] flex items-center justify-center text-[#638404] whitespace-nowrap bg-[#EEF3E2] rounded-[2px] font-pretendard text-[12px] leading-[19px]">
-            {chef.certification}
+            {tags[0]}
           </div>
           <div className="text-[#638404] px-[4px] flex items-center justify-center w-[60px] whitespace-nowrap bg-[#EEF3E2] rounded-[2px] font-pretendard text-[12px] leading-[19px]">
-            {chef.kitchen}
+            {tags[1]}
           </div>
         </div>
         <div className="text-[#707A87] font-pretendard text-[12px] leading-[19px]">
