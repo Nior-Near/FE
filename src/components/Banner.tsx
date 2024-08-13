@@ -47,7 +47,19 @@ export default function Banner() {
         backgroundPosition: "center",
       }}
     >
-      <div className="flex gap-[6px] mb-[5px]">
+      <div
+        className="absolute z-0" 
+        style={{
+          width: "261px",
+          height: "375px",
+          background: "rgba(53, 72, 0, 0.50)",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%) rotate(90deg)",
+        }}
+      ></div>
+
+      <div className="relative z-10 flex gap-[6px] mb-[5px]">
         {slides.map((_, index) => (
           <div
             key={index}
@@ -58,16 +70,16 @@ export default function Banner() {
         ))}
       </div>
       <h1
-        className="text-white font-pretendard text-[22px] leading-[35px] font-semibold mb-[12px]"
+        className="relative z-10 text-white font-pretendard text-[22px] leading-[35px] font-semibold mb-[12px]"
         style={{ whiteSpace: "pre-line" }}
       >
         {slides[currentSlide].title}
       </h1>
-      <p className="text-white text-[12px] leading-[19px]">
+      <p className="relative z-10 text-white text-[12px] leading-[19px]">
         {slides[currentSlide].description}
       </p>
 
-      <div className="flex items-center justify-between mt-[19px]">
+      <div className="relative z-10 flex items-center justify-between mt-[19px]">
         <button onClick={handlePrev}>
           <LeftArrow />
         </button>
@@ -78,7 +90,7 @@ export default function Banner() {
 
       <button
         onClick={handleLearnMoreClick}
-        className="flex justify-center items-center whitespace-nowrap self-end py-[10px] px-[24px] bg-[#EEF3E2] rounded-full text-[#638404] font-pretendard text-[14px] font-semibold mt-[19px]"
+        className="relative z-10 flex justify-center items-center whitespace-nowrap self-end py-[10px] px-[24px] bg-[#EEF3E2] rounded-full text-[#638404] font-pretendard text-[14px] font-semibold mt-[19px]"
       >
         더 알아보기
       </button>

@@ -33,12 +33,30 @@ const fetchHomeData = async () => {
   }
 };
 
+// 검색
+const searchChefsAndStores = async (query: {
+  chefName?: string;
+  menuName?: string;
+  regionName?: string;
+}) => {
+  try {
+    const response = await axios.get("http://13.124.232.198/home/search", {
+      params: query,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch search results:", error);
+    throw new Error("Failed to fetch search results");
+  }
+};
+
 export default function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [isRegionSelectOpen, setIsRegionSelectOpen] = useState(false);
   const [chefs, setChefs] = useState<Chef[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // const chefs = [
   //   {
@@ -93,6 +111,24 @@ export default function Main() {
     getData();
   }, []);
 
+  const handleSearch = async () => {
+    try {
+      const data = await searchChefsAndStores({
+        chefName: searchTerm,
+        menuName: searchTerm,
+        regionName: selectedRegion ?? undefined,
+      });
+      setChefs(data.chefs);
+      setStores(data.stores);
+    } catch (error) {
+      console.error("검색 결과를 가져오는 데 실패했습니다:", error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   const handleRegionSelectClose = () => {
     setIsRegionSelectOpen(false);
   };
@@ -106,7 +142,7 @@ export default function Main() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header
         isLoggedIn={isLoggedIn}
         selectedRegion={selectedRegion}
@@ -120,8 +156,10 @@ export default function Main() {
             type="text"
             placeholder="요리사 성함, 메뉴명, 지역명을 검색하세요."
             className="flex-1 border-none outline-none bg-[#F0F2F5] text-gray-600 text-sm placeholder-gray-500 font-roboto"
+            onChange={handleInputChange}
           />
           <svg
+            onClick={handleSearch}
             xmlns="http://www.w3.org/2000/svg"
             width="22"
             height="22"
