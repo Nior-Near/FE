@@ -11,6 +11,14 @@ import OrderInfoPersonalChef, {
 } from "@/src/components/ChefRequest/OrderInfoPersonalChef";
 import MenuRegistration from "@/src/components/ChefRequest/MenuRegistration";
 import LetterRegistration from "@/src/components/ChefRequest/LetterRegistration";
+import MenuList from "@/src/components/ChefRequest/MenuList";
+
+interface FormData {
+  menuName: string;
+  menuOneServing: number | null;
+  menuIntroduction: string;
+  menuImage: File | null;
+}
 
 const ChefRequest = () => {
   const [step, setStep] = useState(1);
@@ -22,37 +30,43 @@ const ChefRequest = () => {
 
   const nextStepFromChefInfo = (data: ChefInfoFormData) => {
     setChefData(data);
-    setStep(step + 1);
+    setStep(2);
   };
 
   const nextStepFromOrderInfo = (
     data: OrderInfoNearChefFormData | OrderInfoPersonalChefFormData
   ) => {
     setOrderData(data);
-    setStep(step + 1);
+
+    setStep(5);
   };
 
-  const handleMenuSubmit = (data: any) => {
-    console.log("메뉴 등록 완료:", data);
+  const handleMenuSubmit = (data: FormData) => {
     setMenus([...menus, data]);
+    setStep(4);
   };
 
   const handleCompleteMenuRegistration = () => {
     if (menus.length > 0) {
-      setStep(step + 1);
+      setStep(6);
     }
   };
 
   const handleLetterSubmit = (data: any) => {
     console.log("편지 등록 완료:", data);
-    // 최종
+    setStep(3);
+  };
+
+  const handleBoxClick = () => {
+    setStep(4);
   };
 
   return (
     <div>
       <Header step={step} />
       {step === 1 && <ChefInfo nextStep={nextStepFromChefInfo} />}
-      {step === 2 && chefData && (
+      {step === 2 && <LetterRegistration onSubmit={handleLetterSubmit} />}
+      {step === 3 && chefData && (
         <>
           {chefData.affiliation === "니어 요리사" && (
             <OrderInfoNearChef nextStep={nextStepFromOrderInfo} />
@@ -62,14 +76,16 @@ const ChefRequest = () => {
           )}
         </>
       )}
-      {step === 3 && orderData && (
+
+      {step === 4 && <MenuList menus={menus} onBoxClick={handleBoxClick} />}
+      {step === 5 && (
         <MenuRegistration
           affiliation={chefData!.affiliation}
           onSubmit={handleMenuSubmit}
           handleCompleteMenuRegistration={handleCompleteMenuRegistration}
+          storeId={"storeId"}
         />
       )}
-      {step === 4 && <LetterRegistration onSubmit={handleLetterSubmit} />}
     </div>
   );
 };

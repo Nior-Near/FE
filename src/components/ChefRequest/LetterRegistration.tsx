@@ -25,14 +25,22 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
       letterImage: null,
     },
   });
-
   const submitHandler = (data: LetterFormData) => {
+    if (data.letterImage) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const fileContent = event.target?.result;
+        if (typeof fileContent === 'string') {
+          localStorage.setItem("letter", fileContent);
+        }
+      };
+      reader.readAsDataURL(data.letterImage);
+    }
     onSubmit(data);
-    setFileName("사진을 첨부해주세요.");
   };
 
   return (
-    <div className="px-[23px] pb-[40px]">
+    <div className="px-[23px] pb-[40px] h-[765px] overflow-y-auto">
       <div className="text-[20px] font-semibold mt-[44px] mb-[10px]">
         편지를 등록해주세요
       </div>
@@ -114,7 +122,7 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
           } text-white font-semibold leading-[28px]`}
           disabled={!isValid}
         >
-          요리사 신청하기
+          다음으로
         </button>
       </form>
     </div>

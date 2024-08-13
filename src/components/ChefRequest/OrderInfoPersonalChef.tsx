@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
+import { ChefInfoFormData } from "./ChefInfo";
 
 export interface OrderInfoPersonalChefFormData {
   name: string;
@@ -47,9 +49,30 @@ const regionOptions: Record<string, string[]> = {
   다른지역: ["강원", "제주"],
 };
 
+const determineRegionId = (region: string): string => {
+  // 임시 지역 아이디 반환 -> api 에서 지역리스트 받아올 예정
+  switch (region) {
+    case "서울":
+      return "1L";
+    case "경기-인천":
+      return "2L";
+    default:
+      return "0L";
+  }
+};
+
 const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
   nextStep,
 }) => {
+  const [chefInfo, setChefInfo] = useState<ChefInfoFormData | null>(null);
+
+  useEffect(() => {
+    const storedChefInfo = localStorage.getItem("chefInfo");
+    if (storedChefInfo) {
+      setChefInfo(JSON.parse(storedChefInfo));
+    }
+  }, []);
+
   const {
     handleSubmit,
     control,
@@ -59,7 +82,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
   } = useForm<OrderInfoPersonalChefFormData>({
     mode: "onChange",
     defaultValues: {
-      name: "",
+      name: chefInfo?.name || "",
       placeName: "",
       placeAddress: "",
       regionId1: "",
@@ -74,11 +97,51 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
   const [selectedRegion2, setSelectedRegion2] = useState("");
   const [region2Options, setRegion2Options] = useState<string[]>([]);
 
-  const onSubmit = (data: OrderInfoPersonalChefFormData) => {
-    console.log("Form submitted:", data);
-    nextStep(data);
-  };
+  const onSubmit = async (data: OrderInfoPersonalChefFormData) => {
+    if (chefInfo) {
+      const formData = new FormData();
+      formData.append("name", chefInfo.name);
+      formData.append("introduction", chefInfo.shortIntro);
+      formData.append("qualification", chefInfo.qualification.toString());
+      formData.append("auth", chefInfo.auth);
 
+      const storedLetter = localStorage.getItem("letter");
+      if (storedLetter) {
+        const letterFile = new File([storedLetter], "letter.png", {
+          type: "image/png",
+        });
+        formData.append("letter", letterFile);
+      }
+
+      formData.append("placeName", data.placeName);
+      formData.append("placeAddress", data.placeAddress);
+
+      const regionId = determineRegionId(data.regionId1); //  지역 ID
+      formData.append("regionId", regionId);
+
+      formData.append("message", data.message);
+
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await axios.post(
+          "http://13.124.232.198/stores/freelance",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log("API 응답 성공:", response.data);
+        nextStep(data);
+      } catch (error) {
+        console.error("API 요청 실패:", error);
+      }
+    }
+  };
   const toggleRegion1Dropdown = () => {
     setRegion1DropdownOpen(!isRegion1DropdownOpen);
   };
