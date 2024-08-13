@@ -7,8 +7,12 @@ export interface OrderInfoNearChefFormData {
   message: string;
 }
 
+interface OrderInfoWithStoreId extends OrderInfoNearChefFormData {
+  storeId: string;
+}
+
 interface OrderInfoNearChefProps {
-  nextStep: (data: OrderInfoNearChefFormData) => void;
+  nextStep: (data: OrderInfoWithStoreId) => void;
 }
 
 const regionOptions: Record<string, string[]> = {
@@ -99,17 +103,22 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     formData.append("message", data.message);
 
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://13.124.232.198/stores/near-company",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
       console.log("API 응답 성공:", response.data);
-      nextStep(data); 
+      const storeId = response.data.result.storeId;
+      localStorage.setItem("storeId", storeId.toString());
+
+      nextStep({ ...data, storeId });
     } catch (error) {
       console.error("API 요청 실패:", error);
     }

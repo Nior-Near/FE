@@ -30,34 +30,35 @@ const ChefRequest = () => {
 
   const nextStepFromChefInfo = (data: ChefInfoFormData) => {
     setChefData(data);
-    setStep(2); // 다음 단계로 LetterRegistration으로 이동
+    setStep(2);
   };
 
   const nextStepFromOrderInfo = (
     data: OrderInfoNearChefFormData | OrderInfoPersonalChefFormData
   ) => {
     setOrderData(data);
-    setStep(5); // 다음 단계로 MenuList로 이동
+
+    setStep(5);
   };
 
   const handleMenuSubmit = (data: FormData) => {
     setMenus([...menus, data]);
-    setStep(4); // MenuList에서 MenuRegistration로 이동
+    setStep(4);
   };
 
   const handleCompleteMenuRegistration = () => {
     if (menus.length > 0) {
-      setStep(6); // MenuRegistration이 완료된 후
+      setStep(6);
     }
   };
 
   const handleLetterSubmit = (data: any) => {
     console.log("편지 등록 완료:", data);
-    setStep(3); // LetterRegistration이 완료된 후, OrderInfo로 이동
+    setStep(3);
   };
 
   const handleBoxClick = () => {
-    setStep(4); // 메뉴 등록 화면으로 이동
+    setStep(4);
   };
 
   return (
@@ -71,10 +72,7 @@ const ChefRequest = () => {
             <OrderInfoNearChef nextStep={nextStepFromOrderInfo} />
           )}
           {chefData.affiliation === "개인 요리사" && (
-            <OrderInfoPersonalChef
-              nextStep={nextStepFromOrderInfo}
-              // chefData를 전달하지 않음
-            />
+            <OrderInfoPersonalChef nextStep={nextStepFromOrderInfo} />
           )}
         </>
       )}

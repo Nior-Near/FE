@@ -57,9 +57,8 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
     const authId = determineAuthId(data.experience);
     const updatedData = { ...data, auth: authId };
 
-    if (updatedData.affiliation === "니어 요리사") {
-      localStorage.setItem("chefInfo", JSON.stringify(updatedData));
-    }
+    localStorage.setItem("chefInfo", JSON.stringify(updatedData));
+
     nextStep(updatedData);
   };
 
