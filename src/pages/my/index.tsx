@@ -125,7 +125,7 @@ export default function My() {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       편지함
                     </div>
-                    <NavigateNext width="24" height="24" className="*:fill-[#A8B1B9]" />
+                    <NavigateNext width="24" height="24" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -163,7 +163,7 @@ export default function My() {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       주문내역
                     </div>
-                    <NavigateNext width="24" height="24" className="*:fill-[#A8B1B9]" />
+                    <NavigateNext width="24" height="24" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -183,7 +183,7 @@ export default function My() {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       프로필 수정
                     </div>
-                    <NavigateNext width="24" height="24" className="*:fill-[#A8B1B9]" />
+                    <NavigateNext width="24" height="24" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -203,7 +203,7 @@ export default function My() {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       요리사 신청하기
                     </div>
-                    <NavigateNext width="24" height="24" className="*:fill-[#A8B1B9]" />
+                    <NavigateNext width="24" height="24" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -223,7 +223,7 @@ export default function My() {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       고객 센터
                     </div>
-                    <NavigateNext width="24" height="24" className="*:fill-[#A8B1B9]" />
+                    <NavigateNext width="24" height="24" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -243,7 +243,7 @@ export default function My() {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       이용 가이드
                     </div>
-                    <NavigateNext width="24" height="24" className="*:fill-[#A8B1B9]" />
+                    <NavigateNext width="24" height="24" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
