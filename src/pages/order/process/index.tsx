@@ -1,7 +1,7 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
 import CheckCircle from "@/src/assets/check_circle.svg";
 
-export default function Payment_Process() {
+export default function Order_Process() {
   return (
     <div className="h-dvh">
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">

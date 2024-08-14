@@ -1,6 +1,9 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
+import { Done } from "./interface";
+import Image from "next/image";
+import Link from "next/link";
 
-export default function Payment_Done() {
+export default function Order_Done({ data }: { data: Done | null }) {
   return (
     <div className="relative h-dvh z-0">
       <svg
@@ -40,7 +43,7 @@ export default function Payment_Done() {
       </div>
       <div className="pb-[47px] mt-[27px] mx-auto w-[204px] flex flex-col items-center gap-[8px]">
         <div className="w-[120px] h-[120px] rounded-full bg-white text-center shadow-[0px_0px_5px_rgba(0,0,0,0.25)]">
-          사진
+          {/* <Image src={data?.profileImage} width={120} height={120} alt="" /> */}
         </div>
         <div className="flex flex-col items-center">
           <svg
@@ -54,9 +57,7 @@ export default function Payment_Done() {
           </svg>
           <div className="w-[204px] h-[68px] bg-[#dbe8b6] rounded-[12px] px-[21.5px] py-[8px]">
             <p className="font-pretendard text-[16px] font-[400] leading-[25.6px] text-center text-[#222224]">
-              맛있게 요리해 드릴게요~
-              <br />
-              좋은 하루 되세요
+              {data?.message}
             </p>
           </div>
         </div>
@@ -66,22 +67,19 @@ export default function Payment_Done() {
           <div className="self-stretch text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
             주문 상품 총 2개
           </div>
-          <div className="self-stretch justify-start items-start gap-[89px] inline-flex">
-            <div className="w-[31px] text-[#333e4e] text-sm font-normal font-pretendard leading-snug">
-              잡채
+          {data?.orderMenus?.map((menu, index) => (
+            <div
+              key={menu?.menuName}
+              className="self-stretch justify-between items-start inline-flex"
+            >
+              <div className="text-[#333e4e] text-sm font-normal font-pretendard leading-snug">
+                {menu?.menuName}
+              </div>
+              <div className="w-[207px] text-right text-[#333e4e] text-sm font-semibold font-pretendard">
+                {menu?.menuPrice} * {menu?.quantity}
+              </div>
             </div>
-            <div className="w-[207px] text-right text-[#333e4e] text-sm font-semibold font-pretendard">
-              7,000 * 2
-            </div>
-          </div>
-          <div className="self-stretch justify-start items-start gap-[74px] inline-flex">
-            <div className="w-[45px] text-[#333e4e] text-sm font-normal font-pretendard leading-snug">
-              불고기
-            </div>
-            <div className="w-[207px] text-right text-[#333e4e] text-sm font-semibold font-pretendard">
-              7,000 * 2
-            </div>
-          </div>
+          ))}
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,18 +96,24 @@ export default function Payment_Done() {
               총 결제금액
             </div>
             <div className="w-[79px] text-right text-[#638404] text-xl font-semibold font-pretendard leading-loose">
-              38,700
+              {data?.totalPrice?.toLocaleString()}
             </div>
           </div>
         </div>
       </div>
       <div className="w-full inline-flex items-center gap-[20px] justify-center">
-        <button className="px-[24px] py-[10px] flex items-center justify-center h-[40px] rounded-full bg-[#97b544] font-pretendard font-[600] text-[16px] leading-[25.6px] text-white text-center">
+        <Link
+          href="/main"
+          className="px-[24px] py-[10px] flex items-center justify-center h-[40px] rounded-full bg-[#97b544] font-pretendard font-[600] text-[16px] leading-[25.6px] text-white text-center"
+        >
           니어니어 홈으로
-        </button>
-        <button className="px-[24px] py-[10px] flex items-center justify-center h-[40px] rounded-full bg-[#638404] font-pretendard font-[600] text-[16px] leading-[25.6px] text-white text-center">
+        </Link>
+        <Link
+          href={`/order/history/${data?.orderId}`}
+          className="px-[24px] py-[10px] flex items-center justify-center h-[40px] rounded-full bg-[#638404] font-pretendard font-[600] text-[16px] leading-[25.6px] text-white text-center"
+        >
           주문내역 보러가기
-        </button>
+        </Link>
       </div>
     </div>
   );
