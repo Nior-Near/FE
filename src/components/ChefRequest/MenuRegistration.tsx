@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+import { axios } from "../../lib/axios";
 
 interface FormData {
   menuName: string;
@@ -56,16 +56,12 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-        `http://13.124.232.198/stores/${storeId}/menu`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post(`/stores/${storeId}/menu`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log("메뉴 등록 성공:", response.data);
       onSubmit(data);
