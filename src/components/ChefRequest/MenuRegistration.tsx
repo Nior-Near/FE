@@ -57,7 +57,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        `http://13.124.232.198/stores/${storeId}/menu`,
+        `54.180.155.131:8080/stores/${storeId}/menu`,
         formData,
         {
           headers: {

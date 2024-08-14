@@ -125,7 +125,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
         const token = localStorage.getItem("token");
 
         const response = await axios.post(
-          "http://13.124.232.198/stores/freelance",
+          "http://54.180.155.131:8080/stores/freelance",
           formData,
           {
             headers: {
