@@ -41,13 +41,15 @@ const ChefCard: React.FC<CardProps> = ({
         <div className="font-pretendard h-[39px] flex items-center text-[16px] leading-[25px] whitespace-nowrap ">
           {description}
         </div>
-        <div className="flex flex-row items-center gap-[8px] mb-[12px]">
-          <div className="w-[63px] px-[4px] flex items-center justify-center text-[#638404] whitespace-nowrap bg-[#EEF3E2] rounded-[2px] font-pretendard text-[12px] leading-[19px]">
-            {tags[0]}
-          </div>
-          <div className="text-[#638404] px-[4px] flex items-center justify-center w-[60px] whitespace-nowrap bg-[#EEF3E2] rounded-[2px] font-pretendard text-[12px] leading-[19px]">
-            {tags[1]}
-          </div>
+        <div className="flex flex-row items-center gap-[8px] mb-[12px] flex-wrap">
+          {tags.map((tag, index) => (
+            <div
+              key={index}
+              className="px-[4px] flex items-center justify-center text-[#638404] whitespace-nowrap bg-[#EEF3E2] rounded-[2px] font-pretendard text-[12px] leading-[19px]"
+            >
+              {tag}
+            </div>
+          ))}
         </div>
         <div className="text-[#707A87] font-pretendard text-[12px] leading-[19px]">
           온도 {temperature} | 후기 {reviews}개

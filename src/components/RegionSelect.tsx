@@ -1,71 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { axios } from "../lib/axios";
 
+// 다시 수정 !!!!
 interface RegionSelectProps {
-  setSelectedRegion: (region: string | null) => void;
+  setSelectedRegion: (regionId: number | null) => void;
   onClose: () => void;
 }
 
 interface Region {
+  id: number;
   name: string;
-  areas: string[];
 }
-
-const regions: Region[] = [
-  {
-    name: "서울",
-    areas: [
-      "건대/왕십리",
-      "명동/이태원",
-      "신촌/이대",
-      "홍대/마포",
-      "강남/논현",
-      "관악/신림",
-      "삼성/선릉",
-      "압구정/신사",
-      "강동/천호",
-      "교대/사당",
-      "송파/잠실",
-      "여의도/영등포",
-      "강서/목동",
-      "노원/강북",
-      "수유/동대문",
-      "종로/대학로",
-    ],
-  },
-  {
-    name: "경기-인천",
-    areas: [
-      "일산/파주",
-      "용인/분당/수원",
-      "인천/부천",
-      "남양주/구리/하남",
-      "안양/안산/광명",
-    ],
-  },
-  { name: "대전-충청", areas: ["대전", "충청"] },
-  { name: "대구-경북", areas: ["대구", "경북"] },
-  { name: "부산-경남", areas: ["부산", "경남"] },
-  { name: "광주-전라", areas: ["광주", "전라"] },
-  { name: "다른지역", areas: ["강원", "제주"] },
-];
 
 export default function RegionSelect({
   setSelectedRegion,
   onClose,
 }: RegionSelectProps) {
-  const [selectedRegion, setSelectedRegionState] = React.useState<Region>(
-    regions[0]
+  const [upperRegions, setUpperRegions] = useState<Region[]>([]);
+  const [detailRegions, setDetailRegions] = useState<Region[]>([]);
+  const [selectedUpperRegion, setSelectedUpperRegion] = useState<Region | null>(
+    null
   );
-  const [selectedArea, setSelectedArea] = React.useState<string | null>(null);
+  const [selectedArea, setSelectedArea] = useState<string | null>(null);
 
-  const handleRegionClick = (region: Region) => {
-    setSelectedRegionState(region);
-    setSelectedArea(null);
+  useEffect(() => {
+    const fetchRegions = async () => {
+      try {
+        const response = await axios.get("/regions");
+        const { upperRegions, detailRegions } = response.data.result;
+
+        setUpperRegions(upperRegions);
+        setDetailRegions(detailRegions);
+        setSelectedUpperRegion(upperRegions[0]);
+      } catch (error) {
+        console.error("Error fetching regions:", error);
+      }
+    };
+
+    fetchRegions();
+  }, []);
+
+  const handleUpperRegionClick = async (region: Region) => {
+    try {
+      setSelectedUpperRegion(region);
+      const response = await axios.get("/regions", {
+        params: { upperRegionId: region.id },
+      });
+      setDetailRegions(response.data.result.detailRegions);
+      setSelectedArea(null);
+    } catch (error) {
+      console.error("Error fetching detail regions:", error);
+    }
   };
 
-  const handleAreaClick = (area: string) => {
-    setSelectedArea(area);
-    setSelectedRegion(area);
+  const handleAreaClick = (area: Region) => {
+    setSelectedArea(area.name);
+    setSelectedRegion(area.id);
   };
 
   return (
@@ -85,22 +75,22 @@ export default function RegionSelect({
             />
           </svg>
         </button>
-        <h1 className="text-[18px] font-medium  font-pretendard leading-[28px]">
+        <h1 className="text-[18px] font-medium font-pretendard leading-[28px]">
           어느 지역에서 음식을 받을건가요?
         </h1>
       </header>
       <div className="flex flex-1">
         <div className="bg-[#F0F2F5] w-[124px] flex justify-center pt-[31px]">
           <ul className="space-y-[21px]">
-            {regions.map((region, index) => (
+            {upperRegions.map((region) => (
               <li
-                key={index}
+                key={region.id}
                 className={`cursor-pointer ${
-                  selectedRegion.name === region.name
+                  selectedUpperRegion?.id === region.id
                     ? "text-[#638404] text-[18px] font-pretendard font-medium leading-[29px]"
                     : "text-[#333E4E] text-[18px] font-pretendard leading-[29px]"
                 }`}
-                onClick={() => handleRegionClick(region)}
+                onClick={() => handleUpperRegionClick(region)}
               >
                 {region.name}
               </li>
@@ -109,17 +99,17 @@ export default function RegionSelect({
         </div>
         <div className="bg-[#E4E8EB] flex-1 pt-[31px] pl-[29px]">
           <ul className="space-y-[21px]">
-            {selectedRegion.areas.map((area, index) => (
+            {detailRegions.map((area) => (
               <li
-                key={index}
+                key={area.id}
                 className={`cursor-pointer ${
-                  selectedArea === area
+                  selectedArea === area.name
                     ? "text-[#638404] text-[16px] font-pretendard font-medium leading-[29px]"
                     : "text-[#333E4E] text-[16px] font-pretendard leading-[29px]"
                 }`}
                 onClick={() => handleAreaClick(area)}
               >
-                {area}
+                {area.name}
               </li>
             ))}
           </ul>
