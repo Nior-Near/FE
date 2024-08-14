@@ -211,7 +211,7 @@ export default function Main() {
           <circle cx="22" cy="22" r="22" fill="white" fillOpacity="0.5" />
         </svg>
         <Kakao
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[32px] h-[31px]"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[31px] h-[31px]"
           onClick={handleKakaoClick}
         />
       </div>
