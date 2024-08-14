@@ -19,7 +19,7 @@ export default function Header({
     <header className="bg-white flex justify-between items-center py-[9px] relative">
       <div className="flex flex-row items-center ml-[26px]">
         <div
-          className="text-[#638404] text-[24px] font-jalnan mr-[11px] leading-[32.437px]"
+          className="text-[#638404] text-[24px] font-[Jalnan 2] mr-[11px] leading-[32.437px]"
           style={{ letterSpacing: "0.387px" }}
         >
           니어니어
