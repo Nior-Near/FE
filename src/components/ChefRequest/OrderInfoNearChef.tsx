@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+import { axios } from "../../lib/axios";
 
 export interface OrderInfoNearChefFormData {
   regionId1: string;
@@ -89,21 +89,29 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
 
   const fetchRegionId = async (placeId: number) => {
     try {
-      const response = await axios.get(
-        `http://54.180.155.131:8080/stores/near-company/${placeId}`
-      );
+      const response = await axios.get(`/stores/near-company/${placeId}`);
+      console.log("Region ID API response:", response.data);
+
       if (response.data.isSuccess && response.data.result) {
         const regionId = response.data.result.regionId;
+        console.log("Received regionId:", regionId);
+
         localStorage.setItem("regionId", regionId.toString());
 
-        const regionResponse = await axios.get(
-          `http://54.180.155.131:8080/regions/${regionId}`
-        );
-        if (regionResponse.data.code === 200) {
+        const regionResponse = await axios.get(`/regions/${regionId}`);
+        console.log("Full Region details API response:", regionResponse.data); // 전체 응답을 확인
+
+        if (regionResponse.data.code === "2000") {
           const regionName = regionResponse.data.result.name;
+
           setRegionId2(regionName);
           setValue("regionId2", regionName, { shouldValidate: true });
+          console.log("Set regionId2 to:", regionName);
+        } else {
+          console.error("Unexpected response code:", regionResponse.data.code);
         }
+      } else {
+        console.error("Error with region ID:", response.data.message);
       }
     } catch (error) {
       console.error("Region ID 가져오기 오류:", error);
@@ -268,7 +276,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
                   {...field}
                   value={regionId2}
                   readOnly
-                  className="flex mb-[11px] w-[321px] h-[40px] flex-col justify-center items-start rounded-[4px] border border-[#D1D6DB] bg-[#FFF] py-[8px] px-[16px]"
+                  className="flex font-pretendard leading-[22px] text-[14px] mb-[11px] w-[321px] h-[40px] flex-col justify-center items-start rounded-[4px] border border-[#D1D6DB] bg-[#FFF] py-[8px] px-[16px]"
                 />
               )}
             />

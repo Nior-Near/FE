@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
 import { ChefInfoFormData } from "./ChefInfo";
+import {axios} from "../../lib/axios"
 
 export interface OrderInfoPersonalChefFormData {
   name: string;
@@ -125,7 +125,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
         const token = localStorage.getItem("token");
 
         const response = await axios.post(
-          "http://54.180.155.131:8080/stores/freelance",
+          "/stores/freelance",
           formData,
           {
             headers: {
