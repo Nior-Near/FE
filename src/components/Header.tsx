@@ -1,4 +1,5 @@
 import Avatar from "../assets/avatar.svg";
+
 interface HeaderProps {
   isLoggedIn: boolean;
   selectedRegion: string | null;
@@ -10,6 +11,10 @@ export default function Header({
   selectedRegion,
   onRegionSelect,
 }: HeaderProps) {
+  const handleProfileClick = () => {
+    window.location.href = "/my";
+  };
+
   return (
     <header className="bg-white flex justify-between items-center py-[9px] relative">
       <div className="flex flex-row items-center ml-[26px]">
@@ -37,12 +42,10 @@ export default function Header({
             지역 선택
           </button>
         )}
-        <div className="ml-[21px] mr-[19px]">
-          {/* <img
-            src="/profile.png"
-            alt="Profile"
-            className="h-[40px] w-[40px] rounded-full"
-          /> */}
+        <div
+          className="ml-[21px] mr-[19px] cursor-pointer"
+          onClick={handleProfileClick}
+        >
           <Avatar className="h-[40px] w-[40px] rounded-full" />
         </div>
       </div>

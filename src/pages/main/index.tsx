@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {axios} from "../../lib/axios"
+import { axios } from "../../lib/axios";
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
@@ -15,20 +15,19 @@ interface Store {
   profileImage: string;
   name: string;
   tags: string[];
-  description: string;
-  lowestPrice: number; //없애기
+  introduction: string;
   temperature: number;
   reviewCount: number;
-  isLiked: boolean; //없애기
 }
 
 const fetchHomeData = async () => {
   try {
     const response = await axios.get("/home");
+    console.log("Received response:", response);
+
     return response.data;
   } catch (error) {
     console.error("Failed to fetch home data:", error);
-    throw new Error("Failed to fetch home data");
   }
 };
 
@@ -45,7 +44,6 @@ const searchChefsAndStores = async (query: {
     return response.data;
   } catch (error) {
     console.error("Failed to fetch search results:", error);
-    throw new Error("Failed to fetch search results");
   }
 };
 
@@ -214,7 +212,7 @@ export default function Main() {
               key={index}
               name={store.name}
               tags={store.tags}
-              description={store.description}
+              description={store.introduction}
               temperature={store.temperature.toString()}
               reviews={store.reviewCount.toString()}
               imageUrl={store.profileImage}
