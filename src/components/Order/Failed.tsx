@@ -1,7 +1,7 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
 import ErrorCircle from "@/src/assets/error_circle.svg";
 
-export default function Payment_Failed() {
+export default function Order_Failed() {
   return (
     <div className="h-dvh">
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">

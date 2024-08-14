@@ -1,7 +1,7 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
 import { useState } from "react";
 
-export default function Payment_History() {
+export default function Order_History() {
   const list = [
     {
       name: "주문접수",
