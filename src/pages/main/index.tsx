@@ -20,103 +20,67 @@ interface Store {
   reviewCount: number;
 }
 
-const fetchHomeData = async () => {
+const fetchHomeData = async (regionId: number | null) => {
   try {
-    const response = await axios.get("/home");
-    console.log("Received response:", response);
-
-    return response.data;
+    const response = await axios.get("/home", {
+      params: { region: regionId },
+    });
+    return response.data.result;
   } catch (error) {
     console.error("Failed to fetch home data:", error);
+    return { chefs: [], stores: [] };
   }
 };
 
 // 검색
-const searchChefsAndStores = async (query: {
-  chefName?: string;
-  menuName?: string;
-  regionName?: string;
-}) => {
+const searchChefsAndStores = async (keyword: string) => {
   try {
     const response = await axios.get("/home/search", {
-      params: query,
+      params: { keyword }, 
     });
-    return response.data;
+    return response.data.result;
   } catch (error) {
     console.error("Failed to fetch search results:", error);
+    return { stores: [] };
   }
 };
 
 export default function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
   const [isRegionSelectOpen, setIsRegionSelectOpen] = useState(false);
   const [chefs, setChefs] = useState<Chef[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // const chefs = [
-  //   {
-  //     name: "이영자",
-  //     certification: "자격증 보유",
-  //     kitchen: "니어요리사",
-  //     image: "/chef1.jpg",
-  //   },
-  //   {
-  //     name: "김춘자",
-  //     certification: "경력인증",
-  //     kitchen: "니어키친",
-  //     image: "/chef2.jpg",
-  //   },
-  //   {
-  //     name: "박철배",
-  //     certification: "경력인증",
-  //     kitchen: "니어키친",
-  //     image: "/chef3.jpg",
-  //   },
-  //   {
-  //     name: "박철배",
-  //     certification: "경력인증",
-  //     kitchen: "니어키친",
-  //     image: "/chef3.jpg",
-  //   },
-  //   {
-  //     name: "박철배",
-  //     certification: "경력인증",
-  //     kitchen: "니어키친",
-  //     image: "/chef3.jpg",
-  //   },
-  //   {
-  //     name: "박철배",
-  //     certification: "경력인증",
-  //     kitchen: "니어키친",
-  //     image: "/chef3.jpg",
-  //   },
-  // ];
-
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await fetchHomeData();
-        setChefs(data.chefs);
-        setStores(data.stores);
+        const data = await fetchHomeData(selectedRegion);
+        if (data) {
+          setChefs(data.chefs || []);
+          setStores(data.stores || []);
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
     getData();
-  }, []);
+  }, [selectedRegion]);
 
   const handleSearch = async () => {
     try {
-      const data = await searchChefsAndStores({
-        chefName: searchTerm,
-        menuName: searchTerm,
-        regionName: selectedRegion ?? undefined,
-      });
-      setChefs(data.chefs);
-      setStores(data.stores);
+      if (searchTerm.trim() === "") {
+        const defaultData = await fetchHomeData(selectedRegion);
+        setStores(defaultData.stores || []);
+        setChefs(defaultData.chefs || []);
+      } else {
+        const data = await searchChefsAndStores(searchTerm);
+        setStores(data.stores || []);
+
+        setChefs(data.chefs || []);
+      }
     } catch (error) {
       console.error("검색 결과를 가져오는 데 실패했습니다:", error);
     }
@@ -130,8 +94,8 @@ export default function Main() {
     setIsRegionSelectOpen(false);
   };
 
-  const handleSetSelectedRegion = (region: string | null) => {
-    setSelectedRegion(region);
+  const handleSetSelectedRegion = (regionId: number | null) => {
+    setSelectedRegion(regionId);
   };
 
   const handleKakaoClick = () => {
@@ -142,7 +106,7 @@ export default function Main() {
     <div className="min-h-screen flex flex-col">
       <Header
         isLoggedIn={isLoggedIn}
-        selectedRegion={selectedRegion}
+        selectedRegion={selectedRegion?.toString() || "지역 선택"}
         onRegionSelect={() => setIsRegionSelectOpen(true)}
       />
       <Banner />
@@ -181,20 +145,21 @@ export default function Main() {
       </div>
 
       <div className="flex overflow-x-scroll scrollbar-hide px-[24px] mt-[16px] mb-[60px] space-x-[15px]">
-        {chefs.map((chef, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <div className="w-[90px] h-[90px] rounded-full bg-[#D9D9D9] flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
-              <img
-                src={chef.profileImage}
-                alt={chef.name}
-                className="w-full h-full object-cover"
-              />
+        {chefs &&
+          chefs.map((chef, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <div className="w-[90px] h-[90px] rounded-full bg-[#D9D9D9] flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
+                <img
+                  src={chef.profileImage}
+                  alt={chef.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="mt-[8px] text-center font-pretendard text-[12px] leading-[19px]">
+                {chef.name} 요리사
+              </div>
             </div>
-            <div className="mt-[8px] text-center font-pretendard text-[12px] leading-[19px]">
-              {chef.name} 요리사
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       <div className="flex flex-col px-[24px] mb-[16px]">
@@ -207,17 +172,23 @@ export default function Main() {
       </div>
       <div className="flex justify-center">
         <div className="grid grid-cols-1 gap-[16px] justify-items-center">
-          {stores.map((store, index) => (
-            <ChefCard
-              key={index}
-              name={store.name}
-              tags={store.tags}
-              description={store.introduction}
-              temperature={store.temperature.toString()}
-              reviews={store.reviewCount.toString()}
-              imageUrl={store.profileImage}
-            />
-          ))}
+          {stores && stores.length > 0 ? (
+            stores.map((store, index) => (
+              <ChefCard
+                key={index}
+                name={store.name}
+                tags={store.tags}
+                description={store.introduction}
+                temperature={store.temperature.toString()}
+                reviews={store.reviewCount.toString()}
+                imageUrl={store.profileImage}
+              />
+            ))
+          ) : (
+            <div className="text-center text-gray-500">
+              해당하는 정보가 없습니다.
+            </div>
+          )}
         </div>
       </div>
 
