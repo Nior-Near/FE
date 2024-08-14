@@ -8,9 +8,33 @@ import NavigateBefore from "@/src/assets/navigate_before.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
-import { Data } from "./interface";
 import { useState } from "react";
 import Link from "next/link";
+
+export interface Data {
+  storeId: number;
+  profileImage: string;
+  name: string;
+  storePhone: string;
+  images: string[];
+  title: string;
+  introduction: string;
+  possibleRegion: string[];
+  placeId: number;
+  placeName: string;
+  auths: string[];
+  temperature: number;
+  menus: Menu[];
+}
+interface Menu {
+  menuId: number;
+  menuName: string;
+  menuImage: string;
+  menuIntroduction: string;
+  menuPrice: number;
+  menuGram: number;
+  orderable: boolean;
+}
 
 export default function Store({ data }: { data: Data }) {
   const [foodBannerImage, setFoodBannerImage] = useState(data?.images?.[0]);
