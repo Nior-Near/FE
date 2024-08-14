@@ -1,0 +1,213 @@
+import Image from "next/image";
+import food from "@/src/assets/food.jpg";
+import food2 from "@/src/assets/food-2.jpeg";
+import food3 from "@/src/assets/food-3.jpeg";
+import food4 from "@/src/assets/food-4.jpeg";
+import food5 from "@/src/assets/food-5.jpeg";
+import NavigateBefore from "@/src/assets/navigate_before.svg";
+import NavigateNext from "@/src/assets/navigate_next.svg";
+import { axios } from "@/src/lib/axios";
+import { GetServerSidePropsContext } from "next";
+import { Data } from "./interface";
+import { useState } from "react";
+
+export default function Store({ data }: { data: Data }) {
+  const [foodBannerImage, setFoodBannerImage] = useState(data?.images?.[0]);
+
+  const [orders, setOrders] = useState<{ [key: number]: { count: number } }>({});
+
+  return (
+    <div>
+      <div className="w-[375px] h-[291px] relative">
+        <Image
+          src={foodBannerImage}
+          width={375}
+          height={291}
+          alt=""
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute bottom-[-15px] w-full flex flex-row items-center justify-center gap-[16px]">
+          {data?.images &&
+            data?.images?.map((img, index) => (
+              <div
+                key={img}
+                className="w-[90px] h-[66px] rounded-[5px] cursor-pointer overflow-hidden"
+                onClick={() => setFoodBannerImage(img)}
+                style={{
+                  boxShadow: img === foodBannerImage ? "0px 0px 5px 0px #638404" : undefined,
+                  border: img === foodBannerImage ? "2px solid #97b544" : "2px solid #ffffff",
+                }}
+              >
+                <Image
+                  src={img}
+                  width={90}
+                  height={66}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+        </div>
+      </div>
+      <div className="pt-[33px] pb-[24px] px-[24px]">
+        <div className="flex flex-row items-center gap-[15px]">
+          <div className="w-[90px] h-[90px] rounded-full border text-center">
+            {/* <Image src={data?.profileImage} alt="" width={90} height={90} /> */}
+          </div>
+          <span className="font-pretendard text-[24px] font-[600] leading-[13.268px] text-[#222224]">
+            {data?.name} 요리사님
+          </span>
+        </div>
+      </div>
+      <div className="px-[24px] flex flex-col gap-[10px]">
+        <span className="font-pretendard text-[16px] font-[600] leading-[13.268px] text-[#222224]">
+          {data?.title}
+        </span>
+        <span className="font-pretendard text-[14px] font-[400] leading-none text-[#333e4e]">
+          {data?.introduction}
+        </span>
+      </div>
+      <div className="px-[24px] py-[40px] flex flex-col items-start gap-[20px]">
+        <div className="flex flex-row items-center gap-[18px]">
+          <span className="font-pretendard text-[14px] font-[700] leading-none text-[#222224]">
+            주문 가능 지역
+          </span>
+          <span className="font-pretendard text-[14px] font-[400] leading-none text-[#1e2530]">
+            {typeof data?.possibleRegion === "object"
+              ? data?.possibleRegion?.map((region) => `${region}, `)
+              : data?.possibleRegion}
+          </span>
+        </div>
+        <div className="flex flex-row items-center gap-[18px]">
+          <span className="font-pretendard text-[14px] font-[700] leading-none text-[#222224]">
+            위치
+          </span>
+          <span className="font-pretendard text-[14px] font-[400] leading-none text-[#1e2530]">
+            {data?.placeName}
+          </span>
+        </div>
+        <div className="flex flex-row flex-wrap gap-[4px] items-center">
+          {data?.auths.map((auth) => (
+            <div
+              key={auth}
+              className="px-[4px] flex items-center justify-center rounded-[2px] bg-[#eef3e2]"
+            >
+              <span className="font-pretendard text-[12px] font-[400] leading-[19.2px] text-[#638404]">
+                {auth}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="py-[16px] px-[24px] bg-[#eef3e2]">
+        <div className="flex flex-col gap-[10px]">
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-col items-start gap-[5px]">
+              <span className="font-pretendard text-[14px] font-[700] leading-none text-[#1e2530]">
+                요리사의 온기
+              </span>
+              <span className="font-pretendard text-[12px] font-[400] leading-[19.2px] text-[#1e2530]">
+                요리사님의 요리를 구매한 사람들의 평가
+              </span>
+            </div>
+            <span className="font-pretendard text-[24px] font-[600] leading-[38.4px] text-[#638404]">
+              {data?.temperature}℃
+            </span>
+          </div>
+          <div className="w-full h-[18px] rounded-full bg-[#d1d6db]">
+            <div
+              className="h-[18px] rounded-full transition-all duration-500"
+              style={{
+                width: `${375 * (data?.temperature / 100)}px`,
+                background: "linear-gradient(90deg, #97B544 0%, #486300 100%)",
+              }}
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div className="py-[40px] flex flex-col">
+        <span className="px-[24px] font-pretendard text-[18px] font-[600] leading-[28.8px] text-[#222224]">
+          주문
+        </span>
+        <div className="px-[24px] py-[12px] flex flex-row flex-nowrap items-center gap-[16px] overflow-x-auto">
+          {data?.menus?.map((item, index) => (
+            <div
+              key={item?.menuId}
+              className="w-[184px] flex flex-col p-[8px] gap-[23px] rounded-[8px] bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.25)]"
+            >
+              <div className="w-[168px] h-[143px] rounded-[4px] overflow-hidden">
+                <Image
+                  src={item?.menuImage}
+                  width={168}
+                  height={143}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="px-[8px] flex flex-col gap-[12px]">
+                <span className="font-pretendard text-[16px] font-[600] leading-[25.6px]">
+                  {item?.menuName}
+                </span>
+                <span className="font-pretendard tet-[14px] font-[400] leading-none text-[#1e2530]">
+                  {item?.menuIntroduction}
+                </span>
+                <span className="font-pretendard text-[12px] font-[400] leading-[19.2px] text-[#707a87]">
+                  {item?.menuPrice}원당 약 {item?.menuGram}g
+                </span>
+              </div>
+              <div className="flex flex-row items-center gap-[12px] self-center">
+                <NavigateBefore
+                  onClick={() => {
+                    if (orders[item?.menuId] === undefined || orders[item?.menuId]?.count === 0)
+                      return;
+
+                    orders[item?.menuId].count--;
+                    setOrders({ ...orders });
+                  }}
+                />
+                <div className="px-[16px] py-[8px] rounded-[4px] border border-[#e4e8eb] bg-white">
+                  <span className="font-pretendard text-[14px] font-[400] leading-[22.4px] text-[#707a87] text-center">
+                    {orders?.[item?.menuId]?.count === undefined
+                      ? 0
+                      : orders?.[item?.menuId]?.count}
+                  </span>
+                </div>
+                <NavigateNext
+                  onClick={() => {
+                    orders[item?.menuId]?.count === undefined
+                      ? (orders[item?.menuId] = { count: 1 })
+                      : orders[item?.menuId].count++;
+                    setOrders({ ...orders });
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="pb-[40px]">
+        <button className="mx-auto px-[24px] py-[4px] w-[329px] h-[51px] flex items-center justify-center font-pretendard text-[18px] font-[600] leading-[28.8px] text-center rounded-full bg-[#638404] text-white">
+          총 {Object.values(orders).reduce((sum, obj) => sum + obj.count, 0)}개{" "}
+          {Object.keys(orders)
+            .reduce((sum, key, index) => {
+              return (
+                sum +
+                orders[parseInt(key)]?.count *
+                  data?.menus?.find((menu) => menu.menuId === parseInt(key))?.menuPrice!
+              );
+            }, 0)
+            .toLocaleString()}
+          원 주문하기
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { id } = context.query;
+
+  const response = await axios.get(`/stores/${id}`);
+
+  return { props: { data: response.data?.result } };
+}
