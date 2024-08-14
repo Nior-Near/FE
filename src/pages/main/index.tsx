@@ -1,52 +1,132 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {axios} from "../../lib/axios"
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
 import RegionSelect from "@/src/components/RegionSelect";
+import Kakao from "../../assets/kakao.svg";
+
+interface Chef {
+  profileImage: string;
+  name: string;
+}
+
+interface Store {
+  profileImage: string;
+  name: string;
+  tags: string[];
+  description: string;
+  lowestPrice: number; //없애기
+  temperature: number;
+  reviewCount: number;
+  isLiked: boolean; //없애기
+}
+
+const fetchHomeData = async () => {
+  try {
+    const response = await axios.get("/home");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch home data:", error);
+    throw new Error("Failed to fetch home data");
+  }
+};
+
+// 검색
+const searchChefsAndStores = async (query: {
+  chefName?: string;
+  menuName?: string;
+  regionName?: string;
+}) => {
+  try {
+    const response = await axios.get("/home/search", {
+      params: query,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch search results:", error);
+    throw new Error("Failed to fetch search results");
+  }
+};
 
 export default function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [isRegionSelectOpen, setIsRegionSelectOpen] = useState(false);
+  const [chefs, setChefs] = useState<Chef[]>([]);
+  const [stores, setStores] = useState<Store[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const chefs = [
-    {
-      name: "이영자",
-      certification: "자격증 보유",
-      kitchen: "니어요리사",
-      image: "/chef1.jpg",
-    },
-    {
-      name: "김춘자",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef2.jpg",
-    },
-    {
-      name: "박철배",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef3.jpg",
-    },
-    {
-      name: "박철배",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef3.jpg",
-    },
-    {
-      name: "박철배",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef3.jpg",
-    },
-    {
-      name: "박철배",
-      certification: "경력인증",
-      kitchen: "니어키친",
-      image: "/chef3.jpg",
-    },
-  ];
+  // const chefs = [
+  //   {
+  //     name: "이영자",
+  //     certification: "자격증 보유",
+  //     kitchen: "니어요리사",
+  //     image: "/chef1.jpg",
+  //   },
+  //   {
+  //     name: "김춘자",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef2.jpg",
+  //   },
+  //   {
+  //     name: "박철배",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef3.jpg",
+  //   },
+  //   {
+  //     name: "박철배",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef3.jpg",
+  //   },
+  //   {
+  //     name: "박철배",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef3.jpg",
+  //   },
+  //   {
+  //     name: "박철배",
+  //     certification: "경력인증",
+  //     kitchen: "니어키친",
+  //     image: "/chef3.jpg",
+  //   },
+  // ];
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await fetchHomeData();
+        setChefs(data.chefs);
+        setStores(data.stores);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getData();
+  }, []);
+
+  const handleSearch = async () => {
+    try {
+      const data = await searchChefsAndStores({
+        chefName: searchTerm,
+        menuName: searchTerm,
+        regionName: selectedRegion ?? undefined,
+      });
+      setChefs(data.chefs);
+      setStores(data.stores);
+    } catch (error) {
+      console.error("검색 결과를 가져오는 데 실패했습니다:", error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   const handleRegionSelectClose = () => {
     setIsRegionSelectOpen(false);
@@ -56,8 +136,12 @@ export default function Main() {
     setSelectedRegion(region);
   };
 
+  const handleKakaoClick = () => {
+    window.location.href = "http://pf.kakao.com/_qxgcgG/chat";
+  };
+
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header
         isLoggedIn={isLoggedIn}
         selectedRegion={selectedRegion}
@@ -71,8 +155,10 @@ export default function Main() {
             type="text"
             placeholder="요리사 성함, 메뉴명, 지역명을 검색하세요."
             className="flex-1 border-none outline-none bg-[#F0F2F5] text-gray-600 text-sm placeholder-gray-500 font-roboto"
+            onChange={handleInputChange}
           />
           <svg
+            onClick={handleSearch}
             xmlns="http://www.w3.org/2000/svg"
             width="22"
             height="22"
@@ -101,7 +187,7 @@ export default function Main() {
           <div key={index} className="flex flex-col items-center">
             <div className="w-[90px] h-[90px] rounded-full bg-[#D9D9D9] flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
               <img
-                src={chef.image}
+                src={chef.profileImage}
                 alt={chef.name}
                 className="w-full h-full object-cover"
               />
@@ -115,23 +201,23 @@ export default function Main() {
 
       <div className="flex flex-col px-[24px] mb-[16px]">
         <div className="text-[20px] text-[#222224] font-semibold leading-[32px] font-pretendard">
-          밥 한끼 시키러 가기
+          단돈 천 원으로 밥 한끼 시키러 가기
         </div>
         <div className="text-[12px] text-[#333E4E] font-pretendard leading-[19px]">
-          좋은 가게들의 단골이 되어보세요.
+          1,000원 단위로 먹고싶은 만큼만 음식을 주문하세요
         </div>
       </div>
       <div className="flex justify-center">
         <div className="grid grid-cols-1 gap-[16px] justify-items-center">
-          {chefs.map((chef, index) => (
+          {stores.map((store, index) => (
             <ChefCard
               key={index}
-              chef={chef}
-              title="똥강아지들 밥 한끼 든든하게 먹고 다니고있..."
-              price="9,900"
-              temperature="36.5"
-              reviews="14"
-              imageUrl="/food.jpg"
+              name={store.name}
+              tags={store.tags}
+              description={store.description}
+              temperature={store.temperature.toString()}
+              reviews={store.reviewCount.toString()}
+              imageUrl={store.profileImage}
             />
           ))}
         </div>
@@ -145,6 +231,21 @@ export default function Main() {
           />
         </div>
       )}
+      <div className="fixed bottom-[5%] right-[8px] cursor-pointer">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="44"
+          height="44"
+          viewBox="0 0 44 44"
+          fill="none"
+        >
+          <circle cx="22" cy="22" r="22" fill="white" fillOpacity="0.5" />
+        </svg>
+        <Kakao
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[32px] h-[31px]"
+          onClick={handleKakaoClick}
+        />
+      </div>
     </div>
   );
 }

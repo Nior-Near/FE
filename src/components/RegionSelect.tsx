@@ -14,7 +14,6 @@ const regions: Region[] = [
   {
     name: "서울",
     areas: [
-      "전체",
       "건대/왕십리",
       "명동/이태원",
       "신촌/이대",
@@ -29,18 +28,34 @@ const regions: Region[] = [
       "여의도/영등포",
       "강서/목동",
       "노원/강북",
+      "수유/동대문",
+      "종로/대학로",
     ],
   },
-  { name: "경기-인천", areas: [] },
-  { name: "대전-충청", areas: [] },
-  { name: "대구-경북", areas: [] },
-  { name: "부산-경남", areas: [] },
-  { name: "광주-전라", areas: [] },
-  { name: "다른지역", areas: [] },
+  {
+    name: "경기-인천",
+    areas: [
+      "일산/파주",
+      "용인/분당/수원",
+      "인천/부천",
+      "남양주/구리/하남",
+      "안양/안산/광명",
+    ],
+  },
+  { name: "대전-충청", areas: ["대전", "충청"] },
+  { name: "대구-경북", areas: ["대구", "경북"] },
+  { name: "부산-경남", areas: ["부산", "경남"] },
+  { name: "광주-전라", areas: ["광주", "전라"] },
+  { name: "다른지역", areas: ["강원", "제주"] },
 ];
 
-export default function RegionSelect({ setSelectedRegion, onClose }: RegionSelectProps) {
-  const [selectedRegion, setSelectedRegionState] = React.useState<Region>(regions[0]);
+export default function RegionSelect({
+  setSelectedRegion,
+  onClose,
+}: RegionSelectProps) {
+  const [selectedRegion, setSelectedRegionState] = React.useState<Region>(
+    regions[0]
+  );
   const [selectedArea, setSelectedArea] = React.useState<string | null>(null);
 
   const handleRegionClick = (region: Region) => {
@@ -55,7 +70,7 @@ export default function RegionSelect({ setSelectedRegion, onClose }: RegionSelec
 
   return (
     <div className="fixed inset-0 bg-white flex flex-col">
-      <header className="bg-[#638404] h-[56px] pl-[28px] text-white flex items-center">
+      <header className="bg-[#638404] h-[56px] pl-[28px] flex flex-row items-center text-white flex-shrink-0">
         <button onClick={onClose} className="mr-[30px]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +85,7 @@ export default function RegionSelect({ setSelectedRegion, onClose }: RegionSelec
             />
           </svg>
         </button>
-        <h1 className="text-[18px] font-medium font-pretendard leading-[28px]">
+        <h1 className="text-[18px] font-medium  font-pretendard leading-[28px]">
           어느 지역에서 음식을 받을건가요?
         </h1>
       </header>
