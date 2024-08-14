@@ -1,4 +1,7 @@
 import { useState } from "react";
+import bgImg from "../assets/loginbg.png";
+import LeftArrow from "../assets/navigate_before.svg";
+import RightArrow from "../assets/navigate_next.svg";
 
 export default function Banner() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -27,35 +30,26 @@ export default function Banner() {
   };
 
   return (
-    <div className="relative w-full h-[261px] flex flex-col bg-green-500 px-[29px] pt-[30px] pb-[28px]">
+    <div
+      className="relative w-full h-[261px] flex flex-col px-[29px] pt-[30px] pb-[28px]"
+      style={{
+        backgroundImage: `url(${bgImg.src})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <h1 className="text-white font-pretendard text-[22px] leading-[35px] font-semibold mb-[12px]">
         {slides[currentSlide].title}
       </h1>
-      <p className="text-white text-[12px] leading-[19px]">{slides[currentSlide].description}</p>
+      <p className="text-white text-[12px] leading-[19px]">
+        {slides[currentSlide].description}
+      </p>
       <div className="flex items-center justify-between mt-[19px]">
         <button onClick={handlePrev}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <rect width="24" height="24" fill="white" />
-            <path d="M14 18L8 12L14 6L15.4 7.4L10.8 12L15.4 16.6L14 18Z" fill="#222224" />
-          </svg>
+          <LeftArrow />
         </button>
         <button onClick={handleNext}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <rect width="24" height="24" fill="white" />
-            <path d="M12.6 12L8 7.4L9.4 6L15.4 12L9.4 18L8 16.6L12.6 12Z" fill="#222224" />
-          </svg>
+          <RightArrow />
         </button>
       </div>
       <button className="flex justify-center items-center whitespace-nowrap self-end py-[10px] px-[24px] bg-[#EEF3E2] rounded-full text-[#638404] font-pretendard text-[14px] font-semibold mt-[19px]">
