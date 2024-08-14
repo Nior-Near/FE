@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-
+import {axios} from "../../lib/axios"
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
@@ -25,7 +24,7 @@ interface Store {
 
 const fetchHomeData = async () => {
   try {
-    const response = await axios.get("http://13.124.232.198/home");
+    const response = await axios.get("/home");
     return response.data;
   } catch (error) {
     console.error("Failed to fetch home data:", error);
@@ -40,7 +39,7 @@ const searchChefsAndStores = async (query: {
   regionName?: string;
 }) => {
   try {
-    const response = await axios.get("http://13.124.232.198/home/search", {
+    const response = await axios.get("/home/search", {
       params: query,
     });
     return response.data;
