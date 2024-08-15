@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { axios } from "../../lib/axios";
 
@@ -16,13 +16,6 @@ interface MenuRegistrationProps {
   storeId: string;
 }
 
-
-const getCookie = (name: string) => {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  if (match) return match[2];
-  return null;
-};
-
 const MenuRegistration: React.FC<MenuRegistrationProps> = ({
   affiliation,
   onSubmit,
@@ -30,6 +23,24 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
   storeId,
 }) => {
   const [fileName, setFileName] = useState("파일 선택");
+  const [memberId, setMemberId] = useState<number | null>(12);
+
+  // useEffect(() => {
+  //   const fetchMemberId = async () => {
+  //     try {
+  //       const response = await axios.get("/users");
+  //       if (response.data.isSuccess && response.data.result) {
+  //         setMemberId(response.data.result.memberId);
+  //       } else {
+  //         console.error("Failed to fetch memberId:", response.data.message);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching memberId:", error);
+  //     }
+  //   };
+
+  //   fetchMemberId();
+  // }, []);
 
   const {
     handleSubmit,
@@ -60,13 +71,17 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
       formData.append("menuImage", data.menuImage);
     }
 
-    try {
-      const token = getCookie("token");
+    if (memberId !== null) {
+      formData.append("memberId", memberId.toString());
+    } else {
+      console.error("memberId is null, cannot proceed with form submission.");
+      return;
+    }
 
+    try {
       const response = await axios.post(`/stores/${storeId}/menu`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
         },
       });
 

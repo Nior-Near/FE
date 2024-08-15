@@ -31,8 +31,8 @@ export default function RegionSelect({
         const response = await axios.get("/regions");
         const { upperRegions, detailRegions } = response.data.result;
 
-        setUpperRegions(upperRegions);
-        setDetailRegions(detailRegions);
+        // setUpperRegions(upperRegions || []);
+        setDetailRegions(detailRegions || []);
         setSelectedUpperRegion(upperRegions[0]);
       } catch (error) {
         console.error("Error fetching regions:", error);
