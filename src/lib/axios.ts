@@ -1,6 +1,6 @@
 import Axios from "axios";
 
 export const axios = Axios.create({
-  baseURL: "https://niornear-server.store/",
+  baseURL: "https://api.niornear.store/",
   withCredentials: true,
 });

@@ -9,12 +9,9 @@ export default function OAuthResponse() {
   useEffect(() => {
     const checkAccessToken = async () => {
       try {
-        const response = await axios.get(
-          "https://niornear-server.store/api/v1/auth/token",
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get("https://api.niornear.store/api/v1/auth/token", {
+          withCredentials: true,
+        });
 
         const accessToken = Cookies.get("accessToken");
         console.log("쿠키 토큰:", accessToken);
