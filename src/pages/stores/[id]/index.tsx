@@ -8,13 +8,40 @@ import NavigateBefore from "@/src/assets/navigate_before.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
-import { Data } from "./interface";
 import { useState } from "react";
+import Link from "next/link";
+
+export interface Data {
+  storeId: number;
+  profileImage: string;
+  name: string;
+  storePhone: string;
+  images: string[];
+  title: string;
+  introduction: string;
+  possibleRegion: string[];
+  placeId: number;
+  placeName: string;
+  auths: string[];
+  temperature: number;
+  menus: Menu[];
+}
+interface Menu {
+  menuId: number;
+  menuName: string;
+  menuImage: string;
+  menuIntroduction: string;
+  menuPrice: number;
+  menuGram: number;
+  orderable: boolean;
+}
 
 export default function Store({ data }: { data: Data }) {
   const [foodBannerImage, setFoodBannerImage] = useState(data?.images?.[0]);
 
-  const [orders, setOrders] = useState<{ [key: number]: { count: number } }>({});
+  const [orders, setOrders] = useState<{
+    [key: number]: { name: string; price: number; quantity: number };
+  }>({});
 
   return (
     <div>
@@ -158,25 +185,37 @@ export default function Store({ data }: { data: Data }) {
               <div className="flex flex-row items-center gap-[12px] self-center">
                 <NavigateBefore
                   onClick={() => {
-                    if (orders[item?.menuId] === undefined || orders[item?.menuId]?.count === 0)
+                    if (
+                      orders?.[item?.menuId] === undefined ||
+                      orders?.[item?.menuId]?.quantity === 0
+                    )
                       return;
 
-                    orders[item?.menuId].count--;
+                    if (orders?.[item?.menuId]?.quantity === 1) {
+                      delete orders[item?.menuId];
+                    } else {
+                      orders[item?.menuId].quantity--;
+                    }
+
                     setOrders({ ...orders });
                   }}
                 />
                 <div className="px-[16px] py-[8px] rounded-[4px] border border-[#e4e8eb] bg-white">
                   <span className="font-pretendard text-[14px] font-[400] leading-[22.4px] text-[#707a87] text-center">
-                    {orders?.[item?.menuId]?.count === undefined
+                    {orders?.[item?.menuId]?.quantity === undefined
                       ? 0
-                      : orders?.[item?.menuId]?.count}
+                      : orders?.[item?.menuId]?.quantity}
                   </span>
                 </div>
                 <NavigateNext
                   onClick={() => {
-                    orders[item?.menuId]?.count === undefined
-                      ? (orders[item?.menuId] = { count: 1 })
-                      : orders[item?.menuId].count++;
+                    orders?.[item?.menuId]?.quantity === undefined
+                      ? (orders[item?.menuId] = {
+                          name: item?.menuName,
+                          price: item?.menuPrice,
+                          quantity: 1,
+                        })
+                      : orders[item?.menuId].quantity++;
                     setOrders({ ...orders });
                   }}
                 />
@@ -186,19 +225,34 @@ export default function Store({ data }: { data: Data }) {
         </div>
       </div>
       <div className="pb-[40px]">
-        <button className="mx-auto px-[24px] py-[4px] w-[329px] h-[51px] flex items-center justify-center font-pretendard text-[18px] font-[600] leading-[28.8px] text-center rounded-full bg-[#638404] text-white">
-          총 {Object.values(orders).reduce((sum, obj) => sum + obj.count, 0)}개{" "}
+        <Link
+          href={{
+            pathname: "/order",
+            query: {
+              store: Buffer.from(
+                JSON.stringify({
+                  storeId: data?.storeId,
+                  storePhone: data?.storePhone,
+                  placeName: data?.placeName,
+                })
+              ).toString("base64"),
+              orders: Buffer.from(JSON.stringify(orders)).toString("base64"),
+            },
+          }}
+          style={{
+            pointerEvents: Object.keys(orders).length === 0 ? "none" : undefined,
+            background: Object.keys(orders).length === 0 ? "#ddd" : undefined,
+          }}
+          className="mx-auto px-[24px] py-[4px] w-[329px] h-[51px] flex items-center justify-center font-pretendard text-[18px] font-[600] leading-[28.8px] text-center rounded-full bg-[#638404] text-white"
+        >
+          총 {Object.values(orders).reduce((sum, obj) => sum + obj?.quantity, 0)}개{" "}
           {Object.keys(orders)
             .reduce((sum, key, index) => {
-              return (
-                sum +
-                orders[parseInt(key)]?.count *
-                  data?.menus?.find((menu) => menu.menuId === parseInt(key))?.menuPrice!
-              );
+              return sum + orders?.[parseInt(key)].price * orders[parseInt(key)]?.quantity;
             }, 0)
             .toLocaleString()}
           원 주문하기
-        </button>
+        </Link>
       </div>
     </div>
   );
