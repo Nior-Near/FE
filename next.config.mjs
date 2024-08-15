@@ -19,12 +19,6 @@ const nextConfig = {
       },
     ],
   },
-  rewrites: async () => [
-    {
-      source: "/api/:path*",
-      destination: "http://54.180.155.131:8080/:path*",
-    },
-  ],
 };
 
 export default nextConfig;
