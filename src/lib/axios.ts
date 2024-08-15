@@ -1,6 +1,9 @@
 import Axios from "axios";
 
 export const axios = Axios.create({
-  baseURL: "https://niornear-server.store/",
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "https://www.niornear.store/api"
+      : "http://localhost:3000/api",
   withCredentials: true,
 });
