@@ -165,7 +165,7 @@ export default function Order() {
 
     const formData = jsonToFormData({ ...data, storeId, menus });
 
-    const response = await axios.post("/orders", jsonToFormData, {
+    const response = await axios.post("/orders", formData, {
       headers: { "Content-Type": "multiparty/form-data" },
     });
 
