@@ -1,5 +1,8 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import { useEffect } from "react";
+
 interface LoginModalProps {
   isLoginRequired: boolean;
 }
@@ -7,8 +10,17 @@ interface LoginModalProps {
 export default function LoginModal({ isLoginRequired }: LoginModalProps) {
   const router = useRouter();
 
+  useEffect(() => {
+    const accessToken = Cookies.get("accessToken");
+    console.log("Access Token:", accessToken);
+
+    if (accessToken) {
+      window.location.href = "/main";
+    }
+  }, []);
+
   const handleNaverLogin = () => {
-    console.log("로그인 버튼 클릭");
+    console.log("Login button clicked");
 
     const naverLoginUrl = "http://54.180.155.131:8080/api/v1/auth/oauth2/naver";
     console.log("Navigating to:", naverLoginUrl);
