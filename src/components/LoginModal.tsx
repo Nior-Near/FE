@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-
 interface LoginModalProps {
   isLoginRequired: boolean;
 }
@@ -9,11 +8,13 @@ export default function LoginModal({ isLoginRequired }: LoginModalProps) {
   const router = useRouter();
 
   const handleNaverLogin = () => {
-    const baseurl = "http://54.180.155.131:8080";
-    const currentPath = router.asPath; // 현재 경로 저장
-    const naverLoginUrl = `${baseurl}/api/v1/auth/oauth2/naver`;
-    
-    router.push(naverLoginUrl);
+    console.log("Login button clicked");
+
+    const naverLoginUrl = "http://54.180.155.131/api/v1/auth/oauth2/naver";
+    console.log("Navigating to:", naverLoginUrl);
+    window.location.href = naverLoginUrl;
+
+    // router.push(naverLoginUrl);
   };
 
   return (
