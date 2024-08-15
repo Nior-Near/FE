@@ -1,7 +1,8 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
-import axios from "axios";
+import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
+import Map from "@/src/assets/map.svg";
 
 interface Data {
   orderStatus: "CONFIRM" | "COOKING" | "PICKUP"; //TODO "DONE" 추가
@@ -127,10 +128,7 @@ export default function Order_History({ data }: { data: Data }) {
             </div>
           </div>
           <div className="self-stretch h-[178px] px-6 flex-col justify-start items-start gap-1 flex">
-            <img
-              className="w-[326px] h-[178px] rounded-[9px] shadow-[0px_0px_5px_0px_rgba(0,0,0,0.25)]"
-              src="https://via.placeholder.com/326x178"
-            />
+            <Map width={326} height={178} />
           </div>
           <div className="bg-white flex-col justify-start items-start flex">
             <div className="w-[321px] h-10 bg-white rounded border border-[#d1d6db] flex-col justify-center items-start flex">

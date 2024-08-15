@@ -3,17 +3,20 @@ import Image from "next/image";
 import letter from "@/src/assets/letter.png";
 import { useEffect } from "react";
 import { axios } from "@/src/lib/axios";
+import { useRouter } from "next/router";
 
 export interface Letter {
   letterId: number;
   senderName: string;
   senderId: number;
-  status: "READ" | "UNREAD";
+  status: "열람" | "미열람";
   imageUrl: string;
   createdAt: string;
 }
 
-export default function ViewLetter({ data }: { data: Letter }) {
+export default function ViewLetter({ data, setLetter }: { data: Letter; setLetter: any }) {
+  const router = useRouter();
+
   const markAsRead = async () => {
     const response = await axios.put(`/letters/${data?.letterId}`);
   };
@@ -25,7 +28,12 @@ export default function ViewLetter({ data }: { data: Letter }) {
   return (
     <div>
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-        <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
+        <ArrowRight
+          width="24"
+          height="24"
+          className="ml-[27px] mr-auto"
+          onClick={() => (letter === null ? router.back() : setLetter(null))}
+        />
         <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
           편지함
         </span>
