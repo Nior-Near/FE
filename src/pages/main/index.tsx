@@ -38,6 +38,8 @@ const searchChefsAndStores = async (keyword: string) => {
     const response = await axios.get("/home/search", {
       params: { keyword },
     });
+    console.log("Search response:", response.data.result);
+
     return response.data.result;
   } catch (error) {
     console.error("Failed to fetch search results:", error);
@@ -71,9 +73,9 @@ export default function Main() {
       setChefs(data.chefs || []);
       setStores(data.stores || []);
     } else {
+      // 검색어가 있을 때는 stores 데이터만 업데이트
       const data = await searchChefsAndStores(trimmedSearchTerm);
-      setChefs(data.chefs || []);
-      setStores(data.stores || []);
+      setStores(data || []);
     }
   };
 
@@ -183,7 +185,7 @@ export default function Main() {
               />
             ))
           ) : (
-            <div className="text-center text-gray-500">
+            <div className="text-center mb-[20px] text-gray-500">
               해당하는 정보가 없습니다.
             </div>
           )}

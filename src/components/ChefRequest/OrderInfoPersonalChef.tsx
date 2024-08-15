@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { ChefInfoFormData } from "./ChefInfo";
-import {axios} from "../../lib/axios"
+import { axios } from "../../lib/axios";
 
 export interface OrderInfoPersonalChefFormData {
   name: string;
@@ -16,63 +16,60 @@ interface OrderInfoPersonalChefProps {
   nextStep: (data: OrderInfoPersonalChefFormData) => void;
 }
 
-const regionOptions: Record<string, string[]> = {
-  서울: [
-    "강남/논현",
-    "강동/천호",
-    "강서/목동",
-    "건대/왕십리",
-    "관악/신림",
-    "교대/사당",
-    "노원/강북",
-    "명동/이태원",
-    "삼성/선릉",
-    "송파/잠실",
-    "수유/동대문",
-    "신촌/이대",
-    "압구정/신사",
-    "여의도/영등포",
-    "종로/대학로",
-    "홍대/마포",
-  ],
-  "경기-인천": [
-    "일산/파주",
-    "용인/분당/수원",
-    "인천/부천",
-    "남양주/구리/하남",
-    "안양/안산/광명",
-  ],
-  "대전-충청": ["대전", "충청"],
-  "대구-경북": ["대구", "경북"],
-  "부산-경남": ["부산", "경남"],
-  "광주-전라": ["광주", "전라"],
-  다른지역: ["강원", "제주"],
-};
-
-const determineRegionId = (region: string): string => {
-  // 임시 지역 아이디 반환 -> api 에서 지역리스트 받아올 예정
-  switch (region) {
-    case "서울":
-      return "1L";
-    case "경기-인천":
-      return "2L";
-    default:
-      return "0L";
-  }
-};
-
-const getCookie = (name: string) => {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  if (match) return match[2];
-  return null;
-};
+interface Region {
+  id: number;
+  name: string;
+}
 
 const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
   nextStep,
 }) => {
   const [chefInfo, setChefInfo] = useState<ChefInfoFormData | null>(null);
+  const [memberId, setMemberId] = useState<number | null>(12);
+  const [upperRegions, setUpperRegions] = useState<Region[]>([]);
+  const [detailRegions, setDetailRegions] = useState<Region[]>([]);
+  const [regionOptions, setRegionOptions] = useState<Record<string, Region[]>>({});
 
   useEffect(() => {
+    const fetchRegions = async () => {
+      try {
+        const response = await axios.get("/regions");
+        if (response.data.isSuccess && response.data.result) {
+          setUpperRegions(response.data.result.upperRegions);
+          setDetailRegions(response.data.result.detailRegions);
+
+          const options: Record<string, Region[]> = {};
+          response.data.result.upperRegions.forEach((upperRegion: Region) => {
+            options[upperRegion.name] = response.data.result.detailRegions.filter(
+              (detailRegion: Region) => detailRegion.id === upperRegion.id
+            );
+          });
+
+          setRegionOptions(options);
+        } else {
+          console.error("Failed to fetch regions:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching regions:", error);
+      }
+    };
+
+    // const fetchMemberId = async () => {
+    //   try {
+    //     const response = await axios.get("/users");
+    //     if (response.data.isSuccess && response.data.result) {
+    //       setMemberId(response.data.result.memberId);
+    //     } else {
+    //       console.error("Failed to fetch memberId:", response.data.message);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching memberId:", error);
+    //   }
+    // };
+
+    fetchRegions();
+    // fetchMemberId();
+
     const storedChefInfo = localStorage.getItem("chefInfo");
     if (storedChefInfo) {
       setChefInfo(JSON.parse(storedChefInfo));
@@ -101,10 +98,10 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
   const [isRegion2DropdownOpen, setRegion2DropdownOpen] = useState(false);
   const [selectedRegion1, setSelectedRegion1] = useState("");
   const [selectedRegion2, setSelectedRegion2] = useState("");
-  const [region2Options, setRegion2Options] = useState<string[]>([]);
+  const [region2Options, setRegion2Options] = useState<Region[]>([]);
 
   const onSubmit = async (data: OrderInfoPersonalChefFormData) => {
-    if (chefInfo) {
+    if (chefInfo && memberId !== null) {
       const formData = new FormData();
       formData.append("name", chefInfo.name);
       formData.append("introduction", chefInfo.shortIntro);
@@ -122,24 +119,21 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
       formData.append("placeName", data.placeName);
       formData.append("placeAddress", data.placeAddress);
 
-      const regionId = determineRegionId(data.regionId1); //  지역 ID
-      formData.append("regionId", regionId);
+      const regionId1 = upperRegions.find((region) => region.name === data.regionId1)?.id || "";
+      const regionId2 = detailRegions.find((region) => region.name === data.regionId2)?.id || "";
+
+      formData.append("regionId1", regionId1.toString());
+      formData.append("regionId2", regionId2.toString());
 
       formData.append("message", data.message);
+      formData.append("memberId", memberId.toString());
 
       try {
-        const token = getCookie("token");
-
-        const response = await axios.post(
-          "/stores/freelance",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.post("/stores/freelance", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         console.log("API 응답 성공:", response.data);
         nextStep(data);
@@ -148,6 +142,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
       }
     }
   };
+
   const toggleRegion1Dropdown = () => {
     setRegion1DropdownOpen(!isRegion1DropdownOpen);
   };
@@ -160,11 +155,13 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
     setSelectedRegion1(region);
     setValue("regionId1", region, { shouldValidate: true });
     setRegion2Options(regionOptions[region] || []);
+    setSelectedRegion2("");
     setValue("regionId2", "");
     setRegion1DropdownOpen(false);
   };
 
   const handleRegion2Select = (region: string) => {
+    setSelectedRegion2(region);
     setValue("regionId2", region, { shouldValidate: true });
     setRegion2DropdownOpen(false);
   };
@@ -275,18 +272,18 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
 
             {isRegion1DropdownOpen && (
               <div className="absolute flex flex-col w-[321px] border border-[#D1D6DB] rounded-[4px] bg-[#FFF] mt-[8px] z-10">
-                {Object.keys(regionOptions).map((region) => (
+                {upperRegions.map((region) => (
                   <div
-                    key={region}
-                    onClick={() => handleRegion1Select(region)}
+                    key={region.id}
+                    onClick={() => handleRegion1Select(region.name)}
                     className={`flex items-center justify-between px-[16px] py-[8px] gap-[23px] text-[#707A87] text-[14px] font-pretendard leading-[22px] cursor-pointer ${
-                      selectedRegion1 === region
+                      selectedRegion1 === region.name
                         ? "bg-[#EEF3E2] text-[#333E4E]"
                         : ""
                     }`}
                   >
-                    <span>{region}</span>
-                    {selectedRegion1 === region ? (
+                    <span>{region.name}</span>
+                    {selectedRegion1 === region.name ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -295,7 +292,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                         fill="none"
                       >
                         <path
-                          d="M12 17C13.3833 17 14.5625 16.5125 15.5375 15.5375C16.5125 14.5625 17 13.3833 17 12C17 10.6167 16.5125 9.4375 15.5375 8.4625C14.5625 7.4875 13.3833 7 12 7C10.6167 7 9.4375 7.4875 8.4625 8.4625C7.4875 9.4375 7 10.6167 7 12C7 13.3833 7.4875 14.5625 8.4625 15.5375C9.4375 16.5125 10.6167 17 12 17ZM12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 14.2333 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
+                          d="M12 17C13.3833 17 14.5625 16.5125 15.5375 15.5375C16.5125 14.5625 17 13.3833 17 12C17 10.6167 16.5125 9.4375 15.5375 8.4625C14.5625 7.4875 13.3833 7 12 7C10.6167 7 9.4375 7.4875 8.4625 8.4625C7.4875 9.4375 7 10.6167 7 12C7 13.3833 7.4875 14.5625 8.4625 15.5375C9.4375 16.5125 10.6167 17 12 17ZM12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 13.3833 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
                           fill="#638404"
                         />
                       </svg>
@@ -308,7 +305,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                         fill="none"
                       >
                         <path
-                          d="M12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 14.2333 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
+                          d="M12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 13.3833 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
                           fill="#A8B1B9"
                         />
                       </svg>
@@ -358,16 +355,16 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
               <div className="absolute flex flex-col w-[321px] border border-[#D1D6DB] rounded-[4px] bg-[#FFF] mt-[8px] z-10">
                 {region2Options.map((region) => (
                   <div
-                    key={region}
-                    onClick={() => handleRegion2Select(region)}
+                    key={region.id}
+                    onClick={() => handleRegion2Select(region.name)}
                     className={`flex items-center justify-between px-[16px] py-[8px] gap-[23px] text-[#707A87] text-[14px] font-pretendard leading-[22px] cursor-pointer ${
-                      watch("regionId2") === region
+                      watch("regionId2") === region.name
                         ? "bg-[#EEF3E2] text-[#333E4E]"
                         : ""
                     }`}
                   >
-                    <span>{region}</span>
-                    {watch("regionId2") === region ? (
+                    <span>{region.name}</span>
+                    {watch("regionId2") === region.name ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -376,7 +373,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                         fill="none"
                       >
                         <path
-                          d="M12 17C13.3833 17 14.5625 16.5125 15.5375 15.5375C16.5125 14.5625 17 13.3833 17 12C17 10.6167 16.5125 9.4375 15.5375 8.4625C14.5625 7.4875 13.3833 7 12 7C10.6167 7 9.4375 7.4875 8.4625 8.4625C7.4875 9.4375 7 10.6167 7 12C7 13.3833 7.4875 14.5625 8.4625 15.5375C9.4375 16.5125 10.6167 17 12 17ZM12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 14.2333 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
+                          d="M12 17C13.3833 17 14.5625 16.5125 15.5375 15.5375C16.5125 14.5625 17 13.3833 17 12C17 10.6167 16.5125 9.4375 15.5375 8.4625C14.5625 7.4875 13.3833 7 12 7C10.6167 7 9.4375 7.4875 8.4625 8.4625C7.4875 9.4375 7 10.6167 7 12C7 13.3833 7.4875 14.5625 8.4625 15.5375C9.4375 16.5125 10.6167 17 12 17ZM12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 13.3833 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
                           fill="#638404"
                         />
                       </svg>
@@ -389,7 +386,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                         fill="none"
                       >
                         <path
-                          d="M12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 14.2333 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
+                          d="M12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 13.3833 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z"
                           fill="#A8B1B9"
                         />
                       </svg>

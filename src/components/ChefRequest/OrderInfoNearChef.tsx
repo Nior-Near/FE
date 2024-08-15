@@ -41,17 +41,12 @@ const determinePlaceId = (place: string): number => {
   }
 };
 
-const getCookie = (name: string) => {
-  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-  if (match) return match[2];
-  return null;
-};
-
 const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   const [isRegion1DropdownOpen, setRegion1DropdownOpen] = useState(false);
   const [selectedRegion1, setSelectedRegion1] = useState("");
   const [regionId2, setRegionId2] = useState("");
-
+  const [memberId, setMemberId] = useState<number | null>(12);
+  
   const {
     handleSubmit,
     control,
@@ -75,6 +70,21 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   });
 
   useEffect(() => {
+    // const fetchMemberId = async () => {
+    //   try {
+    //     const response = await axios.get("/users");
+    //     if (response.data.isSuccess && response.data.result) {
+    //       setMemberId(response.data.result.memberId);
+    //     } else {
+    //       console.error("Failed to fetch memberId:", response.data.message);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching memberId:", error);
+    //   }
+    // };
+
+    // fetchMemberId();
+
     const storedChefInfo = localStorage.getItem("chefInfo");
     if (storedChefInfo) {
       const parsedChefInfo = JSON.parse(storedChefInfo);
@@ -105,7 +115,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
         localStorage.setItem("regionId", regionId.toString());
 
         const regionResponse = await axios.get(`/regions/${regionId}`);
-        console.log("Full Region details API response:", regionResponse.data); // 전체 응답을 확인
+        // console.log("Full Region details API response:", regionResponse.data);
 
         if (regionResponse.data.code === "2000") {
           const regionName = regionResponse.data.result.name;
@@ -140,18 +150,19 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     formData.append("regionId", regionId2);
     formData.append("message", data.message);
 
+    if (memberId !== null) {
+      formData.append("memberId", memberId.toString());
+    } else {
+      console.error("memberId is null, cannot proceed with form submission.");
+      return;
+    }
+
     try {
-      const token = getCookie("token");
-      const response = await axios.post(
-        "http://54.180.155.131:8080/stores/near-company",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post("/stores/near-company", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("API 응답 성공:", response.data);
       const storeId = response.data.result.storeId;
       localStorage.setItem("storeId", storeId.toString());
