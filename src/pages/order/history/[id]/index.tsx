@@ -1,7 +1,22 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
+import axios from "axios";
+import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 
-export default function Order_History() {
+interface Data {
+  orderStatus: "CONFIRM" | "COOKING" | "PICKUP"; //TODO "DONE" 추가
+  placeAddress: string;
+  storePhone: string;
+  requestMessage: string;
+  totalPrice: number;
+  orderMenus: {
+    menuName: string;
+    menuPrice: number;
+    quantity: number;
+  }[];
+}
+
+export default function Order_History({ data }: { data: Data }) {
   const list = [
     {
       name: "주문접수",
@@ -29,7 +44,9 @@ export default function Order_History() {
     },
   ];
 
-  const [status, setStatus] = useState<number>(0);
+  const [status, setStatus] = useState<number>(
+    { CONFIRM: 0, COOKING: 1, PICKUP: 2 }?.[data?.orderStatus]
+  );
 
   return (
     <div>
@@ -102,10 +119,10 @@ export default function Order_History() {
             </div>
             <div className="flex-col justify-start items-start gap-1 flex">
               <div className="w-[174px] text-[#222224] text-[14px] font-[400] font-pretendard leading-[22.4px]">
-                강북구 수유동 니어키친 1호점
+                {data?.placeAddress}
               </div>
               <div className="w-[207px] text-[#707a87] text-[12px] font-[400] font-pretendard leading-[19.2px]">
-                010-1234-1234
+                {data?.storePhone}
               </div>
             </div>
           </div>
@@ -119,7 +136,7 @@ export default function Order_History() {
             <div className="w-[321px] h-10 bg-white rounded border border-[#d1d6db] flex-col justify-center items-start flex">
               <div className="self-stretch px-4 py-2 justify-start items-center gap-[11px] inline-flex">
                 <div className="w-[254px] h-[22px] text-[#222224] text-[14px] font-[400] font-pretendard leading-[22.4px]">
-                  오후 2시 반에 픽업하러 갈게요.
+                  {data?.requestMessage}
                 </div>
               </div>
             </div>
@@ -130,24 +147,23 @@ export default function Order_History() {
       <div className="w-full h-[185px] py-4 mb-[91px] bg-[#f0f2f5] border-dashed border-[1px] border-[#d1d6db] flex-col justify-start items-start gap-1 inline-flex">
         <div className="self-stretch h-[153px] px-6 flex-col justify-start items-start gap-3 flex">
           <div className="self-stretch text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
-            주문 상품 총 2개
+            주문 상품 총 {data?.orderMenus?.reduce((prev, menu) => prev + menu?.quantity, 0)}개
           </div>
-          <div className="self-stretch justify-start items-start gap-[89px] inline-flex">
-            <div className="w-[31px] text-[#333e4e] text-sm font-normal font-pretendard leading-snug">
-              잡채
+
+          {data?.orderMenus?.map((menu, index) => (
+            <div
+              key={menu?.menuName}
+              className="self-stretch justify-start items-start gap-[89px] inline-flex"
+            >
+              <div className="w-[31px] text-[#333e4e] text-sm font-normal font-pretendard leading-snug">
+                {menu?.menuName}
+              </div>
+              <div className="w-[207px] text-right text-[#333e4e] text-sm font-semibold font-pretendard">
+                {menu?.menuPrice} * {menu?.quantity}
+              </div>
             </div>
-            <div className="w-[207px] text-right text-[#333e4e] text-sm font-semibold font-pretendard">
-              7,000 * 2
-            </div>
-          </div>
-          <div className="self-stretch justify-start items-start gap-[74px] inline-flex">
-            <div className="w-[45px] text-[#333e4e] text-sm font-normal font-pretendard leading-snug">
-              불고기
-            </div>
-            <div className="w-[207px] text-right text-[#333e4e] text-sm font-semibold font-pretendard">
-              7,000 * 2
-            </div>
-          </div>
+          ))}
+
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -164,11 +180,19 @@ export default function Order_History() {
               총 결제금액
             </div>
             <div className="w-[79px] text-right text-[#638404] text-xl font-semibold font-pretendard leading-loose">
-              38,700
+              {data?.totalPrice?.toLocaleString()}
             </div>
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { id } = context.query;
+
+  const response = await axios.get(`/orders/${id}`);
+
+  return { props: { data: response.data?.result } };
 }

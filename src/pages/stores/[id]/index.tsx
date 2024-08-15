@@ -46,7 +46,7 @@ export default function Store({ data }: { data: Data }) {
   return (
     <div>
       <div className="w-[375px] h-[291px] relative">
-        <Image
+        <img
           src={foodBannerImage}
           width={375}
           height={291}
@@ -65,7 +65,7 @@ export default function Store({ data }: { data: Data }) {
                   border: img === foodBannerImage ? "2px solid #97b544" : "2px solid #ffffff",
                 }}
               >
-                <Image
+                <img
                   src={img}
                   width={90}
                   height={66}
@@ -160,10 +160,10 @@ export default function Store({ data }: { data: Data }) {
           {data?.menus?.map((item, index) => (
             <div
               key={item?.menuId}
-              className="w-[184px] flex flex-col p-[8px] gap-[23px] rounded-[8px] bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.25)]"
+              className="w-[184px] h-[363px] flex flex-col p-[8px] gap-[23px] rounded-[8px] bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.25)]"
             >
               <div className="w-[168px] h-[143px] rounded-[4px] overflow-hidden">
-                <Image
+                <img
                   src={item?.menuImage}
                   width={168}
                   height={143}
@@ -184,6 +184,7 @@ export default function Store({ data }: { data: Data }) {
               </div>
               <div className="flex flex-row items-center gap-[12px] self-center">
                 <NavigateBefore
+                  className="[&_path]:fill-[#222224]"
                   onClick={() => {
                     if (
                       orders?.[item?.menuId] === undefined ||
@@ -208,6 +209,7 @@ export default function Store({ data }: { data: Data }) {
                   </span>
                 </div>
                 <NavigateNext
+                  className="[&_path]:fill-[#222224]"
                   onClick={() => {
                     orders?.[item?.menuId]?.quantity === undefined
                       ? (orders[item?.menuId] = {
