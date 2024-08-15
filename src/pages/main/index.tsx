@@ -12,6 +12,7 @@ interface Chef {
 }
 
 interface Store {
+  storeId: number;
   profileImage: string;
   name: string;
   tags: string[];
@@ -36,7 +37,7 @@ const fetchHomeData = async (regionId: number | null) => {
 const searchChefsAndStores = async (keyword: string) => {
   try {
     const response = await axios.get("/home/search", {
-      params: { keyword }, 
+      params: { keyword },
     });
     return response.data.result;
   } catch (error) {
@@ -176,6 +177,7 @@ export default function Main() {
             stores.map((store, index) => (
               <ChefCard
                 key={index}
+                storeId={store.storeId}
                 name={store.name}
                 tags={store.tags}
                 description={store.introduction}

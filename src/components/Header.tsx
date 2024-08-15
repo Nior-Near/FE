@@ -17,13 +17,8 @@ export default function Header({
 
   return (
     <header className="bg-white flex justify-between items-center py-[9px] relative">
-      <div className="flex flex-row items-center ml-[26px]">
-        <div
-          className="text-[#638404] text-[24px] font-[Jalnan 2] mr-[11px] leading-[32.437px]"
-          style={{ letterSpacing: "0.387px" }}
-        >
-          니어니어
-        </div>
+      <div className="flex items-center justify-center ml-[26px] text-[#638404] text-[24px] mt-[5px] font-jalnan">
+        니어니어
       </div>
       <div className="flex items-center">
         {isLoggedIn ? (

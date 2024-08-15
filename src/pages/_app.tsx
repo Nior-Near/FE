@@ -23,10 +23,16 @@ const reeniebeanie = localFont({
   display: "swap",
 });
 
+const jalnan = localFont({
+  src: "../fonts/Jalnan2TTF.woff2",
+  variable: "--font-jalnan",
+  display: "swap",
+});
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main
-      className={`${pretendard.variable} ${inter.variable} ${roboto.variable} ${reeniebeanie?.variable}`}
+      className={`${pretendard.variable} ${inter.variable} ${roboto.variable} ${reeniebeanie?.variable} ${jalnan?.variable}`}
     >
       <Component {...pageProps} />
     </main>
