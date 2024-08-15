@@ -1,12 +1,23 @@
-import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
-
 interface LoginModalProps {
   isLoginRequired?: boolean;
   dimmed?: boolean;
 }
 
-export default function LoginModal({ isLoginRequired, dimmed }: LoginModalProps) {
+export default function LoginModal({ isLoginRequired, dimmed  }: LoginModalProps) {
+  const router = useRouter();
+
+  const handleNaverLogin = () => {
+    console.log("로그인 버튼 클릭");
+
+    const naverLoginUrl = "http://54.180.155.131:8080/api/v1/auth/oauth2/naver";
+    console.log("Navigating to:", naverLoginUrl);
+    window.location.href = naverLoginUrl;
+
+    // router.push(naverLoginUrl);
+  };
+
   return (
     <div
       className={`fixed z-50 ${
@@ -25,21 +36,24 @@ export default function LoginModal({ isLoginRequired, dimmed }: LoginModalProps)
           니어니어의 음식을 즐겨보세요!
         </div>
 
-        <button className="flex items-center justify-center gap-[12px] bg-[#57BC63] text-white font-inter py-[16px] px-[32px] rounded-full text-[16px] font-semibold w-full">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="27"
-            viewBox="0 0 28 27"
-            fill="none"
-          >
-            <path
-              d="M17.0906 5.0625V13.643L10.9096 5.0625H4.27637V21.9375H10.9096V13.5L17.0906 21.9375H23.7238V5.0625H17.0906Z"
-              fill="white"
-            />
-          </svg>
-          네이버 로그인
-        </button>
+      <button
+        className="flex items-center justify-center gap-[12px] bg-[#57BC63] text-white font-inter py-[16px] px-[32px] rounded-full text-[16px] font-semibold w-full"
+        onClick={handleNaverLogin}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="28"
+          height="27"
+          viewBox="0 0 28 27"
+          fill="none"
+        >
+          <path
+            d="M17.0906 5.0625V13.643L10.9096 5.0625H4.27637V21.9375H10.9096V13.5L17.0906 21.9375H23.7238V5.0625H17.0906Z"
+            fill="white"
+          />
+        </svg>
+        네이버 로그인
+      </button>
 
         <Link href="/main">
           <p className="text-[#5DB075] font-pretendard text-[16px] font-semibold mt-[16px]">

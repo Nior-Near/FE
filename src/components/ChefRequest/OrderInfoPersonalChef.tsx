@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
 import { ChefInfoFormData } from "./ChefInfo";
+import {axios} from "../../lib/axios"
 
 export interface OrderInfoPersonalChefFormData {
   name: string;
@@ -59,6 +59,12 @@ const determineRegionId = (region: string): string => {
     default:
       return "0L";
   }
+};
+
+const getCookie = (name: string) => {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  if (match) return match[2];
+  return null;
 };
 
 const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
@@ -122,10 +128,10 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
       formData.append("message", data.message);
 
       try {
-        const token = localStorage.getItem("token");
+        const token = getCookie("token");
 
         const response = await axios.post(
-          "http://13.124.232.198/stores/freelance",
+          "/stores/freelance",
           formData,
           {
             headers: {

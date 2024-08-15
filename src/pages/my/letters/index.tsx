@@ -1,8 +1,20 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
 import LetterRead from "@/src/assets/letter_read.svg";
 import LetterUnread from "@/src/assets/letter_unread.svg";
+import ViewLetter, { Letter } from "@/src/components/Letters/ViewLetter";
+import { axios } from "@/src/lib/axios";
+import { GetServerSidePropsContext } from "next";
+import { useState } from "react";
 
-export default function Letters() {
+interface Data {
+  letterDTOs: Letter[];
+}
+
+export default function Letters({ data }: { data: Data }) {
+  const [letter, setLetter] = useState<Letter | null>(null);
+
+  if (letter !== null) return <ViewLetter data={letter} />;
+
   return (
     <div className="h-dvh">
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
@@ -30,15 +42,19 @@ export default function Letters() {
           </span>
         </div>
         <div className="pt-[42px] grid grid-cols-3 gap-x-[7px] gap-y-[24px]">
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((value, index) => (
-            <div key={value} className="w-[105px] h-[130px] flex flex-col items-center gap-[8px]">
-              <LetterUnread />
+          {data?.letterDTOs?.map((letter, index) => (
+            <div
+              key={letter?.letterId}
+              className="w-[105px] h-[130px] flex flex-col items-center gap-[8px]"
+              onClick={() => setLetter(letter)}
+            >
+              {letter?.status === "UNREAD" ? <LetterUnread /> : <LetterRead />}
               <div className="flex flex-col items-center">
                 <span className="text-[#1E2530] font-pretendard font-[600] text-[14px] leading-none">
-                  이영자 요리사
+                  {letter?.senderName}
                 </span>
                 <span className="text-[#1E2530] font-pretendard font-[400] text-[12px] leading-[19.2px]">
-                  2024.08.02
+                  {letter?.createdAt}
                 </span>
               </div>
             </div>
@@ -47,4 +63,10 @@ export default function Letters() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const response = await axios.get(`/letters`);
+
+  return { props: { data: response.data?.result } };
 }

@@ -1,11 +1,26 @@
-import { useRouter } from "next/router";
 import ArrowRight from "@/src/assets/arrow_right.svg";
 import Image from "next/image";
 import letter from "@/src/assets/letter.png";
+import { useEffect } from "react";
+import { axios } from "@/src/lib/axios";
 
-export default function Letter() {
-  const router = useRouter();
-  const { id } = router.query;
+export interface Letter {
+  letterId: number;
+  senderName: string;
+  senderId: number;
+  status: "READ" | "UNREAD";
+  imageUrl: string;
+  createdAt: string;
+}
+
+export default function ViewLetter({ data }: { data: Letter }) {
+  const markAsRead = async () => {
+    const response = await axios.put(`/letters/${data?.letterId}`);
+  };
+
+  useEffect(() => {
+    markAsRead();
+  }, []);
 
   return (
     <div>
@@ -26,13 +41,13 @@ export default function Letter() {
       </svg>
       <div className="pt-[31px] px-[24px] flex flex-col">
         <span className="font-pretendard text-[24px] font-[600] leading-[38.4px]">
-          <span className="text-[#638404]">이영자</span> 요리사님의 편지
+          <span className="text-[#638404]">{data?.senderName}</span> 요리사님의 편지
         </span>
         <span className="mt-[8px] font-pretendard text-[12px] font-[400] leading-[19.2px]">
           노인 요리사님이 보내주신 편지를 읽고, 답장을 보내주세요!
         </span>
         <div className="py-[30px] flex flex-col items-center">
-          <Image src={letter} alt="" />
+          <img src={data?.imageUrl} alt="" />
           <span className="font-pretendard text-[12px] font-[400] leading-[19.2px] text-[#A8B1B9]">
             캡처하여 편지를 간직해보세요
           </span>

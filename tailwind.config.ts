@@ -13,6 +13,7 @@ const config: Config = {
         pretendard: ["var(--font-pretendard)", "sans-serif"],
         roboto: ["var(--font-roboto)", "sans-serif"],
         reenie: ["var(--font-reeniebeanie)", "cursive"],
+        jalnan: ["var(--font-jalnan)", "sans-serif"],
       },
       keyframes: {
         slideIn: {
