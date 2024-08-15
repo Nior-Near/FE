@@ -12,6 +12,8 @@ import { axios } from "@/src/lib/axios";
 import Order_Done from "@/src/components/Order/Done";
 import Order_Failed from "@/src/components/Order/Failed";
 import { Done } from "@/src/components/Order/interface";
+import { jsonToFormData } from "@/src/lib/jsonToFormdata";
+import Order_Process from "./process";
 
 interface DecodedOrders {
   [key: number]: { name: string; price: number; quantity: number };
@@ -161,17 +163,21 @@ export default function Order() {
 
     const storeId = decodedStore?.storeId;
 
-    const response = await axios.post("/orders", { ...data, storeId, menus });
+    const formData = jsonToFormData({ ...data, storeId, menus });
+
+    const response = await axios.post("/orders", jsonToFormData, {
+      headers: { "Content-Type": "multiparty/form-data" },
+    });
 
     if (response.data?.isSuccess === true) setPaymentDonePayload(response.data?.result);
-    setIndex("done");
+    setIndex("pending");
   };
 
   const [PaymentDonePayload, setPaymentDonePayload] = useState<Done | null>(null);
 
-  return (
-    <>
-      {index === "process" && (
+  switch (index) {
+    case "process":
+      return (
         <form onSubmit={handleSubmit(onSubmit)}>
           <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
             <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
@@ -303,9 +309,12 @@ export default function Order() {
             </button>
           </div>
         </form>
-      )}
-      {index === "done" && <Order_Done data={PaymentDonePayload} />}
-      {index === "failed" && <Order_Failed />}
-    </>
-  );
+      );
+    case "pending":
+      return <Order_Process orderId={PaymentDonePayload?.orderId} />;
+    case "done":
+      return <Order_Done data={PaymentDonePayload} />;
+    case "failed":
+      return <Order_Failed />;
+  }
 }
