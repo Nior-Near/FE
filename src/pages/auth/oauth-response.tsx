@@ -10,7 +10,7 @@ export default function OAuthResponse() {
     const checkAccessToken = async () => {
       try {
         const response = await axios.get(
-          "http://54.180.155.131:8080/api/v1/auth/token",
+          "https://niornear-server.store/api/v1/auth/token",
           {
             withCredentials: true,
           }

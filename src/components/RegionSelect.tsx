@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { axios } from "../lib/axios";
 
-// 다시 수정 !!!!
 interface RegionSelectProps {
-  setSelectedRegion: (regionId: number | null) => void;
+  setSelectedRegion: (
+    regionId: number | null,
+    regionName: string | null
+  ) => void;
   onClose: () => void;
 }
 
@@ -46,7 +48,6 @@ export default function RegionSelect({
       const response = await axios.get("/regions", {
         params: { upperId: region.id },
       });
-      // console.log("API Response:", response.data);
       setDetailRegions(response.data.result.detailRegions);
       setSelectedArea(null);
     } catch (error) {
@@ -56,7 +57,7 @@ export default function RegionSelect({
 
   const handleAreaClick = (area: Region) => {
     setSelectedArea(area.name);
-    setSelectedRegion(area.id);
+    setSelectedRegion(area.id, area.name);
   };
 
   return (
