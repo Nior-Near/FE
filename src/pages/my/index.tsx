@@ -177,26 +177,7 @@ export default function My() {
                   </svg>
                 </div>
               </div>
-              <div className="self-stretch h-[35px] flex-col justify-start items-center gap-[9px] flex">
-                <div className="relative h-[35px]">
-                  <div className="flex flex-row justify-between items-center gap-[10px] mb-[9px]">
-                    <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
-                      프로필 수정
-                    </div>
-                    <NavigateNext width="24" height="24" />
-                  </div>
-                  <svg
-                    className="absolute -left-[24px] bottom-0 w-[375px]"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="327"
-                    height="2"
-                    viewBox="0 0 373 2"
-                    fill="none"
-                  >
-                    <path d="M0.5 1L372.5 1.00003" stroke="#A8B1B9" strokeWidth="0.5" />
-                  </svg>
-                </div>
-              </div>
+
               <div className="self-stretch h-[35px] flex-col justify-start items-center gap-[9px] flex">
                 <div className="relative h-[35px]">
                   <div className="flex flex-row justify-between items-center gap-[10px] mb-[9px]">
