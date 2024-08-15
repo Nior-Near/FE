@@ -2,7 +2,7 @@ import LoginModal from "@/src/components/LoginModal";
 import { useRouter } from "next/router";
 import bgImg from "../../assets/loginbg.png";
 
-export default function Home() {
+export default function Login() {
   const router = useRouter();
 
   const handleButtonClick = () => {
