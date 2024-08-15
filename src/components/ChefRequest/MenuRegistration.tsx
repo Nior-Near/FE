@@ -16,6 +16,13 @@ interface MenuRegistrationProps {
   storeId: string;
 }
 
+
+const getCookie = (name: string) => {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  if (match) return match[2];
+  return null;
+};
+
 const MenuRegistration: React.FC<MenuRegistrationProps> = ({
   affiliation,
   onSubmit,
@@ -54,7 +61,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
     }
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getCookie("token");
 
       const response = await axios.post(`/stores/${storeId}/menu`, formData, {
         headers: {

@@ -9,8 +9,8 @@ const Header: React.FC<HeaderProps> = ({ step }) => {
 
   const progressBarStyles: Record<number, { width: string; height: string }> = {
     1: { width: "43px", height: "3px" },
-    2: { width: "173px", height: "3px" },
-    3: { width: "280px", height: "3px" },
+    2: { width: "165px", height: "3px" },
+    3: { width: "274px", height: "3px" },
     4: { width: "336px", height: "3px" },
   };
 
