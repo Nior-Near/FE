@@ -1,8 +1,12 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
 import Envelope from "@/src/assets/envelope.svg";
+import { useState } from "react";
+import LoginModal from "@/src/components/LoginModal";
 
 export default function My() {
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
     <div>
       <div className="w-full h-dvh relative bg-[#638404]">
@@ -92,12 +96,16 @@ export default function My() {
             </div>
             <div className="w-[85px] py-[5px] flex-col justify-start items-start gap-1 inline-flex">
               <div className="self-stretch px-1 bg-[#96b444] justify-center items-center gap-1 inline-flex">
-                <div className="h-[19px] text-[#f0f2f5] text-[12px] font-pretendard leading-[19.2px]">
+                <button
+                  className="h-[19px] text-[#f0f2f5] text-[12px] font-pretendard leading-[19.2px]"
+                  onClick={() => setShowLogin(true)}
+                >
                   로그인/회원가입
-                </div>
+                </button>
               </div>
             </div>
           </div>
+          {showLogin && <LoginModal dimmed />}
 
           <div className="w-[375px] px-[24px] flex flex-col gap-[40px] bg-white">
             <div className="h-[94px] px-[24px] py-[16px] bg-[#638404] rounded-[14px] flex-col justify-start items-start gap-[9px] flex">
