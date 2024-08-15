@@ -41,6 +41,12 @@ const determinePlaceId = (place: string): number => {
   }
 };
 
+const getCookie = (name: string) => {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  if (match) return match[2];
+  return null;
+};
+
 const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   const [isRegion1DropdownOpen, setRegion1DropdownOpen] = useState(false);
   const [selectedRegion1, setSelectedRegion1] = useState("");
@@ -135,7 +141,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     formData.append("message", data.message);
 
     try {
-      const token = localStorage.getItem("token");
+      const token = getCookie("token");
       const response = await axios.post(
         "http://54.180.155.131:8080/stores/near-company",
         formData,
