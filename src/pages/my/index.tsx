@@ -1,7 +1,7 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
 import Envelope from "@/src/assets/envelope.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginModal from "@/src/components/LoginModal";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
@@ -15,6 +15,10 @@ interface Data {
 
 export default function My({ data }: { data?: Data }) {
   const [showLogin, setShowLogin] = useState(false);
+
+  useEffect(() => {
+    const response = axios.get(`/users`).then((result) => console.log(result));
+  }, []);
 
   return (
     <div>
