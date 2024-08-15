@@ -44,8 +44,9 @@ export default function RegionSelect({
     try {
       setSelectedUpperRegion(region);
       const response = await axios.get("/regions", {
-        params: { upperRegionId: region.id },
+        params: { upperId: region.id },
       });
+      // console.log("API Response:", response.data);
       setDetailRegions(response.data.result.detailRegions);
       setSelectedArea(null);
     } catch (error) {
