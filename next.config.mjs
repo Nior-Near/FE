@@ -19,12 +19,6 @@ const nextConfig = {
       },
     ],
   },
-  rewrites: async () => [
-    {
-      source: "/api/:path*",
-      destination: "https://niornear-server.store/:path*",
-    },
-  ],
 };
 
 export default nextConfig;
