@@ -1,20 +1,36 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 export default function OAuthResponse() {
   const router = useRouter();
 
   useEffect(() => {
-    const redirectPath = router.query.redirect || "/";
+    const checkAccessToken = async () => {
+      try {
+        const response = await axios.get(
+          "http://54.180.155.131:8080/api/v1/auth/token",
+          {
+            withCredentials: true,
+          }
+        );
 
-    const accessToken = Cookies.get('accessToken');
+        const accessToken = Cookies.get("accessToken");
+        console.log("쿠키 토큰:", accessToken);
+        if (accessToken) {
+          const redirectPath = (router.query.redirect as string) || "/";
+          router.push(redirectPath);
+        } else {
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("Failed to fetch access token", error);
+        router.push("/login");
+      }
+    };
 
-    if (accessToken) {
-      router.push(redirectPath as string);
-    } else {
-      router.push("/login");
-    }
+    checkAccessToken();
   }, [router]);
 
   return (

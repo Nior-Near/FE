@@ -8,9 +8,9 @@ export default function LoginModal({ isLoginRequired }: LoginModalProps) {
   const router = useRouter();
 
   const handleNaverLogin = () => {
-    console.log("Login button clicked");
+    console.log("로그인 버튼 클릭");
 
-    const naverLoginUrl = "http://54.180.155.131/api/v1/auth/oauth2/naver";
+    const naverLoginUrl = "http://54.180.155.131:8080/api/v1/auth/oauth2/naver";
     console.log("Navigating to:", naverLoginUrl);
     window.location.href = naverLoginUrl;
 
