@@ -7,8 +7,8 @@ export interface OrderInfoPersonalChefFormData {
   name: string;
   placeName: string;
   placeAddress: string;
-  regionId1: string;
-  regionId2: string;
+  regionId: string;
+  // regionId2: string;
   message: string;
 }
 
@@ -26,26 +26,24 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
 }) => {
   const [chefInfo, setChefInfo] = useState<ChefInfoFormData | null>(null);
   const [memberId, setMemberId] = useState<number | null>(12);
-  const [upperRegions, setUpperRegions] = useState<Region[]>([]);
+  // const [upperRegions, setUpperRegions] = useState<Region[]>([]);
   const [detailRegions, setDetailRegions] = useState<Region[]>([]);
-  const [regionOptions, setRegionOptions] = useState<Record<string, Region[]>>({});
 
   useEffect(() => {
     const fetchRegions = async () => {
       try {
         const response = await axios.get("/regions");
         if (response.data.isSuccess && response.data.result) {
-          setUpperRegions(response.data.result.upperRegions);
+          // setUpperRegions(response.data.result.upperRegions);
           setDetailRegions(response.data.result.detailRegions);
 
-          const options: Record<string, Region[]> = {};
-          response.data.result.upperRegions.forEach((upperRegion: Region) => {
-            options[upperRegion.name] = response.data.result.detailRegions.filter(
-              (detailRegion: Region) => detailRegion.id === upperRegion.id
-            );
-          });
-
-          setRegionOptions(options);
+          // const options: Record<string, Region[]> = {};
+          // response.data.result.upperRegions.forEach((upperRegion: Region) => {
+          //   options[upperRegion.name] =
+          //     response.data.result.detailRegions.filter(
+          //       (detailRegion: Region) => detailRegion.id === upperRegion.id
+          //     );
+          // });
         } else {
           console.error("Failed to fetch regions:", response.data.message);
         }
@@ -54,21 +52,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
       }
     };
 
-    // const fetchMemberId = async () => {
-    //   try {
-    //     const response = await axios.get("/users");
-    //     if (response.data.isSuccess && response.data.result) {
-    //       setMemberId(response.data.result.memberId);
-    //     } else {
-    //       console.error("Failed to fetch memberId:", response.data.message);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching memberId:", error);
-    //   }
-    // };
-
     fetchRegions();
-    // fetchMemberId();
 
     const storedChefInfo = localStorage.getItem("chefInfo");
     if (storedChefInfo) {
@@ -88,17 +72,18 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
       name: chefInfo?.name || "",
       placeName: "",
       placeAddress: "",
-      regionId1: "",
-      regionId2: "",
+      regionId: "",
+      // regionId2: "",
       message: "",
     },
   });
 
-  const [isRegion1DropdownOpen, setRegion1DropdownOpen] = useState(false);
-  const [isRegion2DropdownOpen, setRegion2DropdownOpen] = useState(false);
-  const [selectedRegion1, setSelectedRegion1] = useState("");
-  const [selectedRegion2, setSelectedRegion2] = useState("");
-  const [region2Options, setRegion2Options] = useState<Region[]>([]);
+  // const [isRegion2DropdownOpen, setRegion2DropdownOpen] = useState(false);
+  // const [selectedRegion2, setSelectedRegion2] = useState("");
+  // const [region2Options, setRegion2Options] = useState<Region[]>([]);
+
+  const [isRegionDropdownOpen, setRegionDropdownOpen] = useState(false);
+  const [selectedRegion, setSelectedRegion] = useState("");
 
   const onSubmit = async (data: OrderInfoPersonalChefFormData) => {
     if (chefInfo && memberId !== null) {
@@ -106,7 +91,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
       formData.append("name", chefInfo.name);
       formData.append("introduction", chefInfo.shortIntro);
       formData.append("qualification", chefInfo.qualification.toString());
-      formData.append("auth", chefInfo.auth);
+      formData.append("auth", chefInfo.auth.toString());
 
       const storedLetter = localStorage.getItem("letter");
       if (storedLetter) {
@@ -119,11 +104,22 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
       formData.append("placeName", data.placeName);
       formData.append("placeAddress", data.placeAddress);
 
-      const regionId1 = upperRegions.find((region) => region.name === data.regionId1)?.id || "";
-      const regionId2 = detailRegions.find((region) => region.name === data.regionId2)?.id || "";
+      // const regionId1 =
+      //   upperRegions.find((region) => region.name === data.regionId1)?.id || "";
+      // const regionId2 =
+      //   detailRegions.find((region) => region.name === data.regionId2)?.id ||
+      //   "";
 
-      formData.append("regionId1", regionId1.toString());
-      formData.append("regionId2", regionId2.toString());
+      const regionId = detailRegions.find(
+        (region) => region.name === data.regionId
+      )?.id;
+
+      if (regionId) {
+        formData.append("regionId", regionId.toString());
+      }
+
+      // formData.append("regionId1", regionId1.toString());
+      // formData.append("regionId2", regionId2.toString());
 
       formData.append("message", data.message);
       formData.append("memberId", memberId.toString());
@@ -143,28 +139,28 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
     }
   };
 
-  const toggleRegion1Dropdown = () => {
-    setRegion1DropdownOpen(!isRegion1DropdownOpen);
+  const toggleRegionDropdown = () => {
+    setRegionDropdownOpen(!isRegionDropdownOpen);
   };
 
-  const toggleRegion2Dropdown = () => {
-    setRegion2DropdownOpen(!isRegion2DropdownOpen);
+  // const toggleRegion2Dropdown = () => {
+  //   setRegion2DropdownOpen(!isRegion2DropdownOpen);
+  // };
+
+  const handleRegionSelect = (region: string) => {
+    setSelectedRegion(region);
+    setValue("regionId", region, { shouldValidate: true });
+    // setRegion2Options(regionOptions[region] || []);
+    // setSelectedRegion2("");
+    // setValue("regionId2", "");
+    setRegionDropdownOpen(false);
   };
 
-  const handleRegion1Select = (region: string) => {
-    setSelectedRegion1(region);
-    setValue("regionId1", region, { shouldValidate: true });
-    setRegion2Options(regionOptions[region] || []);
-    setSelectedRegion2("");
-    setValue("regionId2", "");
-    setRegion1DropdownOpen(false);
-  };
-
-  const handleRegion2Select = (region: string) => {
-    setSelectedRegion2(region);
-    setValue("regionId2", region, { shouldValidate: true });
-    setRegion2DropdownOpen(false);
-  };
+  // const handleRegion2Select = (region: string) => {
+  //   // setSelectedRegion2(region);
+  //   setValue("regionId2", region, { shouldValidate: true });
+  //   setRegion2DropdownOpen(false);
+  // };
 
   return (
     <div className="px-[23px] pb-[43px]">
@@ -237,18 +233,18 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
 
           <div className="relative mb-[10px]">
             <Controller
-              name="regionId1"
+              name="regionId"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
                 <div
                   className="flex w-[321px] h-[40px] justify-between items-center rounded-[4px] border border-[#D1D6DB] bg-[#FFF] py-[8px] px-[16px] cursor-pointer"
-                  onClick={toggleRegion1Dropdown}
+                  onClick={toggleRegionDropdown}
                 >
                   <input
-                    value={selectedRegion1}
+                    value={selectedRegion}
                     readOnly
-                    placeholder="지역 분류"
+                    placeholder="지역 선택"
                     className="flex-1 bg-transparent placeholder-[#707A87] text-[14px] font-pretendard text-[#000] border-none outline-none cursor-pointer"
                   />
                   <svg
@@ -258,7 +254,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                     viewBox="0 0 24 24"
                     fill="none"
                     className={`transform transition-transform ${
-                      isRegion1DropdownOpen ? "rotate-180" : ""
+                      isRegionDropdownOpen ? "rotate-180" : ""
                     }`}
                   >
                     <path
@@ -270,20 +266,20 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
               )}
             />
 
-            {isRegion1DropdownOpen && (
+            {isRegionDropdownOpen && (
               <div className="absolute flex flex-col w-[321px] border border-[#D1D6DB] rounded-[4px] bg-[#FFF] mt-[8px] z-10">
-                {upperRegions.map((region) => (
+                {detailRegions.map((region) => (
                   <div
                     key={region.id}
-                    onClick={() => handleRegion1Select(region.name)}
+                    onClick={() => handleRegionSelect(region.name)}
                     className={`flex items-center justify-between px-[16px] py-[8px] gap-[23px] text-[#707A87] text-[14px] font-pretendard leading-[22px] cursor-pointer ${
-                      selectedRegion1 === region.name
+                      selectedRegion === region.name
                         ? "bg-[#EEF3E2] text-[#333E4E]"
                         : ""
                     }`}
                   >
                     <span>{region.name}</span>
-                    {selectedRegion1 === region.name ? (
+                    {selectedRegion === region.name ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -316,7 +312,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
             )}
           </div>
 
-          <div className="relative">
+          {/* <div className="relative">
             <Controller
               name="regionId2"
               control={control}
@@ -327,7 +323,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                   onClick={toggleRegion2Dropdown}
                 >
                   <input
-                    value={selectedRegion2}
+                    // value={selectedRegion2}
                     readOnly
                     placeholder="지역 선택"
                     className="flex-1 bg-transparent placeholder-[#707A87] text-[14px] font-pretendard text-[#000] border-none outline-none cursor-pointer"
@@ -395,7 +391,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
         </div>
 
         <div className="mb-[190px]">

@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 
 interface FormData {
   menuName: string;
@@ -13,6 +14,19 @@ interface MenuListProps {
 }
 
 const MenuList: React.FC<MenuListProps> = ({ menus, onBoxClick }) => {
+  
+  const router = useRouter();
+
+  const handleRegisterClick = () => {
+    if (menus.length > 0) {
+      // 마이페이지에서 알림 떠야함
+      router.push({
+        pathname: "/my",
+        query: { showAlert: "true" },
+      });
+    }
+  };
+  
   return (
     <div className="px-[23px] h-[765px] flex flex-col justify-between">
       <div>
@@ -104,6 +118,7 @@ const MenuList: React.FC<MenuListProps> = ({ menus, onBoxClick }) => {
 
       <button
         type="button"
+        onClick={handleRegisterClick}
         className={`flex w-[329px] h-[51px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] mb-[43px] ${
           menus.length > 0 ? "bg-[#638404]" : "bg-[#D1D6DB]"
         } text-white font-semibold leading-[28px]`}

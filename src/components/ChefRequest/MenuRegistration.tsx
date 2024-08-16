@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { axios } from "../../lib/axios";
 
@@ -23,24 +23,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
   storeId,
 }) => {
   const [fileName, setFileName] = useState("파일 선택");
-  const [memberId, setMemberId] = useState<number | null>(12);
-
-  // useEffect(() => {
-  //   const fetchMemberId = async () => {
-  //     try {
-  //       const response = await axios.get("/users");
-  //       if (response.data.isSuccess && response.data.result) {
-  //         setMemberId(response.data.result.memberId);
-  //       } else {
-  //         console.error("Failed to fetch memberId:", response.data.message);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching memberId:", error);
-  //     }
-  //   };
-
-  //   fetchMemberId();
-  // }, []);
+  const [memberId, setMemberId] = useState<number | null>(14);
 
   const {
     handleSubmit,
@@ -78,8 +61,11 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
       return;
     }
 
+    // 메뉴 등록 (storeId로 바꿔야 함)
     try {
-      const response = await axios.post(`/stores/${storeId}/menu`, formData, {
+      // const response = await axios.post(`/stores/${storeId}/menu`, formData, {
+
+      const response = await axios.post(`/stores/20/menu`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -94,6 +80,7 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
         menuImage: null,
       });
       setFileName("파일 선택");
+
       handleCompleteMenuRegistration();
     } catch (error) {
       console.error("메뉴 등록 실패:", error);
@@ -201,17 +188,17 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
         <div className="text-[#A8B1B9] text-[12px] font-pretendard leading-[19.2px] mb-[68px]">
           jpg, png 형식의 파일만 첨부 가능합니다.
         </div>
-      </form>
 
-      <button
-        type="submit"
-        className={`flex w-[329px] h-[51px] mb-[43px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
-          isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
-        } text-white font-semibold leading-[28px]`}
-        disabled={!isValid}
-      >
-        이 메뉴 추가하기
-      </button>
+        <button
+          type="submit"
+          className={`flex w-[329px] h-[51px] mb-[43px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
+            isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
+          } text-white font-semibold leading-[28px]`}
+          disabled={!isValid}
+        >
+          이 메뉴 추가하기
+        </button>
+      </form>
     </div>
   );
 };

@@ -8,7 +8,7 @@ export interface ChefInfoFormData {
   qualification: boolean;
   affiliation: string;
   experience: string;
-  auth: string; // 경력 ID
+  auth: number; // 경력 ID
 }
 
 export interface ChefInfoFormProps {
@@ -31,32 +31,35 @@ const ChefInfo: React.FC<ChefInfoFormProps> = ({ nextStep }) => {
       qualification: false,
       affiliation: "니어 요리사",
       experience: "",
-      auth: "0L",
+      auth: 0,
     },
   });
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState("");
 
-  const determineAuthId = (experience: string) => {
+  const determineAuthId = (experience: string): number => {
     switch (experience) {
       case "1년 이하":
-        return "1L";
+        return 1;
       case "1~3년":
-        return "2L";
+        return 2;
       case "3~5년":
-        return "3L";
+        return 3;
       case "5년 이상":
-        return "4L";
+        return 4;
       default:
-        return "0L";
+        return 0;
     }
   };
 
   const onSubmit = (data: ChefInfoFormData) => {
     const authId = determineAuthId(data.experience);
+    if (authId === 0) {
+      console.error("경력이 선택되지 않았습니다.");
+      return;
+    }
     const updatedData = { ...data, auth: authId };
-
     localStorage.setItem("chefInfo", JSON.stringify(updatedData));
 
     nextStep(updatedData);
