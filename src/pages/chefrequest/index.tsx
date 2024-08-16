@@ -37,8 +37,7 @@ const ChefRequest = () => {
     data: OrderInfoNearChefFormData | OrderInfoPersonalChefFormData
   ) => {
     setOrderData(data);
-
-    setStep(5);
+    setStep(4);
   };
 
   const handleMenuSubmit = (data: FormData) => {
@@ -48,7 +47,7 @@ const ChefRequest = () => {
 
   const handleCompleteMenuRegistration = () => {
     if (menus.length > 0) {
-      setStep(6);
+      setStep(4);
     }
   };
 
@@ -58,7 +57,7 @@ const ChefRequest = () => {
   };
 
   const handleBoxClick = () => {
-    setStep(4);
+    setStep(5);
   };
 
   return (

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import LoginModal from "@/src/components/LoginModal";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
 
 interface Data {
   memberId: number;
@@ -15,10 +16,17 @@ interface Data {
 
 export default function My({ data }: { data?: Data }) {
   const [showLogin, setShowLogin] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
+    if (router.query.showAlert === "true") {
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 5000); // 5초 후에 자동으로 사라지게 설정
+    }
+
     const response = axios.get(`/users`).then((result) => console.log(result));
-  }, []);
+  }, [router.query]);
 
   return (
     <div>
@@ -47,7 +55,14 @@ export default function My({ data }: { data?: Data }) {
                   fill="none"
                 >
                   <g filter="url(#filter0_d_194_3587)">
-                    <rect x="8" y="8" width="88" height="88" rx="44" fill="#DBE8B6" />
+                    <rect
+                      x="8"
+                      y="8"
+                      width="88"
+                      height="88"
+                      rx="44"
+                      fill="#DBE8B6"
+                    />
                     <rect
                       x="6.5"
                       y="6.5"
@@ -160,7 +175,11 @@ export default function My({ data }: { data?: Data }) {
                     viewBox="0 0 373 2"
                     fill="none"
                   >
-                    <path d="M0.5 1L372.5 1.00003" stroke="#A8B1B9" strokeWidth="0.5" />
+                    <path
+                      d="M0.5 1L372.5 1.00003"
+                      stroke="#A8B1B9"
+                      strokeWidth="0.5"
+                    />
                   </svg>
                 </div>
                 <div className="flex flex-row items-center gap-[7px] self-stretch">
@@ -198,7 +217,11 @@ export default function My({ data }: { data?: Data }) {
                     viewBox="0 0 373 2"
                     fill="none"
                   >
-                    <path d="M0.5 1L372.5 1.00003" stroke="#A8B1B9" strokeWidth="0.5" />
+                    <path
+                      d="M0.5 1L372.5 1.00003"
+                      stroke="#A8B1B9"
+                      strokeWidth="0.5"
+                    />
                   </svg>
                 </div>
               </div>
@@ -219,7 +242,11 @@ export default function My({ data }: { data?: Data }) {
                     viewBox="0 0 373 2"
                     fill="none"
                   >
-                    <path d="M0.5 1L372.5 1.00003" stroke="#A8B1B9" strokeWidth="0.5" />
+                    <path
+                      d="M0.5 1L372.5 1.00003"
+                      stroke="#A8B1B9"
+                      strokeWidth="0.5"
+                    />
                   </svg>
                 </div>
               </div>
@@ -239,7 +266,11 @@ export default function My({ data }: { data?: Data }) {
                     viewBox="0 0 373 2"
                     fill="none"
                   >
-                    <path d="M0.5 1L372.5 1.00003" stroke="#A8B1B9" strokeWidth="0.5" />
+                    <path
+                      d="M0.5 1L372.5 1.00003"
+                      stroke="#A8B1B9"
+                      strokeWidth="0.5"
+                    />
                   </svg>
                 </div>
               </div>
@@ -259,7 +290,11 @@ export default function My({ data }: { data?: Data }) {
                     viewBox="0 0 373 2"
                     fill="none"
                   >
-                    <path d="M0.5 1L372.5 1.00003" stroke="#A8B1B9" strokeWidth="0.5" />
+                    <path
+                      d="M0.5 1L372.5 1.00003"
+                      stroke="#A8B1B9"
+                      strokeWidth="0.5"
+                    />
                   </svg>
                 </div>
               </div>
@@ -267,6 +302,13 @@ export default function My({ data }: { data?: Data }) {
           </div>
         </div>
       </div>
+      {showNotification && (
+        <div className="fixed bottom-[40px] left-1/2 transform -translate-x-1/2 py-[8px] px-[24px] bg-[#3B3B53] text-white text-center rounded-[10px]">
+          신청이 완료되었습니다.
+          <br />
+          심사 후 판매까지 3~4일 소요될 수 있습니다.
+        </div>
+      )}
     </div>
   );
 }
