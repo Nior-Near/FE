@@ -45,8 +45,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   const [isRegion1DropdownOpen, setRegion1DropdownOpen] = useState(false);
   const [selectedRegion1, setSelectedRegion1] = useState("");
   const [regionId2, setRegionId2] = useState("");
-  const [memberId, setMemberId] = useState<number | null>(12);
-  
+
   const {
     handleSubmit,
     control,
@@ -66,26 +65,13 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     shortIntro: "",
     detailedIntro: "",
     qualification: false,
-    auth: "",
+    auth: 0,
   });
 
   useEffect(() => {
-    // const fetchMemberId = async () => {
-    //   try {
-    //     const response = await axios.get("/users");
-    //     if (response.data.isSuccess && response.data.result) {
-    //       setMemberId(response.data.result.memberId);
-    //     } else {
-    //       console.error("Failed to fetch memberId:", response.data.message);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching memberId:", error);
-    //   }
-    // };
-
-    // fetchMemberId();
-
+    
     const storedChefInfo = localStorage.getItem("chefInfo");
+
     if (storedChefInfo) {
       const parsedChefInfo = JSON.parse(storedChefInfo);
       setChefData({
@@ -93,7 +79,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
         shortIntro: parsedChefInfo.shortIntro || "",
         detailedIntro: parsedChefInfo.detailedIntro || "",
         qualification: parsedChefInfo.qualification || false,
-        auth: parsedChefInfo.auth || "",
+        auth: parsedChefInfo.auth || 0,
       });
     }
   }, []);
@@ -103,26 +89,20 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     ? new File([letter], "letter.png", { type: "image/png" })
     : null;
 
+  // 주문가능지역
   const fetchRegionId = async (placeId: number) => {
     try {
       const response = await axios.get(`/stores/near-company/${placeId}`);
-      console.log("Region ID API response:", response.data);
-
       if (response.data.isSuccess && response.data.result) {
         const regionId = response.data.result.regionId;
-        console.log("Received regionId:", regionId);
-
         localStorage.setItem("regionId", regionId.toString());
 
         const regionResponse = await axios.get(`/regions/${regionId}`);
-        // console.log("Full Region details API response:", regionResponse.data);
 
         if (regionResponse.data.code === "2000") {
           const regionName = regionResponse.data.result.name;
-
           setRegionId2(regionName);
           setValue("regionId2", regionName, { shouldValidate: true });
-          console.log("Set regionId2 to:", regionName);
         } else {
           console.error("Unexpected response code:", regionResponse.data.code);
         }
@@ -135,43 +115,61 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   };
 
   const onSubmit = async (data: OrderInfoNearChefFormData) => {
+
     const placeId = determinePlaceId(data.regionId1);
+    const regionId = parseInt(localStorage.getItem("regionId") || "0");
+    const memberIdNumber = 14;
 
     const formData = new FormData();
     formData.append("name", chefData.name);
     formData.append("shortDescription", chefData.shortIntro);
     formData.append("detailedDescription", chefData.detailedIntro);
     formData.append("qualification", chefData.qualification.toString());
-    formData.append("auth", chefData.auth);
+    formData.append("auth", chefData.auth.toString());
+    formData.append("placeId", placeId.toString());
+    formData.append("regionId", regionId.toString());
+    formData.append("message", data.message);
+    formData.append("memberId", memberIdNumber.toString());
     if (letterFile) {
       formData.append("letter", letterFile);
     }
-    formData.append("placeId", placeId.toString());
-    formData.append("regionId", regionId2);
-    formData.append("message", data.message);
 
-    if (memberId !== null) {
-      formData.append("memberId", memberId.toString());
-    } else {
-      console.error("memberId is null, cannot proceed with form submission.");
-      return;
-    }
+    console.log("FormData 생성 완료");
 
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
+
+    // 니어요리사 신청
     try {
       const response = await axios.post("/stores/near-company", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("API 응답 성공:", response.data);
-      const storeId = response.data.result.storeId;
-      localStorage.setItem("storeId", storeId.toString());
 
-      nextStep({ ...data, storeId });
+      if (response.data.isSuccess) {
+        const storeId = response.data.result.storeId;
+        localStorage.setItem("storeId", storeId.toString());
+        nextStep({ ...data, storeId });
+      } else {
+        console.error("API 요청 실패:", response.data.message);
+      }
     } catch (error) {
       console.error("API 요청 실패:", error);
     }
   };
+
+  <button
+    type="button"
+    onClick={handleSubmit(onSubmit)}
+    className={`flex w-[329px] h-[51px] mb-[43px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
+      isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
+    } text-white font-semibold leading-[28px]`}
+    disabled={!isValid}
+  >
+    다음으로
+  </button>;
 
   const toggleRegion1Dropdown = () => {
     setRegion1DropdownOpen(!isRegion1DropdownOpen);
@@ -326,7 +324,10 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
       </div>
       <button
         type="button"
-        onClick={handleSubmit(onSubmit)}
+        onClick={() => {
+          console.log("Button clicked");
+          handleSubmit(onSubmit)();
+        }}
         className={`flex w-[329px] h-[51px] mb-[43px] justify-center items-center gap-[4px] flex-shrink-0 rounded-[999px] ${
           isValid ? "bg-[#638404]" : "bg-[#D1D6DB]"
         } text-white font-semibold leading-[28px]`}
