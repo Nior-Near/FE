@@ -163,10 +163,21 @@ export default function Order() {
 
     const storeId = decodedStore?.storeId;
 
-    const formData = jsonToFormData({ ...data, storeId, menus });
+    const formData = new FormData();
+
+    formData.append("storeId", storeId!.toString());
+    formData.append("requestMessage", data?.requestMessage);
+    formData.append("memberName", data?.memberName);
+    formData.append("memberPhone", data?.memberName);
+    formData.append("memberName", data?.memberName);
+
+    menus?.forEach((menu, index) => {
+      formData.append(`menus[${index}].menuId`, menu.menuId.toString());
+      formData.append(`menus[${index}].quantity`, menu.quantity.toString());
+    });
 
     const response = await axios.post("/orders", formData, {
-      headers: { "Content-Type": "multiparty/form-data" },
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
     if (response.data?.isSuccess === true) setPaymentDonePayload(response.data?.result);
@@ -311,7 +322,7 @@ export default function Order() {
         </form>
       );
     case "pending":
-      return <Order_Process orderId={PaymentDonePayload?.orderId} />;
+      return <Order_Process orderId={PaymentDonePayload?.orderId} setIndex={setIndex} />;
     case "done":
       return <Order_Done data={PaymentDonePayload} />;
     case "failed":

@@ -4,16 +4,17 @@ import LetterUnread from "@/src/assets/letter_unread.svg";
 import ViewLetter, { Letter } from "@/src/components/Letters/ViewLetter";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 interface Data {
   letterDTOs: Letter[];
 }
 
-export default function Letters({ data }: { data: Data }) {
+export default function Letters({ data }: { data: Data["letterDTOs"] }) {
   const [letter, setLetter] = useState<Letter | null>(null);
 
-  if (letter !== null) return <ViewLetter data={letter} />;
+  if (letter !== null) return <ViewLetter data={letter} setLetter={setLetter} />;
 
   return (
     <div className="h-dvh">
@@ -42,13 +43,13 @@ export default function Letters({ data }: { data: Data }) {
           </span>
         </div>
         <div className="pt-[42px] grid grid-cols-3 gap-x-[7px] gap-y-[24px]">
-          {data?.letterDTOs?.map((letter, index) => (
+          {data?.map((letter, index) => (
             <div
               key={letter?.letterId}
               className="w-[105px] h-[130px] flex flex-col items-center gap-[8px]"
               onClick={() => setLetter(letter)}
             >
-              {letter?.status === "UNREAD" ? <LetterUnread /> : <LetterRead />}
+              {letter?.status === "미열람" ? <LetterUnread /> : <LetterRead />}
               <div className="flex flex-col items-center">
                 <span className="text-[#1E2530] font-pretendard font-[600] text-[14px] leading-none">
                   {letter?.senderName}
