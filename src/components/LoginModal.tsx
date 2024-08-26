@@ -5,10 +5,7 @@ interface LoginModalProps {
   dimmed?: boolean;
 }
 
-export default function LoginModal({
-  isLoginRequired,
-  dimmed,
-}: LoginModalProps) {
+export default function LoginModal({ isLoginRequired, dimmed }: LoginModalProps) {
   const router = useRouter();
 
   const handleNaverLogin = () => {
@@ -32,9 +29,7 @@ export default function LoginModal({
     >
       <div className="bg-white h-[307px] w-[375px] pt-[46px] px-[23px] pb-[53px] text-center rounded-t-[16px]">
         <div className="text-[20px] font-inter font-medium mb-[20px]">
-          {isLoginRequired
-            ? "이 기능은 로그인이 필요해요"
-            : "SNS로 빠르게 니어니어 로그인"}
+          {isLoginRequired ? "이 기능은 로그인이 필요해요" : "SNS로 빠르게 니어니어 로그인"}
         </div>
         <div className="text-[#707A87] font-inter text-[14px] font-medium mb-[36px]">
           네이버로 3초만에 간편하게 로그인하고

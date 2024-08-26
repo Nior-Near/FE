@@ -32,7 +32,7 @@ const jalnan = localFont({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main
-      className={`${pretendard.variable} ${inter.variable} ${roboto.variable} ${reeniebeanie?.variable} ${jalnan?.variable}`}
+      className={`relative ${pretendard.variable} ${inter.variable} ${roboto.variable} ${reeniebeanie?.variable} ${jalnan?.variable}`}
     >
       <Component {...pageProps} />
     </main>

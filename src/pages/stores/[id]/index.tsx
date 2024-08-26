@@ -6,17 +6,18 @@ import food4 from "@/src/assets/food-4.jpeg";
 import food5 from "@/src/assets/food-5.jpeg";
 import NavigateBefore from "@/src/assets/navigate_before.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
+import ArrowRight from "@/src/assets/arrow_right.svg";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export interface Data {
   storeId: number;
   profileImage: string;
   name: string;
   storePhone: string;
-  images: string[];
   title: string;
   introduction: string;
   possibleRegion: string[];
@@ -37,7 +38,9 @@ interface Menu {
 }
 
 export default function Store({ data }: { data: Data }) {
-  const [foodBannerImage, setFoodBannerImage] = useState(data?.images?.[0]);
+  const router = useRouter();
+
+  const [foodBannerImage, setFoodBannerImage] = useState(data?.menus?.[0]?.menuImage);
 
   const [orders, setOrders] = useState<{
     [key: number]: { name: string; price: number; quantity: number };
@@ -45,6 +48,12 @@ export default function Store({ data }: { data: Data }) {
 
   return (
     <div>
+      <div
+        onClick={() => router.back()}
+        className="absolute top-[59px] left-[29px] w-[32px] h-[32px] p-[4px] z-[999] rounded-full bg-white cursor-pointer"
+      >
+        <ArrowRight className="[&_path]:fill-black" width={24} height={24} />
+      </div>
       <div className="w-[375px] h-[291px] relative">
         <img
           src={foodBannerImage}
@@ -53,20 +62,26 @@ export default function Store({ data }: { data: Data }) {
           alt=""
           className="w-full h-full object-cover"
         />
-        <div className="absolute bottom-[-15px] w-full flex flex-row items-center justify-center gap-[16px]">
-          {data?.images &&
-            data?.images?.map((img, index) => (
+        <div
+          className={`absolute w-full px-[36.5px] max-w-[${
+            data?.menus?.length * 90 + (data?.menus?.length + 1) * 16
+          }px] overflow-x-auto bottom-[-15px] flex flex-row items-center flex-nowrap shrink-0 gap-[16px] scrollbar-hide`}
+        >
+          {data?.menus &&
+            data?.menus?.map((menu, index) => (
               <div
-                key={img}
-                className="w-[90px] h-[66px] rounded-[5px] cursor-pointer overflow-hidden"
-                onClick={() => setFoodBannerImage(img)}
+                key={menu?.menuId}
+                className="mx-auto shrink-0 w-[90px] h-[66px] rounded-[5px] cursor-pointer overflow-hidden"
+                onClick={() => setFoodBannerImage(menu?.menuImage)}
                 style={{
-                  boxShadow: img === foodBannerImage ? "0px 0px 5px 0px #638404" : undefined,
-                  border: img === foodBannerImage ? "2px solid #97b544" : "2px solid #ffffff",
+                  boxShadow:
+                    menu?.menuImage === foodBannerImage ? "0px 0px 5px 0px #638404" : undefined,
+                  border:
+                    menu?.menuImage === foodBannerImage ? "2px solid #97b544" : "2px solid #ffffff",
                 }}
               >
                 <img
-                  src={img}
+                  src={menu?.menuImage}
                   width={90}
                   height={66}
                   alt=""
@@ -78,8 +93,8 @@ export default function Store({ data }: { data: Data }) {
       </div>
       <div className="pt-[33px] pb-[24px] px-[24px]">
         <div className="flex flex-row items-center gap-[15px]">
-          <div className="w-[90px] h-[90px] rounded-full border text-center">
-            {/* <Image src={data?.profileImage} alt="" width={90} height={90} /> */}
+          <div className="w-[90px] h-[90px] rounded-full border text-center overflow-hidden">
+            <Image src={data?.profileImage} alt="" width={90} height={90} />
           </div>
           <span className="font-pretendard text-[24px] font-[600] leading-[13.268px] text-[#222224]">
             {data?.name} 요리사님
@@ -127,7 +142,7 @@ export default function Store({ data }: { data: Data }) {
         </div>
       </div>
       <div className="py-[16px] px-[24px] bg-[#eef3e2]">
-        <div className="flex flex-col gap-[10px]">
+        <div className="w-[327px] flex flex-col gap-[10px]">
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-col items-start gap-[5px]">
               <span className="font-pretendard text-[14px] font-[700] leading-none text-[#1e2530]">
@@ -145,7 +160,7 @@ export default function Store({ data }: { data: Data }) {
             <div
               className="h-[18px] rounded-full transition-all duration-500"
               style={{
-                width: `${375 * (data?.temperature / 100)}px`,
+                width: `${327 * (data?.temperature / 100)}px`,
                 background: "linear-gradient(90deg, #97B544 0%, #486300 100%)",
               }}
             ></div>
@@ -156,7 +171,7 @@ export default function Store({ data }: { data: Data }) {
         <span className="px-[24px] font-pretendard text-[18px] font-[600] leading-[28.8px] text-[#222224]">
           주문
         </span>
-        <div className="px-[24px] py-[12px] flex flex-row flex-nowrap items-center gap-[16px] overflow-x-auto">
+        <div className="px-[24px] py-[12px] flex flex-row flex-nowrap items-center gap-[16px] overflow-x-auto scrollbar-hide">
           {data?.menus?.map((item, index) => (
             <div
               key={item?.menuId}
@@ -184,7 +199,7 @@ export default function Store({ data }: { data: Data }) {
               </div>
               <div className="flex flex-row items-center gap-[12px] self-center">
                 <NavigateBefore
-                  className="[&_path]:fill-[#222224]"
+                  className="[&_path]:fill-[#222224] cursor-pointer"
                   onClick={() => {
                     if (
                       orders?.[item?.menuId] === undefined ||
@@ -209,7 +224,7 @@ export default function Store({ data }: { data: Data }) {
                   </span>
                 </div>
                 <NavigateNext
-                  className="[&_path]:fill-[#222224]"
+                  className="[&_path]:fill-[#222224] cursor-pointer"
                   onClick={() => {
                     orders?.[item?.menuId]?.quantity === undefined
                       ? (orders[item?.menuId] = {

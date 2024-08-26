@@ -5,7 +5,13 @@ import { useEffect } from "react";
 import { RequestPayParams, RequestPayResponse } from "iamport-typings";
 import { axios } from "@/src/lib/axios";
 
-export default function Order_Process({ orderId }: { orderId: number | undefined }) {
+export default function Order_Process({
+  orderId,
+  setIndex,
+}: {
+  orderId: number | undefined;
+  setIndex: any;
+}) {
   const readyPayment = async () => {
     const response = await axios.post(`/payment/${orderId}`);
 
@@ -30,6 +36,14 @@ export default function Order_Process({ orderId }: { orderId: number | undefined
         },
         (response: RequestPayResponse) => {
           console.log(response);
+
+          // if(response.success === true) {
+          //   setIndex("done")
+          // } else {
+          //   setIndex("failed")
+          // }
+
+          setIndex("done");
         }
       );
     }

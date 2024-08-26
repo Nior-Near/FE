@@ -9,7 +9,7 @@ export default function OAuthResponse() {
   useEffect(() => {
     const checkAccessToken = async () => {
       try {
-        const response = await axios.get("https://api.niornear.store/api/v1/auth/token", {
+        const response = await axios.get("https://test.niornear.store/api/v1/auth/token", {
           withCredentials: true,
         });
 

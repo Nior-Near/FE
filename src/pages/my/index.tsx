@@ -6,6 +6,7 @@ import LoginModal from "@/src/components/LoginModal";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface Data {
   memberId: number;
@@ -27,6 +28,7 @@ export default function My({ data }: { data?: Data }) {
 
     const response = axios.get(`/users`).then((result) => console.log(result));
   }, [router.query]);
+
 
   return (
     <div>
@@ -160,12 +162,12 @@ export default function My({ data }: { data?: Data }) {
 
             <div className="flex-col justify-start items-start gap-[18px] inline-flex bg-white mb-[65px]">
               <div className="self-stretch flex-col justify-start items-center gap-[18px] flex">
-                <div className="relative h-[35px]">
+                <Link href="/my/letters" className="relative h-[35px]">
                   <div className="flex flex-row justify-between items-center gap-[10px] mb-[9px]">
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       편지함
                     </div>
-                    <NavigateNext width="24" height="24" />
+                    <NavigateNext width="24" height="24" className="[&_path]:fill-[#222224]" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -181,7 +183,7 @@ export default function My({ data }: { data?: Data }) {
                       strokeWidth="0.5"
                     />
                   </svg>
-                </div>
+                </Link>
                 <div className="flex flex-row items-center gap-[7px] self-stretch">
                   {[0, 1, 2].map((value, index) => (
                     <div
@@ -194,7 +196,7 @@ export default function My({ data }: { data?: Data }) {
                           이영자 요리사
                         </div>
                         <div className="text-[#707A87] text-center font-pretendard text-[12px] font-[400] leading-[19.2px]">
-                          2024.08.02
+                          2024.08.16
                         </div>
                       </div>
                     </div>
@@ -207,7 +209,7 @@ export default function My({ data }: { data?: Data }) {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       주문내역
                     </div>
-                    <NavigateNext width="24" height="24" />
+                    <NavigateNext width="24" height="24" className="[&_path]:fill-[#222224]" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -232,7 +234,7 @@ export default function My({ data }: { data?: Data }) {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       요리사 신청하기
                     </div>
-                    <NavigateNext width="24" height="24" />
+                    <NavigateNext width="24" height="24" className="[&_path]:fill-[#222224]" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -256,7 +258,7 @@ export default function My({ data }: { data?: Data }) {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       고객 센터
                     </div>
-                    <NavigateNext width="24" height="24" />
+                    <NavigateNext width="24" height="24" className="[&_path]:fill-[#222224]" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -280,7 +282,7 @@ export default function My({ data }: { data?: Data }) {
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       이용 가이드
                     </div>
-                    <NavigateNext width="24" height="24" />
+                    <NavigateNext width="24" height="24" className="[&_path]:fill-[#222224]" />
                   </div>
                   <svg
                     className="absolute -left-[24px] bottom-0 w-[375px]"
@@ -315,7 +317,7 @@ export default function My({ data }: { data?: Data }) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   try {
-    const response = await axios.get(`/users`);
+    const response = await axios.get(`/members`);
 
     return { props: { data: response.data?.result } };
   } catch (e) {
