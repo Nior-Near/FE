@@ -12,14 +12,14 @@ export default function LoginModal({
   const router = useRouter();
 
   const handleNaverLogin = () => {
-    // console.log("로그인 버튼 클릭");
+    console.log("로그인 버튼 클릭");
 
-    // const naverLoginUrl = "https://api.niornear.store/api/v1/auth/oauth2/naver";
-    // console.log("Navigating to:", naverLoginUrl);
-    // window.location.href = naverLoginUrl;
+    const naverLoginUrl = "https://api.niornear.store/api/v1/auth/oauth2/naver";
+    console.log("Navigating to:", naverLoginUrl);
+    window.location.href = naverLoginUrl;
 
-    // router.push(naverLoginUrl);
-    window.location.href = "/main";
+    router.push(naverLoginUrl);
+    // window.location.href = "/main";
   };
 
   return (
@@ -58,7 +58,7 @@ export default function LoginModal({
               fill="white"
             />
           </svg>
-          임시 사용자로 네이버 로그인하기
+          네이버 로그인
         </button>
 
         <Link href="/main">
