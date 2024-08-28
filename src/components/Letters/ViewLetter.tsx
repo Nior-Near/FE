@@ -26,7 +26,7 @@ export default function ViewLetter({ data, setLetter }: { data: Letter; setLette
   }, []);
 
   return (
-    <div>
+    <div className="h-dvh">
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
         <ArrowRight
           width="24"
@@ -69,7 +69,7 @@ export default function ViewLetter({ data, setLetter }: { data: Letter; setLette
             placeholder="상품과 편지를 받은 후기를 작성해주세요. 일방적인 욕설 등은 신고의 대상이 될 수 있습니다."
           />
         </div>
-        <button className="h-[51px] p-[4px] flex items-center justify-center gap-[4px] self-stretch rounded-full bg-[#d1d6db] font-pretendard font-[600] text-[18px] leading-[28.8px] text-center text-white mb-[58.45px]">
+        <button className="h-[51px] p-[4px] flex items-center justify-center gap-[4px] self-stretch rounded-full bg-[#d1d6db] font-pretendard font-[600] text-[18px] leading-[28.8px] text-center text-white">
           요리사님께 편지 전송하기
         </button>
       </div>
