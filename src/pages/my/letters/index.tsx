@@ -16,10 +16,17 @@ export default function Letters({ data }: { data: Data["letterDTOs"] }) {
 
   if (letter !== null) return <ViewLetter data={letter} setLetter={setLetter} />;
 
+  const router = useRouter();
+
   return (
     <div className="h-dvh">
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-        <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
+        <ArrowRight
+          width="24"
+          height="24"
+          className="ml-[27px] mr-auto"
+          onClick={() => router.back()}
+        />
         <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
           편지함
         </span>
