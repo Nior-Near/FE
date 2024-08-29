@@ -31,9 +31,15 @@ export default function RegionSelect({
         const response = await axios.get("/regions");
         const { upperRegions, detailRegions } = response.data.result;
 
-        // setUpperRegions(upperRegions || []);
+        if (Array.isArray(upperRegions) && upperRegions.length > 0) {
+          setUpperRegions(upperRegions); 
+          setSelectedUpperRegion(upperRegions[0]); 
+        } else {
+          setUpperRegions([]); 
+          setSelectedUpperRegion(null); 
+        }
+
         setDetailRegions(detailRegions || []);
-        setSelectedUpperRegion(upperRegions[0]);
       } catch (error) {
         console.error("Error fetching regions:", error);
       }
@@ -81,8 +87,8 @@ export default function RegionSelect({
           어느 지역에서 음식을 받을건가요?
         </h1>
       </header>
-      <div className="flex flex-1">
-        <div className="bg-[#F0F2F5] w-[124px] flex justify-center pt-[31px]">
+      <div className="flex flex-1 overflow-y-auto">
+        <div className="bg-[#F0F2F5] w-[124px] flex justify-center pt-[31px] overflow-y-auto">
           <ul className="space-y-[21px]">
             {upperRegions.map((region) => (
               <li
@@ -99,7 +105,7 @@ export default function RegionSelect({
             ))}
           </ul>
         </div>
-        <div className="bg-[#E4E8EB] flex-1 pt-[31px] pl-[29px]">
+        <div className="bg-[#E4E8EB] flex-1 pt-[31px] pl-[29px] overflow-y-auto">
           <ul className="space-y-[21px]">
             {detailRegions.map((area) => (
               <li
