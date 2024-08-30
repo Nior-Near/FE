@@ -61,11 +61,11 @@ const MenuRegistration: React.FC<MenuRegistrationProps> = ({
       return;
     }
 
-    // 메뉴 등록 (storeId로 바꿔야 함)
+    // 메뉴 등록 (20은 테스트용)
     try {
-      // const response = await axios.post(`/stores/${storeId}/menu`, formData, {
+      //const response = await axios.post(`/stores/20/menu`, formData, {
 
-      const response = await axios.post(`/stores/20/menu`, formData, {
+      const response = await axios.post(`/stores/${storeId}/menu`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

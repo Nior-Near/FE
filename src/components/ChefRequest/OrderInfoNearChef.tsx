@@ -45,6 +45,8 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   const [isRegion1DropdownOpen, setRegion1DropdownOpen] = useState(false);
   const [selectedRegion1, setSelectedRegion1] = useState("");
   const [regionId2, setRegionId2] = useState("");
+  const [memberId, setMemberId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const {
     handleSubmit,
@@ -69,7 +71,6 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   });
 
   useEffect(() => {
-    
     const storedChefInfo = localStorage.getItem("chefInfo");
 
     if (storedChefInfo) {
@@ -82,6 +83,30 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
         auth: parsedChefInfo.auth || 0,
       });
     }
+
+    // memberId 가져오기
+    const fetchMemberId = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.get("/users", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.data.isSuccess && response.data.result) {
+          setMemberId(response.data.result.memberId);
+        } else {
+          console.error("회원 정보 가져오기 실패:", response.data.message);
+        }
+      } catch (error) {
+        console.error("회원 정보 요청 오류:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMemberId();
   }, []);
 
   const letter = localStorage.getItem("letter");
@@ -115,11 +140,13 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   };
 
   const onSubmit = async (data: OrderInfoNearChefFormData) => {
-
     const placeId = determinePlaceId(data.regionId1);
     const regionId = parseInt(localStorage.getItem("regionId") || "0");
-    const memberIdNumber = 14;
 
+    if (memberId === null) {
+      console.error("Member ID가 없습니다.");
+      return;
+    }
     const formData = new FormData();
     formData.append("name", chefData.name);
     formData.append("shortDescription", chefData.shortIntro);
@@ -129,7 +156,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     formData.append("placeId", placeId.toString());
     formData.append("regionId", regionId.toString());
     formData.append("message", data.message);
-    formData.append("memberId", memberIdNumber.toString());
+    formData.append("memberId", memberId.toString());
     if (letterFile) {
       formData.append("letter", letterFile);
     }
@@ -183,6 +210,8 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     const placeId = determinePlaceId(region);
     await fetchRegionId(placeId);
   };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="px-[23px] pb-[43px] h-[765px] flex flex-col justify-between">
