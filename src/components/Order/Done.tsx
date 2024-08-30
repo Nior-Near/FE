@@ -42,8 +42,8 @@ export default function Order_Done({ data }: { data: Done | null }) {
         </span>
       </div>
       <div className="pb-[47px] mt-[27px] mx-auto w-[204px] flex flex-col items-center gap-[8px]">
-        <div className="w-[120px] h-[120px] rounded-full bg-white text-center shadow-[0px_0px_5px_rgba(0,0,0,0.25)]">
-          {/* <Image src={data?.profileImage} width={120} height={120} alt="" /> */}
+        <div className="w-[120px] h-[120px] rounded-full bg-white text-center shadow-[0px_0px_5px_rgba(0,0,0,0.25)] overflow-hidden">
+          <Image src={data?.profileImage!} width={120} height={120} alt="" />
         </div>
         <div className="flex flex-col items-center">
           <svg
