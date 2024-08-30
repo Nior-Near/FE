@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axios } from "../lib/axios";
 
 interface RegionSelectProps {
-  setSelectedRegion: (
-    regionId: number | null,
-    regionName: string | null
-  ) => void;
+  setSelectedRegion: (regionId: number | null, regionName: string | null) => void;
   onClose: () => void;
 }
 
@@ -14,15 +11,10 @@ interface Region {
   name: string;
 }
 
-export default function RegionSelect({
-  setSelectedRegion,
-  onClose,
-}: RegionSelectProps) {
+export default function RegionSelect({ setSelectedRegion, onClose }: RegionSelectProps) {
   const [upperRegions, setUpperRegions] = useState<Region[]>([]);
   const [detailRegions, setDetailRegions] = useState<Region[]>([]);
-  const [selectedUpperRegion, setSelectedUpperRegion] = useState<Region | null>(
-    null
-  );
+  const [selectedUpperRegion, setSelectedUpperRegion] = useState<Region | null>(null);
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,11 +24,11 @@ export default function RegionSelect({
         const { upperRegions, detailRegions } = response.data.result;
 
         if (Array.isArray(upperRegions) && upperRegions.length > 0) {
-          setUpperRegions(upperRegions); 
-          setSelectedUpperRegion(upperRegions[0]); 
+          setUpperRegions(upperRegions);
+          setSelectedUpperRegion(upperRegions[0]);
         } else {
-          setUpperRegions([]); 
-          setSelectedUpperRegion(null); 
+          setUpperRegions([]);
+          setSelectedUpperRegion(null);
         }
 
         setDetailRegions(detailRegions || []);
@@ -67,7 +59,7 @@ export default function RegionSelect({
   };
 
   return (
-    <div className="fixed inset-0 bg-white flex flex-col">
+    <div className="mx-auto w-[375px] fixed inset-0 bg-white flex flex-col">
       <header className="bg-[#638404] h-[56px] pl-[28px] flex flex-row items-center text-white flex-shrink-0">
         <button onClick={onClose} className="mr-[30px]">
           <svg
