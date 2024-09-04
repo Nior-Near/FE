@@ -64,6 +64,7 @@ export default function RegionSelect({
   const handleAreaClick = (area: Region) => {
     setSelectedArea(area.name);
     setSelectedRegion(area.id, area.name);
+    onClose();
   };
 
   return (
