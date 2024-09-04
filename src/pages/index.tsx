@@ -97,7 +97,7 @@ export default function Main() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-[50px]">
       <Header
         isLoggedIn={isLoggedIn}
         selectedRegion={selectedRegion || "지역 선택"}
