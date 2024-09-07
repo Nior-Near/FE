@@ -4,6 +4,7 @@ import Script from "next/script";
 import { useEffect } from "react";
 import { RequestPayParams, RequestPayResponse } from "iamport-typings";
 import { axios } from "@/src/lib/axios";
+import Title from "@/src/components/Title";
 
 export default function Order_Process({
   orderId,
@@ -61,10 +62,11 @@ export default function Order_Process({
         strategy="beforeInteractive"
       />
       <div className="h-dvh">
+        <Title route="결제" />
         <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
           <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
           <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
-            주문/결제
+            주문 및 결제
           </span>
         </nav>
         <svg

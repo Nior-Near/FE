@@ -6,7 +6,7 @@ export default function Login() {
   const router = useRouter();
 
   const handleButtonClick = () => {
-    router.push("/main");
+    router.push("/");
   };
 
   return (
