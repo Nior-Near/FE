@@ -3,6 +3,7 @@ import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import Map from "@/src/assets/map.svg";
+import Title from "@/src/components/Title";
 
 interface Data {
   orderStatus: "CONFIRM" | "COOKING" | "PICKUP"; //TODO "DONE" 추가
@@ -51,6 +52,7 @@ export default function Order_History({ data }: { data: Data }) {
 
   return (
     <div>
+      <Title route="주문내역 상세보기" />
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
         <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
         <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">

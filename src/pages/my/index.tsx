@@ -7,6 +7,7 @@ import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Title from "@/src/components/Title";
 
 interface Data {
   memberId: number;
@@ -29,6 +30,7 @@ export default function My({ data }: { data?: Data }) {
 
   return (
     <div>
+      <Title route="마이 페이지" />
       <div className="w-full h-dvh relative bg-[#638404]">
         <div className="w-full h-[calc(100%_-_187px)] left-0 top-[187px] absolute bg-white rounded-tl-[28px] rounded-tr-[28px]" />
         <div className="p-1 left-[24px] top-[59px] absolute bg-white rounded-[999px] shadow justify-start items-center gap-1 inline-flex">

@@ -12,6 +12,7 @@ import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Title from "@/src/components/Title";
 
 export interface Data {
   storeId: number;
@@ -48,6 +49,7 @@ export default function Store({ data }: { data: Data }) {
 
   return (
     <div>
+      <Title route="요리사" />
       <div
         onClick={() => router.back()}
         className="absolute top-[59px] left-[29px] w-[32px] h-[32px] p-[4px] z-[999] rounded-full bg-white cursor-pointer"

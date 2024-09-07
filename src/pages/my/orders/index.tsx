@@ -1,4 +1,5 @@
 import ArrowRight from "@/src/assets/arrow_right.svg";
+import Title from "@/src/components/Title";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import Image from "next/image";
@@ -16,6 +17,7 @@ interface Data {
 export default function Orders({ data }: { data: Data[] }) {
   return (
     <div className="min-h-dvh">
+      <Title route="주문내역" />
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
         <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
         <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
