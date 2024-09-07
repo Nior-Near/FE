@@ -114,7 +114,7 @@ export default function Order_History({ data }: { data: Data }) {
       </div>
       <div className="py-[40px]">
         <div className="w-[375px] h-[328px] flex-col justify-start items-center gap-3 inline-flex">
-          <div className="self-stretch h-[86px] px-6 flex-col justify-start items-start gap-3 flex">
+          <div className="self-stretch px-6 flex-col justify-start items-start gap-3 flex">
             <div className="self-stretch text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
               픽업 장소
             </div>
@@ -133,7 +133,10 @@ export default function Order_History({ data }: { data: Data }) {
           <div className="bg-white flex-col justify-start items-start flex">
             <div className="w-[321px] h-10 bg-white rounded border border-[#d1d6db] flex-col justify-center items-start flex">
               <div className="self-stretch px-4 py-2 justify-start items-center gap-[11px] inline-flex">
-                <div className="w-[254px] h-[22px] text-[#222224] text-[14px] font-[400] font-pretendard leading-[22.4px]">
+                <div
+                  className="w-[254px] h-[22px] text-[#222224] text-[14px] font-[400] font-pretendard leading-[22.4px] overflow-hidden text-ellipsis"
+                  title={data?.requestMessage}
+                >
                   {data?.requestMessage}
                 </div>
               </div>
@@ -151,12 +154,12 @@ export default function Order_History({ data }: { data: Data }) {
           {data?.orderMenus?.map((menu, index) => (
             <div
               key={menu?.menuName}
-              className="self-stretch justify-start items-start gap-[89px] inline-flex"
+              className="self-stretch justify-between items-start gap-[89px] inline-flex"
             >
-              <div className="w-[31px] text-[#333e4e] text-sm font-normal font-pretendard leading-snug">
+              <div className="text-[#333e4e] text-sm font-normal font-pretendard leading-snug">
                 {menu?.menuName}
               </div>
-              <div className="w-[207px] text-right text-[#333e4e] text-sm font-semibold font-pretendard">
+              <div className="text-right text-[#333e4e] text-sm font-semibold font-pretendard">
                 {menu?.menuPrice} * {menu?.quantity}
               </div>
             </div>
@@ -174,10 +177,10 @@ export default function Order_History({ data }: { data: Data }) {
             </svg>
           </div>
           <div className="w-[326px] justify-between items-center inline-flex">
-            <div className="w-[79px] text-[#333e4e] text-base font-normal font-pretendard leading-relaxed">
+            <div className="text-[#333e4e] text-base font-normal font-pretendard leading-relaxed">
               총 결제금액
             </div>
-            <div className="w-[79px] text-right text-[#638404] text-xl font-semibold font-pretendard leading-loose">
+            <div className="text-right text-[#638404] text-xl font-semibold font-pretendard leading-loose">
               {data?.totalPrice?.toLocaleString()}
             </div>
           </div>

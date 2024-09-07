@@ -171,7 +171,7 @@ export default function Store({ data }: { data: Data }) {
         <span className="px-[24px] font-pretendard text-[18px] font-[600] leading-[28.8px] text-[#222224]">
           주문
         </span>
-        <div className="px-[24px] py-[12px] flex flex-row flex-nowrap items-center gap-[16px] overflow-x-auto scrollbar-hide">
+        <div className="px-[24px] py-[12px] flex flex-row flex-nowrap items-center gap-[16px] overflow-x-auto">
           {data?.menus?.map((item, index) => (
             <div
               key={item?.menuId}
