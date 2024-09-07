@@ -17,9 +17,7 @@ export default function Header({
 
   return (
     <header className="bg-white flex justify-between items-center py-[9px] relative">
-      <div className="flex items-center justify-center ml-[26px] text-[#638404] text-[24px] mt-[5px] font-jalnan">
-        니어니어
-      </div>
+      <Logo />
       <div className="flex items-center">
         {isLoggedIn ? (
           <button
@@ -37,13 +35,20 @@ export default function Header({
             지역 선택
           </button>
         )}
-        <div
-          className="ml-[21px] mr-[19px] cursor-pointer"
-          onClick={handleProfileClick}
-        >
-          <Avatar className="h-[40px] w-[40px] rounded-full" />
-        </div>
+        <ProfileIcon onClick={handleProfileClick} />
       </div>
     </header>
   );
 }
+
+const Logo = () => (
+  <div className="flex items-center justify-center ml-[26px] text-[#638404] text-[24px] mt-[5px] font-jalnan">
+    니어니어
+  </div>
+);
+
+const ProfileIcon = ({ onClick }: { onClick: () => void }) => (
+  <div className="ml-[21px] mr-[19px] cursor-pointer" onClick={onClick}>
+    <Avatar className="h-[40px] w-[40px] rounded-full" />
+  </div>
+);
