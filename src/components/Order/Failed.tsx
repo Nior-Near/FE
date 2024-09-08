@@ -1,6 +1,7 @@
 import Arrow from "@/src/assets/arrow.svg";
 import ErrorCircle from "@/src/assets/error_circle.svg";
 import Navbar from "../Navbar";
+import Link from "next/link";
 
 export default function Order_Failed() {
   return (
@@ -20,9 +21,12 @@ export default function Order_Failed() {
       </div>
       <div className="pt-[95px] pb-[158px] flex flex-col items-center gap-[21px]">
         <ErrorCircle />
-        <span className="font-pretendard text-[12px] font-[600] leading-[19.2px] underline text-[#707a87] text-center">
+        <Link
+          href="http://pf.kakao.com/_qxgcgG/chat"
+          className="font-pretendard text-[12px] font-[600] leading-[19.2px] underline text-[#707a87] text-center"
+        >
           니어니어 고객센터 바로가기
-        </span>
+        </Link>
       </div>
       <div className="flex flex-row items-center justify-center gap-[20px]">
         <button className="h-[40px] rounded-[100px] px-[24px] py-[10px] flex items-center justify-center self-stretch bg-[#97b544] font-pretendard text-[16px] font-[600] leading-[25.6px] text-center text-white">
