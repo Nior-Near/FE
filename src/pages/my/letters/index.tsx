@@ -1,10 +1,10 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
 import LetterRead from "@/src/assets/letter_read.svg";
 import LetterUnread from "@/src/assets/letter_unread.svg";
 import ViewLetter, { Letter } from "@/src/components/Letters/ViewLetter";
+import Navbar from "@/src/components/Navbar";
+import Title from "@/src/components/Title";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -36,32 +36,12 @@ export default function Letters({ data }: { data: Data["letterDTOs"] }) {
   if (letter !== "sent" && letter !== null)
     return <ViewLetter data={letter} setLetter={setLetter} />;
 
-  const router = useRouter();
-
   return (
     <>
       <Toaster position="bottom-center" />
+      <Title route="편지함" />
       <div className="h-dvh">
-        <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-          <ArrowRight
-            width="24"
-            height="24"
-            className="ml-[27px] mr-auto"
-            onClick={() => router.back()}
-          />
-          <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
-            편지함
-          </span>
-        </nav>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="375"
-          height="2"
-          viewBox="0 0 375 2"
-          fill="none"
-        >
-          <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
-        </svg>
+        <Navbar title="편지함" />
         <div className="pt-[31px] px-[23px]">
           <div className="flex flex-col gap-[8px]">
             <span className="font-pretendard font-[600] leading-[38.4px] text-[24px]">

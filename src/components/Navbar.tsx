@@ -1,6 +1,14 @@
 import Arrow from "@/src/assets/arrow.svg";
 import { useRouter } from "next/router";
-export default function Navbar({ title, destination }: { title: string; destination?: string }) {
+export default function Navbar({
+  title,
+  destination,
+  onClick,
+}: {
+  title: string;
+  destination?: string;
+  onClick?: () => void;
+}) {
   const router = useRouter();
 
   return (
@@ -10,7 +18,11 @@ export default function Navbar({ title, destination }: { title: string; destinat
           width="24"
           height="24"
           className="ml-[27px] mr-auto cursor-pointer"
-          onClick={() => (destination ? router.push(destination) : router.back())}
+          onClick={
+            onClick
+              ? () => onClick()
+              : () => (destination ? router.push(destination) : router.back())
+          }
         />
         <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
           {title}
