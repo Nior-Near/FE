@@ -1,10 +1,10 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
-import Image from "next/image";
 import letter from "@/src/assets/letter.png";
 import { useEffect } from "react";
 import { axios } from "@/src/lib/axios";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import Navbar from "../Navbar";
+import Title from "../Title";
 
 export interface Letter {
   letterId: number;
@@ -54,26 +54,8 @@ export default function ViewLetter({ data, setLetter }: { data: Letter; setLette
 
   return (
     <div>
-      <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-        <ArrowRight
-          width="24"
-          height="24"
-          className="ml-[27px] mr-auto"
-          onClick={() => (letter === null ? router.back() : setLetter(null))}
-        />
-        <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
-          편지함
-        </span>
-      </nav>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="375"
-        height="2"
-        viewBox="0 0 375 2"
-        fill="none"
-      >
-        <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
-      </svg>
+      <Title route="편지함 상세보기" />
+      <Navbar title="편지함" onClick={() => (letter === null ? router.back() : setLetter(null))} />
       <form onSubmit={handleSubmit(onSubmit)} className="pt-[31px] px-[24px] flex flex-col">
         <span className="font-pretendard text-[24px] font-[600] leading-[38.4px]">
           <span className="text-[#638404]">{data?.senderName}</span> 요리사님의 편지
