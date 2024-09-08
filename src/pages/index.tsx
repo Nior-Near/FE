@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { axios } from "../lib/axios";
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
 import RegionSelect from "@/src/components/RegionSelect";
 import Kakao from "../assets/kakao.svg";
+import Title from "../components/Title";
 
 interface Chef {
   profileImage: string;
@@ -79,7 +80,7 @@ export default function Main() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -98,6 +99,7 @@ export default function Main() {
 
   return (
     <div className="min-h-screen flex flex-col pb-[50px]">
+      <Title route="홈" />
       <Header
         isLoggedIn={isLoggedIn}
         selectedRegion={selectedRegion || "지역 선택"}

@@ -1,11 +1,13 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
-import { Done } from "./interface";
 import Image from "next/image";
 import Link from "next/link";
+import Title from "../Title";
+import Navbar from "../Navbar";
+import { Done } from "./interface";
 
 export default function Order_Done({ data }: { data: Done | null }) {
   return (
     <div className="relative h-dvh z-0">
+      <Title route="주문 완료" />
       <svg
         width="375"
         height="327"
@@ -16,21 +18,7 @@ export default function Order_Done({ data }: { data: Done | null }) {
       >
         <circle cx="187" cy="-210" r="537" fill="#486300" />
       </svg>
-      <nav className="w-full py-[16px] flex flex-row items-center justify-center relative text-white">
-        <ArrowRight width="24" height="24" className="ml-[27px] mr-auto [&_path]:fill-white" />
-        <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
-          주문/결제
-        </span>
-      </nav>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="375"
-        height="2"
-        viewBox="0 0 375 2"
-        fill="none"
-      >
-        <path d="M-8 1H384" stroke="#638404" />
-      </svg>
+      <Navbar title="주문 완료" />
       <div className="pt-[41px] flex flex-col items-center gap-[16px]">
         <span className="font-pretendard text-[20px] font-[600] leading-[32px] text-white">
           음식 주문이 완료되었습니다
@@ -103,7 +91,7 @@ export default function Order_Done({ data }: { data: Done | null }) {
       </div>
       <div className="w-full inline-flex items-center gap-[20px] justify-center">
         <Link
-          href="/main"
+          href="/"
           className="px-[24px] py-[10px] flex items-center justify-center h-[40px] rounded-full bg-[#97b544] font-pretendard font-[600] text-[16px] leading-[25.6px] text-white text-center"
         >
           니어니어 홈으로

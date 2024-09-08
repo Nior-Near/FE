@@ -1,17 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "@/src/components/ChefRequest/Header";
-import ChefInfo, {
-  ChefInfoFormData,
-} from "@/src/components/ChefRequest/ChefInfo";
-import OrderInfoNearChef, {
-  OrderInfoNearChefFormData,
-} from "@/src/components/ChefRequest/OrderInfoNearChef";
-import OrderInfoPersonalChef, {
-  OrderInfoPersonalChefFormData,
-} from "@/src/components/ChefRequest/OrderInfoPersonalChef";
+import ChefInfo, { ChefInfoFormData } from "@/src/components/ChefRequest/ChefInfo";
+import OrderInfoNearChef, { OrderInfoNearChefFormData } from "@/src/components/ChefRequest/OrderInfoNearChef";
+import OrderInfoPersonalChef, { OrderInfoPersonalChefFormData } from "@/src/components/ChefRequest/OrderInfoPersonalChef";
 import MenuRegistration from "@/src/components/ChefRequest/MenuRegistration";
 import LetterRegistration from "@/src/components/ChefRequest/LetterRegistration";
 import MenuList from "@/src/components/ChefRequest/MenuList";
+import Title from "@/src/components/Title";
 
 interface FormData {
   menuName: string;
@@ -23,9 +18,7 @@ interface FormData {
 const ChefRequest = () => {
   const [step, setStep] = useState(1);
   const [chefData, setChefData] = useState<ChefInfoFormData | null>(null);
-  const [orderData, setOrderData] = useState<
-    OrderInfoNearChefFormData | OrderInfoPersonalChefFormData | null
-  >(null);
+  const [orderData, setOrderData] = useState<OrderInfoNearChefFormData | OrderInfoPersonalChefFormData | null>(null);
   const [menus, setMenus] = useState<FormData[]>([]);
 
   const nextStepFromChefInfo = (data: ChefInfoFormData) => {
@@ -33,9 +26,7 @@ const ChefRequest = () => {
     setStep(2);
   };
 
-  const nextStepFromOrderInfo = (
-    data: OrderInfoNearChefFormData | OrderInfoPersonalChefFormData
-  ) => {
+  const nextStepFromOrderInfo = (data: OrderInfoNearChefFormData | OrderInfoPersonalChefFormData) => {
     setOrderData(data);
     setStep(4);
   };
@@ -62,6 +53,7 @@ const ChefRequest = () => {
 
   return (
     <div>
+      <Title route="요리사 신청" />
       <Header step={step} />
       {step === 1 && <ChefInfo nextStep={nextStepFromChefInfo} />}
       {step === 2 && <LetterRegistration onSubmit={handleLetterSubmit} />}

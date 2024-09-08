@@ -1,8 +1,9 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import Map from "@/src/assets/map.svg";
+import Title from "@/src/components/Title";
+import Navbar from "@/src/components/Navbar";
 
 interface Data {
   orderStatus: "CONFIRM" | "COOKING" | "PICKUP"; //TODO "DONE" 추가
@@ -51,12 +52,8 @@ export default function Order_History({ data }: { data: Data }) {
 
   return (
     <div>
-      <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-        <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
-        <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
-          주문내역
-        </span>
-      </nav>
+      <Title route="주문내역 상세보기" />
+      <Navbar title="주문내역" destination="/my/orders" />
       <div className="w-[375px] h-[163px] p-6 bg-[#638404] flex-col justify-start items-start gap-5 inline-flex">
         <div className="self-stretch h-[52px] flex-col justify-start items-start gap-1 flex">
           <div className="self-stretch text-white text-lg font-semibold font-pretendard leading-[28.80px]">
@@ -145,8 +142,8 @@ export default function Order_History({ data }: { data: Data }) {
         </div>
       </div>
 
-      <div className="w-full h-[185px] py-4 mb-[91px] bg-[#f0f2f5] border-dashed border-[1px] border-[#d1d6db] flex-col justify-start items-start gap-1 inline-flex">
-        <div className="self-stretch h-[153px] px-6 flex-col justify-start items-start gap-3 flex">
+      <div className="w-full py-4 mb-[91px] bg-[#f0f2f5] border-dashed border-[1px] border-[#d1d6db] flex-col justify-start items-start gap-1 inline-flex">
+        <div className="self-stretch px-6 flex-col justify-start items-start gap-3 flex">
           <div className="self-stretch text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
             주문 상품 총 {data?.orderMenus?.reduce((prev, menu) => prev + menu?.quantity, 0)}개
           </div>

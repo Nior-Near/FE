@@ -1,17 +1,13 @@
 import Image from "next/image";
-import food from "@/src/assets/food.jpg";
-import food2 from "@/src/assets/food-2.jpeg";
-import food3 from "@/src/assets/food-3.jpeg";
-import food4 from "@/src/assets/food-4.jpeg";
-import food5 from "@/src/assets/food-5.jpeg";
 import NavigateBefore from "@/src/assets/navigate_before.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
-import ArrowRight from "@/src/assets/arrow_right.svg";
+import Arrow from "@/src/assets/arrow.svg";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Title from "@/src/components/Title";
 
 export interface Data {
   storeId: number;
@@ -48,11 +44,14 @@ export default function Store({ data }: { data: Data }) {
 
   return (
     <div>
-      <div
-        onClick={() => router.back()}
-        className="absolute top-[59px] left-[29px] w-[32px] h-[32px] p-[4px] z-[999] rounded-full bg-white cursor-pointer"
-      >
-        <ArrowRight className="[&_path]:fill-black" width={24} height={24} />
+      <Title route="요리사" />
+      <div className="absolute top-[59px] left-[29px] w-[32px] h-[32px] p-[4px] z-[999] rounded-full bg-white cursor-pointer">
+        <Arrow
+          className="[&_path]:fill-black"
+          width={24}
+          height={24}
+          onClick={() => router.push("/")}
+        />
       </div>
       <div className="w-[375px] h-[291px] relative">
         <img

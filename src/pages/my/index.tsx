@@ -1,4 +1,4 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
+import Arrow from "@/src/assets/arrow.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
 import Envelope from "@/src/assets/envelope.svg";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Title from "@/src/components/Title";
 
 interface Data {
   memberId: number;
@@ -29,10 +30,11 @@ export default function My({ data }: { data?: Data }) {
 
   return (
     <div>
+      <Title route="마이 페이지" />
       <div className="w-full h-dvh relative bg-[#638404]">
         <div className="w-full h-[calc(100%_-_187px)] left-0 top-[187px] absolute bg-white rounded-tl-[28px] rounded-tr-[28px]" />
         <div className="p-1 left-[24px] top-[59px] absolute bg-white rounded-[999px] shadow justify-start items-center gap-1 inline-flex">
-          <ArrowRight className="w-6 h-6" onClick={() => router.back()} />
+          <Arrow className="w-6 h-6 cursor-pointer" onClick={() => router.push("/")} />
         </div>
         <div className="text-nowrap left-[173px] top-[101px] absolute text-white/30 text-[20px] font-[600] font-pretendard leading-[32px]">
           시니어 요리사가 당신 곁에
@@ -48,38 +50,10 @@ export default function My({ data }: { data?: Data }) {
                 {data ? data?.nickname : "로그인해주세요."}
               </div>
             </div>
-            {/* <div className="w-[85px] py-[5px] flex-col justify-start items-start gap-1 inline-flex">
-              <div className="self-stretch px-1 bg-[#96b444] justify-center items-center gap-1 inline-flex">
-                <button
-                  className="h-[19px] text-[#f0f2f5] text-[12px] font-pretendard leading-[19.2px]"
-                  onClick={() => setShowLogin(true)}
-                >
-                  로그인/회원가입
-                </button>
-              </div>
-            </div> */}
           </div>
           {showLogin && <LoginModal dimmed />}
 
           <div className="w-[375px] px-[24px] flex flex-col gap-[40px] bg-white">
-            <div className="h-[94px] px-[24px] py-[16px] bg-[#638404] rounded-[14px] flex-col justify-start items-start gap-[9px] flex">
-              <div className="justify-start items-start gap-[160px] inline-flex">
-                <div className="text-nowrap text-white text-[12px] font-pretendard leading-[19.2px]">
-                  니어니어 포인트
-                </div>
-                <div className="justify-center items-center gap-1 flex">
-                  <div className="justify-center items-center gap-1 flex">
-                    <div className="text-nowrap text-white text-[14px] font-[600] font-pretendard leading-none">
-                      충전하기
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="text-white text-[28px] font-[600] font-pretendard leading-none">
-                {data ? data?.point : "0"}p
-              </div>
-            </div>
-
             <div className="flex-col justify-start items-start gap-[18px] inline-flex bg-white">
               <div className="self-stretch flex-col justify-start items-center gap-[18px] flex">
                 <Link href="/my/letters" className="relative h-[35px]">

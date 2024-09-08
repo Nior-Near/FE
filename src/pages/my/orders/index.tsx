@@ -1,4 +1,5 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
+import Navbar from "@/src/components/Navbar";
+import Title from "@/src/components/Title";
 import { axios } from "@/src/lib/axios";
 import { GetServerSidePropsContext } from "next";
 import Image from "next/image";
@@ -16,21 +17,8 @@ interface Data {
 export default function Orders({ data }: { data: Data[] }) {
   return (
     <div className="min-h-dvh">
-      <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-        <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
-        <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
-          주문내역
-        </span>
-      </nav>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="375"
-        height="2"
-        viewBox="0 0 375 2"
-        fill="none"
-      >
-        <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
-      </svg>
+      <Title route="주문내역" />
+      <Navbar title="주문내역" destination="/my" />
       <div className="p-[26px] pt-[22px] flex flex-col items-center gap-5">
         {data &&
           (data?.length > 0 ? (
