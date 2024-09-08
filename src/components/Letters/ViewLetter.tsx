@@ -30,10 +30,15 @@ export default function ViewLetter({ data, setLetter }: { data: Letter; setLette
     markAsRead();
   }, []);
 
-  const { register, handleSubmit } = useForm<Form>({
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<Form>({
     defaultValues: {
       content: "",
     },
+    mode: "onChange",
   });
 
   const onSubmit = async ({ content }: Form) => {
@@ -48,7 +53,7 @@ export default function ViewLetter({ data, setLetter }: { data: Letter; setLette
   };
 
   return (
-    <div className="h-dvh">
+    <div>
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
         <ArrowRight
           width="24"
@@ -94,7 +99,9 @@ export default function ViewLetter({ data, setLetter }: { data: Letter; setLette
         </div>
         <button
           type="submit"
-          className="h-[51px] p-[4px] flex items-center justify-center gap-[4px] self-stretch rounded-full bg-[#638404] font-pretendard font-[600] text-[18px] leading-[28.8px] text-center text-white"
+          className={`mb-[40px] h-[51px] p-[4px] flex items-center justify-center gap-[4px] self-stretch rounded-full ${
+            isValid ? "bg-[#638404]" : "bg-[#d1d6db]"
+          } font-pretendard font-[600] text-[18px] leading-[28.8px] text-center text-white`}
         >
           요리사님께 편지 전송하기
         </button>
