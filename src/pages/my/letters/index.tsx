@@ -4,6 +4,7 @@ import ViewLetter, { Letter } from "@/src/components/Letters/ViewLetter";
 import Navbar from "@/src/components/Navbar";
 import Title from "@/src/components/Title";
 import { axios } from "@/src/lib/axios";
+import dayjs from "dayjs";
 import { GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -58,14 +59,14 @@ export default function Letters({ data }: { data: Data["letterDTOs"] }) {
                 className="w-[105px] h-[130px] flex flex-col items-center gap-[8px]"
                 onClick={() => setLetter(letter)}
               >
-                {letter?.status === "미열람" ? <LetterUnread /> : <LetterRead />}
+                {letter?.status === "열람 완료" ? <LetterRead /> : <LetterUnread />}
                 <div className="flex flex-col items-center">
                   <span className="text-[#1E2530] font-pretendard font-[600] text-[14px] leading-none">
                     {letter?.senderName}
                   </span>
-                  <span className="text-[#1E2530] font-pretendard font-[400] text-[12px] leading-[19.2px]">
-                    {letter?.createdAt}
-                  </span>
+                  <div className="text-[#707A87] text-center font-pretendard text-[12px] font-[400] leading-[19.2px]">
+                    {dayjs(letter?.createAt).format("YYYY년 M월 D일")}
+                  </div>
                 </div>
               </div>
             ))}

@@ -1,4 +1,3 @@
-import letter from "@/src/assets/letter.png";
 import { useEffect } from "react";
 import { axios } from "@/src/lib/axios";
 import { useRouter } from "next/router";
@@ -10,9 +9,9 @@ export interface Letter {
   letterId: number;
   senderName: string;
   senderId: number;
-  status: "열람" | "미열람";
+  status: "열람 완료" | "미열람";
   imageUrl: string;
-  createdAt: string;
+  createAt: string;
 }
 
 interface Form {
@@ -55,13 +54,13 @@ export default function ViewLetter({ data, setLetter }: { data: Letter; setLette
   return (
     <div>
       <Title route="편지함 상세보기" />
-      <Navbar title="편지함" onClick={() => (letter === null ? router.back() : setLetter(null))} />
+      <Navbar title="편지함" onClick={() => (data === null ? router.back() : setLetter(null))} />
       <form onSubmit={handleSubmit(onSubmit)} className="pt-[31px] px-[24px] flex flex-col">
         <span className="font-pretendard text-[24px] font-[600] leading-[38.4px]">
           <span className="text-[#638404]">{data?.senderName}</span> 요리사님의 편지
         </span>
         <span className="mt-[8px] font-pretendard text-[12px] font-[400] leading-[19.2px]">
-          노인 요리사님이 보내주신 편지를 읽고, 답장을 보내주세요!
+          {data?.senderName} 요리사님이 보내주신 편지를 읽고, 답장을 보내주세요!
         </span>
         <div className="py-[30px] flex flex-col items-center">
           <img src={data?.imageUrl} alt="" />
