@@ -130,5 +130,5 @@ export default function Orders({ data }: { data: Data[] }) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await axios.get(`/members/payments`);
 
-  return { props: { data: response.data?.result } };
+  return { props: { data: response.data?.result?.reverse() } };
 }
