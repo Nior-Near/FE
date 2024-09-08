@@ -1,6 +1,3 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
-import Image from "next/image";
-import letter from "@/src/assets/letter.png";
 import { useEffect } from "react";
 import { axios } from "@/src/lib/axios";
 import { useRouter } from "next/router";

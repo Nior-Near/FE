@@ -1,4 +1,4 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
+import Arrow from "@/src/assets/arrow.svg";
 import LetterRead from "@/src/assets/letter_read.svg";
 import LetterUnread from "@/src/assets/letter_unread.svg";
 import ViewLetter, { Letter } from "@/src/components/Letters/ViewLetter";
@@ -21,7 +21,7 @@ export default function Letters({ data }: { data: Data["letterDTOs"] }) {
     <div className="h-dvh">
       <Title route="편지함" />
       <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-        <ArrowRight
+        <Arrow
           width="24"
           height="24"
           className="ml-[27px] mr-auto"

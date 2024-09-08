@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { axios } from "../../lib/axios";
 
@@ -41,7 +41,7 @@ const determinePlaceId = (place: string): number => {
   }
 };
 
-const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
+const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   const [isRegion1DropdownOpen, setRegion1DropdownOpen] = useState(false);
   const [selectedRegion1, setSelectedRegion1] = useState("");
   const [regionId2, setRegionId2] = useState("");
@@ -110,9 +110,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   }, []);
 
   const letter = localStorage.getItem("letter");
-  const letterFile = letter
-    ? new File([letter], "letter.png", { type: "image/png" })
-    : null;
+  const letterFile = letter ? new File([letter], "letter.png", { type: "image/png" }) : null;
 
   // 주문가능지역
   const fetchRegionId = async (placeId: number) => {
@@ -216,9 +214,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   return (
     <div className="px-[23px] pb-[43px] h-[765px] flex flex-col justify-between">
       <div>
-        <div className="text-[20px] font-semibold mt-[44px] mb-[36px]">
-          주문 정보
-        </div>
+        <div className="text-[20px] font-semibold mt-[44px] mb-[36px]">주문 정보</div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-[20px]">
@@ -268,9 +264,7 @@ const OrderInfoNearChef: React.FC<OrderInfoNearChefProps> = ({ nextStep }) => {
                       key={region}
                       onClick={() => handleRegion1Select(region)}
                       className={`flex items-center justify-between px-[16px] py-[8px] gap-[23px] text-[#707A87] text-[14px] font-pretendard leading-[22px] cursor-pointer ${
-                        selectedRegion1 === region
-                          ? "bg-[#EEF3E2] text-[#333E4E]"
-                          : ""
+                        selectedRegion1 === region ? "bg-[#EEF3E2] text-[#333E4E]" : ""
                       }`}
                     >
                       <span>{region}</span>
