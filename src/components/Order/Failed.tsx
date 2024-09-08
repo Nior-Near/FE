@@ -1,24 +1,11 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
+import Arrow from "@/src/assets/arrow.svg";
 import ErrorCircle from "@/src/assets/error_circle.svg";
+import Navbar from "../Navbar";
 
 export default function Order_Failed() {
   return (
     <div className="h-dvh">
-      <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-        <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
-        <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
-          주문/결제
-        </span>
-      </nav>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="375"
-        height="2"
-        viewBox="0 0 375 2"
-        fill="none"
-      >
-        <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
-      </svg>
+      <Navbar title="주문 실패" destination="/" />
       <div className="pt-[53px] px-[24px] flex flex-col gap-[10px]">
         <span className="font-pretendard text-[24px] font-[600] leading-[38.4px]">
           주문처리에 실패하여

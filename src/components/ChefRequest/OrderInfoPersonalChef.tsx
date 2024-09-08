@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { ChefInfoFormData } from "./ChefInfo";
 import { axios } from "../../lib/axios";
@@ -20,9 +20,7 @@ interface Region {
   name: string;
 }
 
-const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
-  nextStep,
-}) => {
+const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => {
   const [chefInfo, setChefInfo] = useState<ChefInfoFormData | null>(null);
   const [memberId, setMemberId] = useState<number | null>(null);
   const [detailRegions, setDetailRegions] = useState<Region[]>([]);
@@ -112,18 +110,14 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
       formData.append("placeName", data.placeName);
       formData.append("placeAddress", data.placeAddress);
 
-
-      const regionId = detailRegions.find(
-        (region) => region.name === data.regionId
-      )?.id;
+      const regionId = detailRegions.find((region) => region.name === data.regionId)?.id;
 
       if (regionId) {
         formData.append("regionId", regionId.toString());
       }
 
-
       formData.append("message", data.message);
-      formData.append("memberId", memberId.toString()); 
+      formData.append("memberId", memberId.toString());
 
       try {
         const response = await axios.post("/stores/freelance", formData, {
@@ -144,7 +138,6 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
     setRegionDropdownOpen(!isRegionDropdownOpen);
   };
 
-
   const handleRegionSelect = (region: string) => {
     setSelectedRegion(region);
     setValue("regionId", region, { shouldValidate: true });
@@ -155,9 +148,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
 
   return (
     <div className="px-[23px] pb-[43px]">
-      <div className="text-[20px] font-semibold mt-[39px] mb-[32px]">
-        주문 정보
-      </div>
+      <div className="text-[20px] font-semibold mt-[39px] mb-[32px]">주문 정보</div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-[20px]">
@@ -248,10 +239,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                       isRegionDropdownOpen ? "rotate-180" : ""
                     }`}
                   >
-                    <path
-                      d="M12 12.6L16.6 8L18 9.4L12 15.4L6 9.4L7.4 8L12 12.6Z"
-                      fill="#A8B1B9"
-                    />
+                    <path d="M12 12.6L16.6 8L18 9.4L12 15.4L6 9.4L7.4 8L12 12.6Z" fill="#A8B1B9" />
                   </svg>
                 </div>
               )}
@@ -264,9 +252,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
                     key={region.id}
                     onClick={() => handleRegionSelect(region.name)}
                     className={`flex items-center justify-between px-[16px] py-[8px] gap-[23px] text-[#707A87] text-[14px] font-pretendard leading-[22px] cursor-pointer ${
-                      selectedRegion === region.name
-                        ? "bg-[#EEF3E2] text-[#333E4E]"
-                        : ""
+                      selectedRegion === region.name ? "bg-[#EEF3E2] text-[#333E4E]" : ""
                     }`}
                   >
                     <span>{region.name}</span>
@@ -306,8 +292,7 @@ const OrderInfoPersonalChef: React.FC<OrderInfoPersonalChefProps> = ({
 
         <div className="mb-[190px]">
           <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
-            주문 완료 시 고객에게 보여질 문구 (최대 30자){" "}
-            <span className="text-[#638404]">*</span>
+            주문 완료 시 고객에게 보여질 문구 (최대 30자) <span className="text-[#638404]">*</span>
           </label>
           <Controller
             name="message"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { FC, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 import letterImg from "../../assets/letter.png";
@@ -11,9 +11,7 @@ interface LetterRegistrationProps {
   onSubmit: (data: LetterFormData) => void;
 }
 
-const LetterRegistration: React.FC<LetterRegistrationProps> = ({
-  onSubmit,
-}) => {
+const LetterRegistration: FC<LetterRegistrationProps> = ({ onSubmit }) => {
   const [fileName, setFileName] = useState("사진을 첨부해주세요.");
   const {
     handleSubmit,
@@ -30,7 +28,7 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
       const reader = new FileReader();
       reader.onload = function (event) {
         const fileContent = event.target?.result;
-        if (typeof fileContent === 'string') {
+        if (typeof fileContent === "string") {
           localStorage.setItem("letter", fileContent);
         }
       };
@@ -41,9 +39,7 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
 
   return (
     <div className="px-[23px] pb-[40px] h-[765px] overflow-y-auto">
-      <div className="text-[20px] font-semibold mt-[44px] mb-[10px]">
-        편지를 등록해주세요
-      </div>
+      <div className="text-[20px] font-semibold mt-[44px] mb-[10px]">편지를 등록해주세요</div>
       <div className="text-[12px] font-pretendard leading-[19.2px] mb-[20px]">
         모든 사람이 읽어도 불편함 없는 내용으로 작성하여야 하며,
         <br />
@@ -55,12 +51,7 @@ const LetterRegistration: React.FC<LetterRegistrationProps> = ({
         className="relative w-[327px] h-[207px] mb-[4px]"
         style={{ boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)" }}
       >
-        <Image
-          src={letterImg}
-          alt="편지 예시"
-          layout="fill"
-          objectFit="cover"
-        />
+        <Image src={letterImg} alt="편지 예시" layout="fill" objectFit="cover" />
       </div>
       <div className="text-[#A8B1B9] text-[12px] leading-[19.2px] mb-[44px] text-center">
         손편지 예시 사진입니다.

@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { useRouter } from "next/router";
 
 interface FormData {
@@ -13,8 +13,7 @@ interface MenuListProps {
   onBoxClick: () => void;
 }
 
-const MenuList: React.FC<MenuListProps> = ({ menus, onBoxClick }) => {
-  
+const MenuList: FC<MenuListProps> = ({ menus, onBoxClick }) => {
   const router = useRouter();
 
   const handleRegisterClick = () => {
@@ -26,7 +25,7 @@ const MenuList: React.FC<MenuListProps> = ({ menus, onBoxClick }) => {
       });
     }
   };
-  
+
   return (
     <div className="px-[23px] h-[765px] flex flex-col justify-between">
       <div>

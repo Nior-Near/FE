@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "@/src/components/ChefRequest/Header";
-import ChefInfo, {
-  ChefInfoFormData,
-} from "@/src/components/ChefRequest/ChefInfo";
+import ChefInfo, { ChefInfoFormData } from "@/src/components/ChefRequest/ChefInfo";
 import OrderInfoNearChef, {
   OrderInfoNearChefFormData,
 } from "@/src/components/ChefRequest/OrderInfoNearChef";

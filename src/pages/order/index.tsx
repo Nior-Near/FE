@@ -1,20 +1,18 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
 import NavigateDown from "@/src/assets/navigate_down.svg";
 import Map from "@/src/assets/map.svg";
 import RadioButtonUnchecked from "@/src/assets/radio_button_unchecked.svg";
 import RadioButtonChecked from "@/src/assets/radio_button_checked.svg";
-
 import { useRouter } from "next/router";
 import ReactSelect, { StylesConfig, OptionProps } from "react-select";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { axios } from "@/src/lib/axios";
 import Order_Done from "@/src/components/Order/Done";
 import Order_Failed from "@/src/components/Order/Failed";
-import { Done } from "@/src/components/Order/interface";
-import { jsonToFormData } from "@/src/lib/jsonToFormdata";
 import Order_Process from "./process";
 import Title from "@/src/components/Title";
+import Navbar from "@/src/components/Navbar";
+import { Done } from "@/src/components/Order/interface";
 
 interface DecodedOrders {
   [key: number]: { name: string; price: number; quantity: number };
@@ -128,11 +126,7 @@ export default function Order() {
 
   const CustomDropdownIndicator = () => <NavigateDown className="*:fill-[#A8B1B9] mr-[10px]" />;
 
-  const CustomOption: React.FC<OptionProps<OptionType, false>> = ({
-    innerProps,
-    label,
-    isSelected,
-  }) => (
+  const CustomOption: FC<OptionProps<OptionType, false>> = ({ innerProps, label, isSelected }) => (
     <div
       {...innerProps}
       className={`py-[9px] px-[16px] flex flex-row items-center justify-between ${
@@ -192,21 +186,7 @@ export default function Order() {
       return (
         <>
           <Title route="주문 및 결제" />
-          <nav className="w-full py-[16px] flex flex-row items-center justify-center relative">
-            <ArrowRight width="24" height="24" className="ml-[27px] mr-auto" />
-            <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
-              주문 및 결제
-            </span>
-          </nav>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="375"
-            height="2"
-            viewBox="0 0 375 2"
-            fill="none"
-          >
-            <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
-          </svg>
+          <Navbar title="주문 및 결제" />
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full p-[24px] pb-0">
               <div className="h-[328px] flex-col justify-start items-start gap-[12px] inline-flex">
@@ -270,8 +250,8 @@ export default function Order() {
               </div>
             </div>
             {decodedOrders && (
-              <div className="w-full h-[185px] py-4 bg-[#f0f2f5] border-dashed border-[1px] border-[#d1d6db] flex-col justify-start items-start gap-1 inline-flex">
-                <div className="self-stretch h-[153px] px-6 flex-col justify-start items-start gap-3 flex">
+              <div className="w-full py-4 bg-[#f0f2f5] border-dashed border-[1px] border-[#d1d6db] flex-col justify-start items-start gap-1 inline-flex">
+                <div className="self-stretch px-6 flex-col justify-start items-start gap-3 flex">
                   <div className="self-stretch text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
                     주문 상품 총 {Object.keys(decodedOrders).length}개
                   </div>
@@ -318,7 +298,10 @@ export default function Order() {
               </div>
             )}
             <div className="w-full py-[40px] px-[23px]">
-              <button className="bg-[#638404] w-[329px] h-[51px] py-[16px] px-[32px] flex flex-col items-center self-stretch rounded-[100px] font-inter text-center text-[16px] font-[600] text-white leading-[normal]">
+              <button
+                type="submit"
+                className="bg-[#638404] w-[329px] h-[51px] py-[16px] px-[32px] flex flex-col items-center self-stretch rounded-[100px] font-inter text-center text-[16px] font-[600] text-white leading-[normal]"
+              >
                 결제하기
               </button>
             </div>
