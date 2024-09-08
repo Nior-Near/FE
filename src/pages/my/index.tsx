@@ -50,38 +50,10 @@ export default function My({ data }: { data?: Data }) {
                 {data ? data?.nickname : "로그인해주세요."}
               </div>
             </div>
-            {/* <div className="w-[85px] py-[5px] flex-col justify-start items-start gap-1 inline-flex">
-              <div className="self-stretch px-1 bg-[#96b444] justify-center items-center gap-1 inline-flex">
-                <button
-                  className="h-[19px] text-[#f0f2f5] text-[12px] font-pretendard leading-[19.2px]"
-                  onClick={() => setShowLogin(true)}
-                >
-                  로그인/회원가입
-                </button>
-              </div>
-            </div> */}
           </div>
           {showLogin && <LoginModal dimmed />}
 
           <div className="w-[375px] px-[24px] flex flex-col gap-[40px] bg-white">
-            <div className="h-[94px] px-[24px] py-[16px] bg-[#638404] rounded-[14px] flex-col justify-start items-start gap-[9px] flex">
-              <div className="justify-start items-start gap-[160px] inline-flex">
-                <div className="text-nowrap text-white text-[12px] font-pretendard leading-[19.2px]">
-                  니어니어 포인트
-                </div>
-                <div className="justify-center items-center gap-1 flex">
-                  <div className="justify-center items-center gap-1 flex">
-                    <div className="text-nowrap text-white text-[14px] font-[600] font-pretendard leading-none">
-                      충전하기
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="text-white text-[28px] font-[600] font-pretendard leading-none">
-                {data ? data?.point : "0"}p
-              </div>
-            </div>
-
             <div className="flex-col justify-start items-start gap-[18px] inline-flex bg-white">
               <div className="self-stretch flex-col justify-start items-center gap-[18px] flex">
                 <Link href="/my/letters" className="relative h-[35px]">
