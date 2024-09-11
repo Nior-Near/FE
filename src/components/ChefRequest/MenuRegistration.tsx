@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { FC, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { axios } from "../../lib/axios";
 
@@ -16,7 +16,7 @@ interface MenuRegistrationProps {
   storeId: string;
 }
 
-const MenuRegistration: React.FC<MenuRegistrationProps> = ({
+const MenuRegistration: FC<MenuRegistrationProps> = ({
   affiliation,
   onSubmit,
   handleCompleteMenuRegistration,

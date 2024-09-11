@@ -1,6 +1,7 @@
-import ArrowRight from "@/src/assets/arrow_right.svg";
+import Arrow from "@/src/assets/arrow.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
-import Envelope from "@/src/assets/envelope.svg";
+import LetterRead from "@/src/assets/letter_read.svg";
+import LetterUnread from "@/src/assets/letter_unread.svg";
 import { useEffect, useState } from "react";
 import LoginModal from "@/src/components/LoginModal";
 import { axios } from "@/src/lib/axios";
@@ -8,12 +9,15 @@ import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Title from "@/src/components/Title";
+import dayjs from "dayjs";
+import { Letter } from "@/src/components/Letters/ViewLetter";
 
 interface Data {
   memberId: number;
   nickname: string;
   point: number;
   imageUrl: string;
+  letterResponseDtos: Letter[];
 }
 
 export default function My({ data }: { data?: Data }) {
@@ -34,7 +38,7 @@ export default function My({ data }: { data?: Data }) {
       <div className="w-full h-dvh relative bg-[#638404]">
         <div className="w-full h-[calc(100%_-_187px)] left-0 top-[187px] absolute bg-white rounded-tl-[28px] rounded-tr-[28px]" />
         <div className="p-1 left-[24px] top-[59px] absolute bg-white rounded-[999px] shadow justify-start items-center gap-1 inline-flex">
-          <ArrowRight className="w-6 h-6" onClick={() => router.back()} />
+          <Arrow className="w-6 h-6 cursor-pointer" onClick={() => router.push("/")} />
         </div>
         <div className="text-nowrap left-[173px] top-[101px] absolute text-white/30 text-[20px] font-[600] font-pretendard leading-[32px]">
           시니어 요리사가 당신 곁에
@@ -50,38 +54,10 @@ export default function My({ data }: { data?: Data }) {
                 {data ? data?.nickname : "로그인해주세요."}
               </div>
             </div>
-            {/* <div className="w-[85px] py-[5px] flex-col justify-start items-start gap-1 inline-flex">
-              <div className="self-stretch px-1 bg-[#96b444] justify-center items-center gap-1 inline-flex">
-                <button
-                  className="h-[19px] text-[#f0f2f5] text-[12px] font-pretendard leading-[19.2px]"
-                  onClick={() => setShowLogin(true)}
-                >
-                  로그인/회원가입
-                </button>
-              </div>
-            </div> */}
           </div>
           {showLogin && <LoginModal dimmed />}
 
           <div className="w-[375px] px-[24px] flex flex-col gap-[40px] bg-white">
-            <div className="h-[94px] px-[24px] py-[16px] bg-[#638404] rounded-[14px] flex-col justify-start items-start gap-[9px] flex">
-              <div className="justify-start items-start gap-[160px] inline-flex">
-                <div className="text-nowrap text-white text-[12px] font-pretendard leading-[19.2px]">
-                  니어니어 포인트
-                </div>
-                <div className="justify-center items-center gap-1 flex">
-                  <div className="justify-center items-center gap-1 flex">
-                    <div className="text-nowrap text-white text-[14px] font-[600] font-pretendard leading-none">
-                      충전하기
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="text-white text-[28px] font-[600] font-pretendard leading-none">
-                {data ? data?.point : "0"}p
-              </div>
-            </div>
-
             <div className="flex-col justify-start items-start gap-[18px] inline-flex bg-white">
               <div className="self-stretch flex-col justify-start items-center gap-[18px] flex">
                 <Link href="/my/letters" className="relative h-[35px]">
@@ -102,24 +78,27 @@ export default function My({ data }: { data?: Data }) {
                     <path d="M0.5 1L372.5 1.00003" stroke="#A8B1B9" strokeWidth="0.5" />
                   </svg>
                 </Link>
-                <div className="flex flex-row items-center gap-[7px] self-stretch">
-                  {[0, 1, 2].map((value, index) => (
+                <Link
+                  href="/my/letters"
+                  className="flex flex-row items-center gap-[7px] self-stretch"
+                >
+                  {data?.letterResponseDtos?.map((letter, index) => (
                     <div
-                      key={value}
+                      key={letter?.letterId}
                       className="w-[105px] h-[130px] flex flex-col items-center gap-2"
                     >
-                      <Envelope />
+                      {letter?.status === "열람 완료" ? <LetterRead /> : <LetterUnread />}
                       <div>
                         <div className="text-[#707A87] text-center font-pretendard text-[14px] font-[600] leading-none">
-                          이영자 요리사
+                          {letter?.senderName}
                         </div>
                         <div className="text-[#707A87] text-center font-pretendard text-[12px] font-[400] leading-[19.2px]">
-                          2024.08.16
+                          {dayjs(letter?.createAt).format("YYYY년 M월 D일")}
                         </div>
                       </div>
                     </div>
                   ))}
-                </div>
+                </Link>
               </div>
               <div className="self-stretch h-[35px] flex-col justify-start items-center gap-[9px] flex">
                 <div className="relative h-[35px]">

@@ -1,10 +1,11 @@
 import { useRouter } from "next/router";
+import { FC } from "react";
 
 interface HeaderProps {
   step: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ step }) => {
+const Header: FC<HeaderProps> = ({ step }) => {
   const router = useRouter();
 
   const progressBarStyles: Record<number, { width: string; height: string }> = {
@@ -16,10 +17,7 @@ const Header: React.FC<HeaderProps> = ({ step }) => {
 
   return (
     <header className="relative flex items-center justify-center h-[76px] p-4">
-      <div
-        onClick={() => router.back()}
-        className="absolute left-[27px] cursor-pointer"
-      >
+      <div onClick={() => router.back()} className="absolute left-[27px] cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -34,9 +32,7 @@ const Header: React.FC<HeaderProps> = ({ step }) => {
           />
         </svg>
       </div>
-      <h1 className="text-[16px] font-pretendard text-[#3B3B53] font-semibold">
-        요리사 신청하기
-      </h1>
+      <h1 className="text-[16px] font-pretendard text-[#3B3B53] font-semibold">요리사 신청하기</h1>
       <div
         className="absolute bottom-0 w-[100%] h-0 border-t"
         style={{
