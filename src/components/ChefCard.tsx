@@ -43,7 +43,7 @@ const ChefCard: React.FC<CardProps> = ({
             </div>
           </div>
           <div
-            className="font-pretendard text-[16px] leading-[25px] h-[39px] overflow-hidden text-ellipsis whitespace-nowrap"
+            className="font-pretendard font-semibold text-[16px] leading-[25px] h-[39px] overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {description}
           </div>
