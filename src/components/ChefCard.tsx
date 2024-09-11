@@ -36,7 +36,10 @@ const ChefCard: FC<CardProps> = ({
             />
             <div className="font-pretendard text-[14px] leading-[22px]">{name} 요리사</div>
           </div>
-          <div className="font-pretendard text-[16px] leading-[25px] h-[39px] overflow-hidden text-ellipsis whitespace-nowrap">
+          <div
+            className="font-pretendard font-semibold text-[16px] leading-[25px] h-[39px] overflow-hidden text-ellipsis whitespace-nowrap"
+          >
+
             {description}
           </div>
           <div className="flex flex-row items-center gap-[8px] mb-[12px] flex-wrap">
