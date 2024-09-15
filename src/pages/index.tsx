@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent, Suspense } from "react";
 import { axios } from "../lib/axios";
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
@@ -6,6 +6,7 @@ import ChefCard from "@/src/components/ChefCard";
 import RegionSelect from "@/src/components/RegionSelect";
 import Kakao from "../assets/kakao.svg";
 import Title from "../components/Title";
+import LogoOutline from "@/src/assets/logo_outline.svg";
 
 interface Chef {
   profileImage: string;
@@ -97,8 +98,10 @@ export default function Main() {
     window.location.href = "http://pf.kakao.com/_qxgcgG/chat";
   };
 
+  const [logoClick, setLogoClick] = useState(0);
+
   return (
-    <div className="min-h-screen flex flex-col pb-[50px]">
+    <div className="min-h-screen flex flex-col">
       <Title route="홈" />
       <Header
         isLoggedIn={isLoggedIn}
@@ -142,7 +145,7 @@ export default function Main() {
         </div>
       </div>
 
-      <div className="flex overflow-x-scroll scrollbar-hide px-[24px] mt-[16px] mb-[60px] space-x-[15px]">
+      <div className="flex overflow-x-scroll px-[24px] mt-[16px] mb-[60px] space-x-[15px]">
         {chefs &&
           chefs.map((chef, index) => (
             <div key={index} className="flex flex-col items-center">
@@ -170,21 +173,25 @@ export default function Main() {
       </div>
       <div className="flex justify-center">
         <div className="grid grid-cols-1 gap-[16px] justify-items-center">
-          {stores && stores.length > 0 ? (
-            stores.map((store, index) => (
-              <ChefCard
-                key={index}
-                storeId={store.storeId}
-                name={store.name}
-                tags={store.tags}
-                description={store.introduction}
-                temperature={store.temperature.toString()}
-                reviews={store.reviewCount.toString()}
-                imageUrl={store.profileImage}
-              />
-            ))
+          {stores ? (
+            stores.length > 0 ? (
+              stores.map((store, index) => (
+                <ChefCard
+                  key={index}
+                  storeId={store.storeId}
+                  name={store.name}
+                  tags={store.tags}
+                  description={store.introduction}
+                  temperature={store.temperature.toString()}
+                  reviews={store.reviewCount.toString()}
+                  imageUrl={store.profileImage}
+                />
+              ))
+            ) : (
+              <div className="text-center mb-[20px] text-gray-500">해당하는 정보가 없습니다.</div>
+            )
           ) : (
-            <div className="text-center mb-[20px] text-gray-500">해당하는 정보가 없습니다.</div>
+            <p className="text-center text-sm">목록을 불러오는 중...</p>
           )}
         </div>
       </div>
@@ -214,6 +221,23 @@ export default function Main() {
           onClick={handleKakaoClick}
         />
       </div>
+      <footer className="mt-[26.5px] px-2 py-8 flex flex-col items-center justify-center bg-neutral-100 select-none">
+        <div>
+          <LogoOutline
+            width={48}
+            className={`hover:[&_path]:fill-[#638404] hover:scale-110 active:scale-95 active:[&_path]:fill-[#638404] cursor-pointer transition-all duration-150 ${
+              Math.floor(logoClick / 10) % 2 === 1 && "rotate-180"
+            }`}
+            onClick={() => setLogoClick((prev) => prev + 1)}
+          />
+        </div>
+        <p className="mt-8 p-2 text-xs text-neutral-600">
+          Copyright © 2024. Dear Nior All rights reserved.
+        </p>
+        <a href="https://github.com/Nior-Near" className="text-xs text-neutral-500">
+          View Github
+        </a>
+      </footer>
     </div>
   );
 }
