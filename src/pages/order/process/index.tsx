@@ -38,23 +38,27 @@ export default function Order_Process({
         },
         (response: RequestPayResponse) => {
           // console.log(response);
+checkPayment(response.success === true ? "success" : "failed")
 
-          axios
-            .post(`/payment/status/${orderId}`, {
-              orderId,
-              status: response.success === true ? "success" : "failed",
-            })
-            .then((res) => {
-              if (res.data?.isSuccess === true) {
-                setIndex("done");
-              } else {
-                setIndex("failed");
-              }
-            });
         }
       );
     }
   };
+
+  const checkPayment = async (status: string) => {
+    axios
+    .post(`/payment/status`, {
+      orderId,
+      status,
+    })
+    .then((res) => {
+      if (res.data?.isSuccess === true) {
+        setIndex("done");
+      } else {
+        setIndex("failed");
+      }
+    });
+  }
 
   useEffect(() => {
     readyPayment();
@@ -83,7 +87,7 @@ export default function Order_Process({
         <div className="pt-[95px] pb-[204px] flex flex-col items-center">
           <CheckCircle />
         </div>
-        <button className="mx-auto flex items-center justify-center w-[329px] h-[51px] p-[4px] rounded-full bg-[#638404] font-pretendard text-[18px] font-[600] leading-[28.8px] text-center text-white">
+        <button onClick={() => checkPayment("success")} className="mx-auto flex items-center justify-center w-[329px] h-[51px] p-[4px] rounded-full bg-[#638404] font-pretendard text-[18px] font-[600] leading-[28.8px] text-center text-white">
           결제를 완료했어요.
         </button>
       </div>
