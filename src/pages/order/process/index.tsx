@@ -37,15 +37,20 @@ export default function Order_Process({
           buyer_tel: payload?.buyerTel,
         },
         (response: RequestPayResponse) => {
-          console.log(response);
+          // console.log(response);
 
-          // if(response.success === true) {
-          //   setIndex("done")
-          // } else {
-          //   setIndex("failed")
-          // }
-
-          setIndex("done");
+          axios
+            .post(`/payment/status/${orderId}`, {
+              orderId,
+              status: response.success === true ? "success" : "failed",
+            })
+            .then((res) => {
+              if (res.data?.isSuccess === true) {
+                setIndex("done");
+              } else {
+                setIndex("failed");
+              }
+            });
         }
       );
     }
