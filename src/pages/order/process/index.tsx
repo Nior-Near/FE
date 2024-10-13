@@ -5,6 +5,7 @@ import { RequestPayResponse } from "iamport-typings";
 import { axios } from "@/src/lib/axios";
 import Title from "@/src/components/Title";
 import Navbar from "@/src/components/Navbar";
+import { nanoid } from "nanoid";
 
 export default function Order_Process({
   orderId,
@@ -28,7 +29,7 @@ export default function Order_Process({
         {
           pg: "html5_inicis.INIpayTest",
           pay_method: "card",
-          merchant_uid: payload?.merchantUid,
+          merchant_uid: nanoid(),
           name: payload?.name,
           amount: payload?.amount,
           buyer_email: payload?.buyerEmail,
@@ -36,15 +37,20 @@ export default function Order_Process({
           buyer_tel: payload?.buyerTel,
         },
         (response: RequestPayResponse) => {
-          console.log(response);
+          // console.log(response);
 
-          // if(response.success === true) {
-          //   setIndex("done")
-          // } else {
-          //   setIndex("failed")
-          // }
-
-          setIndex("done");
+          axios
+            .post(`/payment/status/${orderId}`, {
+              orderId,
+              status: response.success === true ? "success" : "failed",
+            })
+            .then((res) => {
+              if (res.data?.isSuccess === true) {
+                setIndex("done");
+              } else {
+                setIndex("failed");
+              }
+            });
         }
       );
     }
