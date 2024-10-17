@@ -56,7 +56,7 @@ export default function LoginModal({ isLoginRequired, dimmed }: LoginModalProps)
           네이버 로그인
         </button>
 
-        <Link href="/">
+        <Link href="/home">
           <p className="text-[#5DB075] font-pretendard text-[16px] font-semibold mt-[16px]">
             로그인 없이 둘러보기
           </p>
