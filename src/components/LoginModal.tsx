@@ -15,7 +15,7 @@ export default function LoginModal({ isLoginRequired, dimmed }: LoginModalProps)
     console.log("Navigating to:", naverLoginUrl);
     window.location.href = naverLoginUrl;
 
-    router.push(naverLoginUrl);
+    // router.push(naverLoginUrl);
     // window.location.href = "/main";
   };
 

@@ -1,33 +1,29 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import Cookies from "js-cookie";
 import axios from "axios";
 
 export default function OAuthResponse() {
   const router = useRouter();
 
-  useEffect(() => {
-    const checkAccessToken = async () => {
-      try {
-        const response = await axios.get("https://test.niornear.store/api/v1/auth/token", {
-          withCredentials: true,
-        });
 
-        const accessToken = Cookies.get("accessToken");
-        console.log("쿠키 토큰:", accessToken);
-        if (accessToken) {
-          const redirectPath = (router.query.redirect as string) || "/";
-          router.push(redirectPath);
-        } else {
-          router.push("/login");
-        }
-      } catch (error) {
-        console.error("Failed to fetch access token", error);
+  useEffect(() => {
+    const storeAccessToken = async () => {
+      const { token } = router.query;
+
+      if (token) {
+        localStorage.setItem("accessToken", token as string);
+
+        console.log("AccessToken 저장:", token);
+
+        const redirectPath = (router.query.redirect as string) || "/home";
+        router.push(redirectPath);
+      } else {
+        console.error("토큰이 없습니다.");
         router.push("/login");
       }
     };
 
-    checkAccessToken();
+    storeAccessToken();
   }, [router]);
 
   return (
