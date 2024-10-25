@@ -38,7 +38,7 @@ export default function My({ data }: { data?: Data }) {
       <div className="w-full h-dvh relative bg-[#638404]">
         <div className="w-full h-[calc(100%_-_187px)] left-0 top-[187px] absolute bg-white rounded-tl-[28px] rounded-tr-[28px]" />
         <div className="p-1 left-[24px] top-[59px] absolute bg-white rounded-[999px] shadow justify-start items-center gap-1 inline-flex">
-          <Arrow className="w-6 h-6 cursor-pointer" onClick={() => router.push("/")} />
+          <Arrow className="w-6 h-6 cursor-pointer" onClick={() => router.push("/home")} />
         </div>
         <div className="text-nowrap left-[173px] top-[101px] absolute text-white/30 text-[20px] font-[600] font-pretendard leading-[32px]">
           시니어 요리사가 당신 곁에
