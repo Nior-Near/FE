@@ -1,4 +1,5 @@
 import "@/src/styles/globals.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
 import { Inter, Roboto } from "next/font/google";
 import localFont from "next/font/local";
@@ -29,12 +30,16 @@ const jalnan = localFont({
   display: "swap",
 });
 
+const queryClient = new QueryClient();
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main
-      className={`relative ${pretendard.variable} ${inter.variable} ${roboto.variable} ${reeniebeanie?.variable} ${jalnan?.variable}`}
-    >
-      <Component {...pageProps} />
-    </main>
+    <QueryClientProvider client={queryClient}>
+      <main
+        className={`relative ${pretendard.variable} ${inter.variable} ${roboto.variable} ${reeniebeanie?.variable} ${jalnan?.variable}`}
+      >
+        <Component {...pageProps} />
+      </main>
+    </QueryClientProvider>
   );
 }
