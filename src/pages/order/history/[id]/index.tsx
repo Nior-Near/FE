@@ -4,6 +4,8 @@ import { useState } from "react";
 import Map from "@/src/assets/map.svg";
 import Title from "@/src/components/Title";
 import Navbar from "@/src/components/Navbar";
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
 
 interface Data {
   orderStatus: "CONFIRM" | "COOKING" | "PICKUP"; //TODO "DONE" 추가
@@ -18,7 +20,16 @@ interface Data {
   }[];
 }
 
-export default function Order_History({ data }: { data: Data }) {
+export default function Order_History() {
+  const router = useRouter();
+
+  const { data } = useQuery<Data>({
+    queryFn: () =>
+      axios.get(`/orders/${router.query?.id}`).then((response) => response.data?.result),
+    queryKey: ["order"],
+    enabled: !!router.query?.id,
+  });
+
   const list = [
     {
       name: "주문접수",
@@ -47,7 +58,7 @@ export default function Order_History({ data }: { data: Data }) {
   ];
 
   const [status, setStatus] = useState<number>(
-    { CONFIRM: 0, COOKING: 1, PICKUP: 2 }?.[data?.orderStatus]
+    { CONFIRM: 0, COOKING: 1, PICKUP: 2 }?.[data?.orderStatus ?? "CONFIRM"]
   );
 
   return (
@@ -185,12 +196,4 @@ export default function Order_History({ data }: { data: Data }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { id } = context.query;
-
-  const response = await axios.get(`/orders/${id}`);
-
-  return { props: { data: response.data?.result } };
 }
