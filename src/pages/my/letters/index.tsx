@@ -4,6 +4,7 @@ import ViewLetter, { Letter } from "@/src/components/Letters/ViewLetter";
 import Navbar from "@/src/components/Navbar";
 import Title from "@/src/components/Title";
 import { axios } from "@/src/lib/axios";
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
@@ -13,7 +14,12 @@ interface Data {
   letterDTOs: Letter[];
 }
 
-export default function Letters({ data }: { data: Data["letterDTOs"] }) {
+export default function Letters() {
+  const { data } = useQuery<Data["letterDTOs"]>({
+    queryFn: () => axios.get("/letters").then((response) => response.data?.result),
+    queryKey: ["letters"],
+  });
+
   const [letter, setLetter] = useState<Letter | "sent" | null>(null);
 
   useEffect(() => {
@@ -75,10 +81,4 @@ export default function Letters({ data }: { data: Data["letterDTOs"] }) {
       </div>
     </>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const response = await axios.get(`/letters`);
-
-  return { props: { data: response.data?.result } };
 }

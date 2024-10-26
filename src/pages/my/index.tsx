@@ -11,6 +11,7 @@ import Link from "next/link";
 import Title from "@/src/components/Title";
 import dayjs from "dayjs";
 import { Letter } from "@/src/components/Letters/ViewLetter";
+import { useQuery } from "@tanstack/react-query";
 
 interface Data {
   memberId: number;
@@ -20,10 +21,15 @@ interface Data {
   letterResponseDtos: Letter[];
 }
 
-export default function My({ data }: { data?: Data }) {
+export default function My() {
   const [showLogin, setShowLogin] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const router = useRouter();
+
+  const { data } = useQuery<Data>({
+    queryFn: () => axios.get("/members").then((response) => response.data?.result),
+    queryKey: ["my"],
+  });
 
   useEffect(() => {
     if (router.query.showAlert === "true") {
@@ -206,14 +212,4 @@ export default function My({ data }: { data?: Data }) {
       )}
     </div>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  try {
-    const response = await axios.get(`/members`);
-
-    return { props: { data: response.data?.result } };
-  } catch (e) {
-    return { props: {} };
-  }
 }

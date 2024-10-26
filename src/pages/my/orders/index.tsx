@@ -1,6 +1,7 @@
 import Navbar from "@/src/components/Navbar";
 import Title from "@/src/components/Title";
 import { axios } from "@/src/lib/axios";
+import { useQuery } from "@tanstack/react-query";
 import { GetServerSidePropsContext } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +15,12 @@ interface Data {
   orderMenuList: { menuQuantity: number; menuName: string }[];
 }
 
-export default function Orders({ data }: { data: Data[] }) {
+export default function Orders() {
+  const { data } = useQuery<Data[]>({
+    queryFn: () => axios.get("/members/payments").then((response) => response.data?.result),
+    queryKey: ["orders"],
+  });
+
   return (
     <div className="min-h-dvh">
       <Title route="주문내역" />
@@ -125,10 +131,4 @@ export default function Orders({ data }: { data: Data[] }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const response = await axios.get(`/members/payments`);
-
-  return { props: { data: response.data?.result?.reverse() } };
 }

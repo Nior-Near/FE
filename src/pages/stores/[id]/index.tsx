@@ -3,11 +3,11 @@ import NavigateBefore from "@/src/assets/navigate_before.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
 import Arrow from "@/src/assets/arrow.svg";
 import { axios } from "@/src/lib/axios";
-import { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Title from "@/src/components/Title";
+import { useQuery } from "@tanstack/react-query";
 
 export interface Data {
   storeId: number;
@@ -33,8 +33,17 @@ interface Menu {
   orderable: boolean;
 }
 
-export default function Store({ data }: { data: Data }) {
+export default function Store() {
   const router = useRouter();
+
+  const { data } = useQuery<Data>({
+    queryKey: ["store"],
+    queryFn: () =>
+      axios.get(`/stores/${router.query?.id}`).then((response) => response.data?.result),
+    enabled: !!router.query?.id,
+    gcTime: 0,
+    staleTime: Infinity,
+  });
 
   const [foodBannerImage, setFoodBannerImage] = useState(data?.menus?.[0]?.menuImage);
 
@@ -50,7 +59,7 @@ export default function Store({ data }: { data: Data }) {
           className="[&_path]:fill-black"
           width={24}
           height={24}
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/home")}
         />
       </div>
       <div className="w-[375px] h-[291px] relative">
@@ -63,7 +72,7 @@ export default function Store({ data }: { data: Data }) {
         />
         <div
           className={`absolute w-full px-[36.5px] max-w-[${
-            data?.menus?.length * 90 + (data?.menus?.length + 1) * 16
+            data ? data?.menus?.length * 90 + (data?.menus?.length + 1) * 16 : 0
           }px] overflow-x-auto bottom-[-15px] flex flex-row items-center flex-nowrap shrink-0 gap-[16px] scrollbar-hide`}
         >
           {data?.menus &&
@@ -93,7 +102,7 @@ export default function Store({ data }: { data: Data }) {
       <div className="pt-[33px] pb-[24px] px-[24px]">
         <div className="flex flex-row items-center gap-[15px]">
           <div className="w-[90px] h-[90px] rounded-full border text-center overflow-hidden">
-            <Image src={data?.profileImage} alt="" width={90} height={90} />
+            {data ? <Image src={data?.profileImage} alt="" width={90} height={90} /> : undefined}
           </div>
           <span className="font-pretendard text-[24px] font-[600] leading-[13.268px] text-[#222224]">
             {data?.name} 요리사님
@@ -128,7 +137,7 @@ export default function Store({ data }: { data: Data }) {
           </span>
         </div>
         <div className="flex flex-row flex-wrap gap-[4px] items-center">
-          {data?.auths.map((auth) => (
+          {data?.auths?.map((auth) => (
             <div
               key={auth}
               className="px-[4px] flex items-center justify-center rounded-[2px] bg-[#eef3e2]"
@@ -159,7 +168,7 @@ export default function Store({ data }: { data: Data }) {
             <div
               className="h-[18px] rounded-full transition-all duration-500"
               style={{
-                width: `${327 * (data?.temperature / 100)}px`,
+                width: `${327 * ((data?.temperature ?? 0) / 100)}px`,
                 background: "linear-gradient(90deg, #97B544 0%, #486300 100%)",
               }}
             ></div>
@@ -272,12 +281,4 @@ export default function Store({ data }: { data: Data }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { id } = context.query;
-
-  const response = await axios.get(`/stores/${id}`);
-
-  return { props: { data: response.data?.result } };
 }
