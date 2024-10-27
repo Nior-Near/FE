@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import axios from "axios";
 
 export default function OAuthResponse() {
   const router = useRouter();
-
 
   useEffect(() => {
     const storeAccessToken = async () => {
@@ -12,14 +10,13 @@ export default function OAuthResponse() {
 
       if (token) {
         localStorage.setItem("accessToken", token as string);
-
         console.log("AccessToken 저장:", token);
 
         const redirectPath = (router.query.redirect as string) || "/home";
-        router.push(redirectPath);
+        router.push(`https://www.niornear.store${redirectPath}`);
       } else {
         console.error("토큰이 없습니다.");
-        router.push("/login");
+        router.push("https://www.niornear.store/login");
       }
     };
 
