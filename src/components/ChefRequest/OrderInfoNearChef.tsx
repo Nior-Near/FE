@@ -17,25 +17,25 @@ interface OrderInfoNearChefProps {
 }
 
 const regionOptions: string[] = [
-  "니어키친 1(서울시 도담로 454)",
-  "니어키친 2(부산광역시 마마마 646)",
-  "니어키친 3(울산광역시 가가가 123)",
-  "니어키친 4(경기도 라라라 456)",
-  "니어키친 5(수원시 다다다 345)",
+  "서울여자대학교",
+  // "니어키친 2(부산광역시 마마마 646)",
+  // "니어키친 3(울산광역시 가가가 123)",
+  // "니어키친 4(경기도 라라라 456)",
+  // "니어키친 5(수원시 다다다 345)",
 ];
 
 const determinePlaceId = (place: string): number => {
   switch (place) {
-    case "니어키친 1(서울시 도담로 454)":
-      return 1;
-    case "니어키친 2(부산광역시 마마마 646)":
-      return 2;
-    case "니어키친 3(울산광역시 가가가 123)":
-      return 3;
-    case "니어키친 4(경기도 라라라 456)":
-      return 4;
-    case "니어키친 5(수원시 다다다 345)":
-      return 5;
+    case "서울여자대학교":
+      return 6;
+    // case "니어키친 2(부산광역시 마마마 646)":
+    //   return 2;
+    // case "니어키친 3(울산광역시 가가가 123)":
+    //   return 3;
+    // case "니어키친 4(경기도 라라라 456)":
+    //   return 4;
+    // case "니어키친 5(수원시 다다다 345)":
+    //   return 5;
     default:
       return 0;
   }
@@ -45,8 +45,6 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
   const [isRegion1DropdownOpen, setRegion1DropdownOpen] = useState(false);
   const [selectedRegion1, setSelectedRegion1] = useState("");
   const [regionId2, setRegionId2] = useState("");
-  const [memberId, setMemberId] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
 
   const {
     handleSubmit,
@@ -84,29 +82,7 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
       });
     }
 
-    // memberId 가져오기
-    const fetchMemberId = async () => {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.get("/users", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (response.data.isSuccess && response.data.result) {
-          setMemberId(response.data.result.memberId);
-        } else {
-          console.error("회원 정보 가져오기 실패:", response.data.message);
-        }
-      } catch (error) {
-        console.error("회원 정보 요청 오류:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMemberId();
+    
   }, []);
 
   const letter = localStorage.getItem("letter");
@@ -141,10 +117,6 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     const placeId = determinePlaceId(data.regionId1);
     const regionId = parseInt(localStorage.getItem("regionId") || "0");
 
-    if (memberId === null) {
-      console.error("Member ID가 없습니다.");
-      return;
-    }
     const formData = new FormData();
     formData.append("name", chefData.name);
     formData.append("shortDescription", chefData.shortIntro);
@@ -154,7 +126,6 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     formData.append("placeId", placeId.toString());
     formData.append("regionId", regionId.toString());
     formData.append("message", data.message);
-    formData.append("memberId", memberId.toString());
     if (letterFile) {
       formData.append("letter", letterFile);
     }
@@ -167,9 +138,11 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
 
     // 니어요리사 신청
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.post("/stores/near-company", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -209,7 +182,6 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     await fetchRegionId(placeId);
   };
 
-  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="px-[23px] pb-[43px] h-[765px] flex flex-col justify-between">

@@ -22,9 +22,7 @@ interface Region {
 
 const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => {
   const [chefInfo, setChefInfo] = useState<ChefInfoFormData | null>(null);
-  const [memberId, setMemberId] = useState<number | null>(null);
   const [detailRegions, setDetailRegions] = useState<Region[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRegions = async () => {
@@ -40,30 +38,9 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
       }
     };
 
-    // memberId 가져오기
-    const fetchMemberId = async () => {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.get("/users", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (response.data.isSuccess && response.data.result) {
-          setMemberId(response.data.result.memberId);
-        } else {
-          console.error("회원 정보 가져오기 실패:", response.data.message);
-        }
-      } catch (error) {
-        console.error("회원 정보 요청 오류:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  
 
     fetchRegions();
-    fetchMemberId();
 
     const storedChefInfo = localStorage.getItem("chefInfo");
     if (storedChefInfo) {
@@ -92,7 +69,7 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
   const [selectedRegion, setSelectedRegion] = useState("");
 
   const onSubmit = async (data: OrderInfoPersonalChefFormData) => {
-    if (chefInfo && memberId !== null) {
+    if (chefInfo !== null) {
       const formData = new FormData();
       formData.append("name", chefInfo.name);
       formData.append("introduction", chefInfo.shortIntro);
@@ -117,12 +94,15 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
       }
 
       formData.append("message", data.message);
-      formData.append("memberId", memberId.toString());
 
       try {
+        const token = localStorage.getItem("accessToken");
+
         const response = await axios.post("/stores/freelance", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${token}`,
+
           },
         });
 
@@ -144,7 +124,6 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
     setRegionDropdownOpen(false);
   };
 
-  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="px-[23px] pb-[43px]">
