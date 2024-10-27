@@ -12,16 +12,23 @@ export default function OAuthResponse() {
         localStorage.setItem("accessToken", token as string);
         console.log("AccessToken 저장:", token);
 
+        const baseRedirectUrl =
+          window.location.hostname === "localhost"
+            ? "http://localhost:3000"
+            : "https://www.niornear.store";
+
         const redirectPath = (router.query.redirect as string) || "/home";
-        router.push(`https://www.niornear.store${redirectPath}`);
+        router.push(`${baseRedirectUrl}${redirectPath}`);
       } else {
         console.error("토큰이 없습니다.");
-        router.push("https://www.niornear.store/login");
+        router.push("/login");
       }
     };
 
-    storeAccessToken();
-  }, [router]);
+    if (router.isReady) {
+      storeAccessToken();
+    }
+  }, [router.isReady, router.query]);
 
   return (
     <div className="flex justify-center items-center h-screen">
