@@ -20,7 +20,9 @@ interface Region {
   name: string;
 }
 
-const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => {
+const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({
+  nextStep,
+}) => {
   const [chefInfo, setChefInfo] = useState<ChefInfoFormData | null>(null);
   const [detailRegions, setDetailRegions] = useState<Region[]>([]);
 
@@ -38,8 +40,6 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
       }
     };
 
-  
-
     fetchRegions();
 
     const storedChefInfo = localStorage.getItem("chefInfo");
@@ -47,6 +47,33 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
       setChefInfo(JSON.parse(storedChefInfo));
     }
   }, []);
+
+  const [chefData, setChefData] = useState({
+    name: "",
+    shortIntro: "",
+    detailedIntro: "",
+    qualification: false,
+    auth: 0,
+  });
+
+  useEffect(() => {
+    const storedChefInfo = localStorage.getItem("chefInfo");
+
+    if (storedChefInfo) {
+      const parsedChefInfo = JSON.parse(storedChefInfo);
+      setChefData({
+        name: parsedChefInfo.name || "",
+        shortIntro: parsedChefInfo.shortIntro || "",
+        detailedIntro: parsedChefInfo.detailedIntro || "",
+        qualification: parsedChefInfo.qualification || false,
+        auth: parsedChefInfo.auth || 0,
+      });
+    }
+  }, []);
+  const letter = localStorage.getItem("letter");
+  const letterFile = letter
+    ? new File([letter], "letter.png", { type: "image/png" })
+    : null;
 
   const {
     handleSubmit,
@@ -71,23 +98,21 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
   const onSubmit = async (data: OrderInfoPersonalChefFormData) => {
     if (chefInfo !== null) {
       const formData = new FormData();
-      formData.append("name", chefInfo.name);
-      formData.append("introduction", chefInfo.shortIntro);
-      formData.append("qualification", chefInfo.qualification.toString());
-      formData.append("auth", chefInfo.auth.toString());
-
-      const storedLetter = localStorage.getItem("letter");
-      if (storedLetter) {
-        const letterFile = new File([storedLetter], "letter.png", {
-          type: "image/png",
-        });
+      formData.append("name", chefData.name);
+      formData.append("shortDescription", chefData.shortIntro);
+      formData.append("detailedDescription", chefData.detailedIntro);
+      formData.append("qualification", chefData.qualification.toString());
+      formData.append("auth", chefData.auth.toString());
+      if (letterFile) {
         formData.append("letter", letterFile);
       }
 
       formData.append("placeName", data.placeName);
       formData.append("placeAddress", data.placeAddress);
 
-      const regionId = detailRegions.find((region) => region.name === data.regionId)?.id;
+      const regionId = detailRegions.find(
+        (region) => region.name === data.regionId
+      )?.id;
 
       if (regionId) {
         formData.append("regionId", regionId.toString());
@@ -95,14 +120,16 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
 
       formData.append("message", data.message);
 
+      formData.forEach((value, key) => {
+        console.log(`${key}:`, value);
+      });
+
       try {
         const token = localStorage.getItem("accessToken");
-
         const response = await axios.post("/stores/freelance", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`,
-
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -113,7 +140,6 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
       }
     }
   };
-
   const toggleRegionDropdown = () => {
     setRegionDropdownOpen(!isRegionDropdownOpen);
   };
@@ -124,10 +150,11 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
     setRegionDropdownOpen(false);
   };
 
-
   return (
     <div className="px-[23px] pb-[43px]">
-      <div className="text-[20px] font-semibold mt-[39px] mb-[32px]">주문 정보</div>
+      <div className="text-[20px] font-semibold mt-[39px] mb-[32px]">
+        주문 정보
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-[20px]">
@@ -218,7 +245,10 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
                       isRegionDropdownOpen ? "rotate-180" : ""
                     }`}
                   >
-                    <path d="M12 12.6L16.6 8L18 9.4L12 15.4L6 9.4L7.4 8L12 12.6Z" fill="#A8B1B9" />
+                    <path
+                      d="M12 12.6L16.6 8L18 9.4L12 15.4L6 9.4L7.4 8L12 12.6Z"
+                      fill="#A8B1B9"
+                    />
                   </svg>
                 </div>
               )}
@@ -231,7 +261,9 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
                     key={region.id}
                     onClick={() => handleRegionSelect(region.name)}
                     className={`flex items-center justify-between px-[16px] py-[8px] gap-[23px] text-[#707A87] text-[14px] font-pretendard leading-[22px] cursor-pointer ${
-                      selectedRegion === region.name ? "bg-[#EEF3E2] text-[#333E4E]" : ""
+                      selectedRegion === region.name
+                        ? "bg-[#EEF3E2] text-[#333E4E]"
+                        : ""
                     }`}
                   >
                     <span>{region.name}</span>
@@ -271,7 +303,8 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({ nextStep }) => 
 
         <div className="mb-[190px]">
           <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">
-            주문 완료 시 고객에게 보여질 문구 (최대 30자) <span className="text-[#638404]">*</span>
+            주문 완료 시 고객에게 보여질 문구 (최대 30자){" "}
+            <span className="text-[#638404]">*</span>
           </label>
           <Controller
             name="message"
