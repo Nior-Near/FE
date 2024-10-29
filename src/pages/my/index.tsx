@@ -62,7 +62,7 @@ export default function My() {
                 <Avatar />
               )}
               <div className="text-[#707a87] text-[16px] font-[400] font-pretendard leading-[25.6px]">
-                {data ? data?.nickname : "로그인해주세요."}
+                {data ? data?.nickname : <Link href="/">로그인해주세요.</Link>}
               </div>
             </div>
           </div>
