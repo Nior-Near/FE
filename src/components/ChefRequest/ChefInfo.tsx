@@ -44,7 +44,7 @@ const ChefInfo: FC<ChefInfoFormProps> = ({ nextStep }) => {
     try {
       const response = await axios.get("/stores/chef-registration-info");
       const data = response.data;
-      console.log("API 응답:", data);
+      // console.log("API 응답:", data);
       if (data.isSuccess) {
         setValue("name", data.result.name);
         setValue("phoneNumber", data.result.phone);
