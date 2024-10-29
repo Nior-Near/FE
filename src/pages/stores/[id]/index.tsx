@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Title from "@/src/components/Title";
 import { useQuery } from "@tanstack/react-query";
-import LZString from "lz-string";
 
 export interface Data {
   storeId: number;
