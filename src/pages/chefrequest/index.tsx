@@ -51,7 +51,7 @@ const ChefRequest = () => {
   };
 
   const handleLetterSubmit = (data: any) => {
-    console.log("편지 등록 완료:", data);
+    // console.log("편지 등록 완료:", data);
     setStep(3);
   };
 

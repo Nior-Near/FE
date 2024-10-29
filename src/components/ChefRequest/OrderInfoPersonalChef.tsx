@@ -120,9 +120,9 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({
 
       formData.append("message", data.message);
 
-      formData.forEach((value, key) => {
-        console.log(`${key}:`, value);
-      });
+      // formData.forEach((value, key) => {
+      //   console.log(`${key}:`, value);
+      // });
 
       try {
         const token = localStorage.getItem("accessToken");
@@ -133,7 +133,7 @@ const OrderInfoPersonalChef: FC<OrderInfoPersonalChefProps> = ({
           },
         });
 
-        console.log("API 응답 성공:", response.data);
+        // console.log("API 응답 성공:", response.data);
         nextStep(data);
       } catch (error) {
         console.error("API 요청 실패:", error);

@@ -23,7 +23,7 @@ const MenuList: FC<MenuListProps> = ({ menus, onBoxClick  }) => {
   const handleRegisterClick = async () => {
     if (menus.length === 0) return;
   
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     const storeId = localStorage.getItem("storeId");
   
     try {
@@ -48,7 +48,7 @@ const MenuList: FC<MenuListProps> = ({ menus, onBoxClick  }) => {
       });
   
       await Promise.all(promises);
-      console.log("모든 메뉴 등록 성공");
+      // console.log("모든 메뉴 등록 성공");
       router.push({ pathname: "/my", query: { showAlert: "true" } });
     }catch (error: unknown) {
       // axios가 발생시킨 오류인지 확인

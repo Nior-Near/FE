@@ -130,11 +130,11 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
       formData.append("letter", letterFile);
     }
 
-    console.log("FormData 생성 완료");
+    // console.log("FormData 생성 완료");
 
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
+    // formData.forEach((value, key) => {
+    //   console.log(`${key}:`, value);
+    // });
 
     // 니어요리사 신청
     try {
