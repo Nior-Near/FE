@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { axios } from "../../lib/axios";
 
 interface FormData {
   menuName: string;
@@ -20,10 +19,8 @@ const MenuRegistration: FC<MenuRegistrationProps> = ({
   affiliation,
   onSubmit,
   handleCompleteMenuRegistration,
-  storeId,
 }) => {
   const [fileName, setFileName] = useState("파일 선택");
-  const [memberId, setMemberId] = useState<number | null>(14);
 
   const {
     handleSubmit,
@@ -40,55 +37,25 @@ const MenuRegistration: FC<MenuRegistrationProps> = ({
     },
   });
 
-  const submitHandler = async (data: FormData) => {
-    if (!storeId) {
-      console.error("storeId 없음");
-      return;
-    }
+  const submitHandler = (data: FormData) => {
+    onSubmit(data);
+    resetForm();
+  };
 
-    const formData = new FormData();
-    formData.append("menuName", data.menuName);
-    formData.append("menuOneServing", data.menuOneServing!.toString());
-    formData.append("menuIntroduction", data.menuIntroduction);
-    if (data.menuImage) {
-      formData.append("menuImage", data.menuImage);
-    }
-
-    if (memberId !== null) {
-      formData.append("memberId", memberId.toString());
-    } else {
-      console.error("memberId is null, cannot proceed with form submission.");
-      return;
-    }
-
-    // 메뉴 등록 (20은 테스트용)
-    try {
-      //const response = await axios.post(`/stores/20/menu`, formData, {
-
-      const response = await axios.post(`/stores/${storeId}/menu`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("메뉴 등록 성공:", response.data);
-      onSubmit(data);
-      reset({
-        menuName: "",
-        menuOneServing: null,
-        menuIntroduction: "",
-        menuImage: null,
-      });
-      setFileName("파일 선택");
-
-      handleCompleteMenuRegistration();
-    } catch (error) {
-      console.error("메뉴 등록 실패:", error);
-    }
+  const resetForm = () => {
+    reset({
+      menuName: "",
+      menuOneServing: null,
+      menuIntroduction: "",
+      menuImage: null,
+    });
+    setFileName("파일 선택");
   };
 
   return (
     <div className="px-[23px] pb-[43px] h-[765px] flex flex-col justify-between">
+      <div className="text-[20px] font-semibold mt-[44px] mb-[33px]">메뉴 등록</div>
+
       <form onSubmit={handleSubmit(submitHandler)} className="flex-grow">
         <div className="mb-[20px]">
           <label className="text-[14px] font-pretendard text-[#222224] mb-[5px] leading-[22px]">

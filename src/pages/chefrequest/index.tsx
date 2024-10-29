@@ -31,6 +31,14 @@ const ChefRequest = () => {
     setStep(4);
   };
 
+  const addMenuToList = (data: FormData) => {
+    setMenus((prevMenus) => [...prevMenus, data]);
+    setStep(4);
+  };
+
+
+  const clearMenuList = () => setMenus([]);
+
   const handleMenuSubmit = (data: FormData) => {
     setMenus([...menus, data]);
     setStep(4);
@@ -68,12 +76,19 @@ const ChefRequest = () => {
         </>
       )}
 
-      {step === 4 && <MenuList menus={menus} onBoxClick={handleBoxClick} />}
+{step === 4 && (
+        <MenuList
+          menus={menus}
+          onBoxClick={handleBoxClick}
+          storeId="storeId"
+          clearMenuList={clearMenuList}
+        />
+      )}
       {step === 5 && (
         <MenuRegistration
           affiliation={chefData!.affiliation}
           onSubmit={handleMenuSubmit}
-          handleCompleteMenuRegistration={handleCompleteMenuRegistration}
+          handleCompleteMenuRegistration={clearMenuList}
           storeId={"storeId"}
         />
       )}
