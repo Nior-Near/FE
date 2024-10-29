@@ -36,7 +36,7 @@ interface Menu {
 export default function Store() {
   const router = useRouter();
 
-  const { data } = useQuery<Data>({
+  const { data, error } = useQuery<Data>({
     queryKey: ["store"],
     queryFn: () =>
       axios.get(`/stores/${router.query?.id}`).then((response) => response.data?.result),
@@ -44,6 +44,8 @@ export default function Store() {
     gcTime: 0,
     staleTime: Infinity,
   });
+
+  if (error) router.replace("/");
 
   const [foodBannerImage, setFoodBannerImage] = useState(data?.menus?.[0]?.menuImage);
 
