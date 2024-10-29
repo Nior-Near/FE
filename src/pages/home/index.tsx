@@ -8,6 +8,17 @@ import Kakao from "../../assets/kakao.svg";
 import Title from "@/src/components/Title";
 import LogoOutline from "@/src/assets/logo_outline.svg";
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 interface Chef {
   profileImage: string;
   name: string;
@@ -58,28 +69,22 @@ export default function Main() {
   const [stores, setStores] = useState<Store[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   useEffect(() => {
     const getData = async () => {
-      const data = await fetchHomeData(selectedRegionId);
-      setChefs(data.chefs || []);
-      setStores(data.stores || []);
+      if (debouncedSearchTerm.trim() === "") {
+        const data = await fetchHomeData(selectedRegionId);
+        setChefs(data.chefs || []);
+        setStores(data.stores || []);
+      } else {
+        const data = await searchChefsAndStores(debouncedSearchTerm);
+        setStores(data || []);
+      }
     };
 
     getData();
-  }, [selectedRegion]);
-
-  const handleSearch = async () => {
-    const trimmedSearchTerm = searchTerm.trim();
-    if (trimmedSearchTerm === "") {
-      const data = await fetchHomeData(selectedRegionId);
-      setChefs(data.chefs || []);
-      setStores(data.stores || []);
-    } else {
-      // 검색어가 있을 때는 stores 데이터만 업데이트
-      const data = await searchChefsAndStores(trimmedSearchTerm);
-      setStores(data || []);
-    }
-  };
+  }, [debouncedSearchTerm, selectedRegionId]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -102,7 +107,6 @@ export default function Main() {
   };
 
   const [logoClick, setLogoClick] = useState(0);
-
   return (
     <div className="min-h-screen flex flex-col">
       <Title route="홈" />
@@ -123,7 +127,6 @@ export default function Main() {
             value={searchTerm}
           />
           <svg
-            onClick={handleSearch}
             xmlns="http://www.w3.org/2000/svg"
             width="22"
             height="22"
