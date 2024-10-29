@@ -5,7 +5,7 @@ import RadioButtonChecked from "@/src/assets/radio_button_checked.svg";
 import { useRouter } from "next/router";
 import ReactSelect, { StylesConfig, OptionProps } from "react-select";
 import { Controller, useForm } from "react-hook-form";
-import { FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { axios } from "@/src/lib/axios";
 import Order_Done from "@/src/components/Order/Done";
 import Order_Failed from "@/src/components/Order/Failed";
@@ -36,8 +36,10 @@ export default function Order() {
 
   useEffect(() => {
     try {
-      setDecodedOrders(JSON.parse(Buffer.from(orders as string, "base64").toString()));
-      setDecodedStore(JSON.parse(Buffer.from(store as string, "base64").toString()));
+      if (!!orders && !!store) {
+        setDecodedOrders(JSON.parse(Buffer.from(orders as string, "base64").toString()));
+        setDecodedStore(JSON.parse(Buffer.from(store as string, "base64").toString()));
+      }
     } catch (err) {
       if (!!storeId) router.replace(`/stores/${storeId}`);
       else router.replace("/home");
@@ -51,20 +53,12 @@ export default function Order() {
 
   const options = [
     {
-      value: "집에서 가져온 용기에 담아갈게요",
-      label: "집에서 가져온 용기에 담아갈게요",
+      value: "서울여대 바롬 식당에서 먹고갈게요.",
+      label: "서울여대 바롬 식당에서 먹고갈게요.",
     },
     {
-      value: "일회용 젓가락, 숟가락 필요해요",
-      label: "일회용 젓가락, 숟가락 필요해요",
-    },
-    {
-      value: "픽업 준비 완료되면 전화주세요",
-      label: "픽업 준비 완료되면 전화주세요",
-    },
-    {
-      value: "others",
-      label: "직접 입력",
+      value: "가져온 용기에 포장할게요.",
+      label: "가져온 용기에 포장할게요.",
     },
   ];
 
@@ -140,13 +134,22 @@ export default function Order() {
     </div>
   );
 
-  const { control, register, handleSubmit } = useForm({
+  const { control, register, handleSubmit, setValue } = useForm({
     defaultValues: {
       requestMessage: "없음.",
       memberName: "",
       memberPhone: "",
     },
   });
+
+  const handleMemberPhone = (e: ChangeEvent<HTMLInputElement>) => {
+    const numericValue = e.target?.value
+      .trim()
+      ?.replace(/[^0-9]/g, "")
+      ?.substring(0, 11);
+
+    setValue("memberPhone", numericValue);
+  };
 
   const onSubmit = async (data: any) => {
     const menus =
@@ -189,7 +192,7 @@ export default function Order() {
           <Navbar title="주문 및 결제" />
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full p-[24px] pb-0">
-              <div className="h-[328px] flex-col justify-start items-start gap-[12px] inline-flex">
+              <div className="flex-col justify-start items-start gap-[12px] inline-flex">
                 <div className="text-[#222224] font-pretendard leading-[28.8px] text-[18px] font-[600]">
                   픽업 장소
                 </div>
@@ -201,14 +204,14 @@ export default function Order() {
                     {decodedStore?.storePhone}
                   </div>
                 </div>
-                <Map width={327} h={178} className="rounded-[9px] shadow" />
+                <Map width={327} height={178} className="rounded-[9px] shadow" />
                 <Controller
                   name="requestMessage"
                   control={control}
                   render={({ field: { onChange, value, ref } }) => (
                     <ReactSelect<OptionType>
                       styles={customStyles}
-                      placeholder="배송 시 요청사항을 선택해주세요"
+                      placeholder="포장, 방문 식사 방법을 선택해주세요."
                       components={{
                         Option: CustomOption,
                         DropdownIndicator: CustomDropdownIndicator,
@@ -244,8 +247,10 @@ export default function Order() {
                 <input
                   className="px-4 py-2 w-[321px] h-[40px] border-[#d1d6db] border-[1px] rounded-[4px] bg-white placeholder:text-[#707a87] placeholder:font-pretendard placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[22.4px]"
                   placeholder="전화번호를 입력해주세요."
+                  inputMode="numeric"
                   autoComplete="off"
                   {...register("memberPhone", { required: true })}
+                  onChange={handleMemberPhone}
                 />
               </div>
             </div>
