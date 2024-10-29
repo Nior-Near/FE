@@ -1,5 +1,7 @@
 import { FC } from "react";
 import { useRouter } from "next/router";
+import { axios } from "../../lib/axios";
+import { AxiosError } from "axios";
 
 interface FormData {
   menuName: string;
@@ -11,20 +13,53 @@ interface FormData {
 interface MenuListProps {
   menus: FormData[];
   onBoxClick: () => void;
+  storeId: string;
+  clearMenuList: () => void;
 }
 
-const MenuList: FC<MenuListProps> = ({ menus, onBoxClick }) => {
+const MenuList: FC<MenuListProps> = ({ menus, onBoxClick  }) => {
   const router = useRouter();
 
-  const handleRegisterClick = () => {
-    if (menus.length > 0) {
-      // 마이페이지에서 알림 떠야함
-      router.push({
-        pathname: "/my",
-        query: { showAlert: "true" },
+  const handleRegisterClick = async () => {
+    if (menus.length === 0) return;
+  
+    const token = localStorage.getItem("token");
+    const storeId = localStorage.getItem("storeId");
+  
+    try {
+      const promises = menus.map(async (menu) => {
+        const formData = new FormData();
+        formData.append("menuName", menu.menuName);
+        formData.append("menuOneServing", menu.menuOneServing?.toString() || "");
+        formData.append("menuIntroduction", menu.menuIntroduction);
+  
+        if (menu.menuImage) {
+          formData.append("menuImage", menu.menuImage);
+        }
+  
+        // console.log("전송할 FormData:", Object.fromEntries(formData.entries()));
+  
+        return axios.post(`/stores/${storeId}/menu`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
       });
+  
+      await Promise.all(promises);
+      console.log("모든 메뉴 등록 성공");
+      router.push({ pathname: "/my", query: { showAlert: "true" } });
+    }catch (error: unknown) {
+      // axios가 발생시킨 오류인지 확인
+      if (error instanceof AxiosError) {
+        console.error("에러 응답:", error.response?.data);
+      } else {
+        console.error("예기치 않은 오류:", error);
+      }
     }
   };
+  
 
   return (
     <div className="px-[23px] h-[765px] flex flex-col justify-between">
