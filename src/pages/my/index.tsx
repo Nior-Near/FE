@@ -2,6 +2,7 @@ import Arrow from "@/src/assets/arrow.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
 import LetterRead from "@/src/assets/letter_read.svg";
 import LetterUnread from "@/src/assets/letter_unread.svg";
+import Avatar from "@/src/assets/avatar_default.svg";
 import { useEffect, useState } from "react";
 import LoginModal from "@/src/components/LoginModal";
 import { axios } from "@/src/lib/axios";
@@ -26,7 +27,7 @@ export default function My() {
   const [showNotification, setShowNotification] = useState(false);
   const router = useRouter();
 
-  const { data } = useQuery<Data>({
+  const { data, isSuccess } = useQuery<Data>({
     queryFn: () => axios.get("/members").then((response) => response.data?.result),
     queryKey: ["my"],
   });
@@ -55,7 +56,11 @@ export default function My() {
         <div className="top-[151px] absolute flex-col justify-start items-end gap-[29px] inline-flex">
           <div className="px-[24px] w-full self-stretch justify-between items-end gap-[40px] inline-flex">
             <div className="justify-start items-end gap-[13px] flex">
-              <img src={data?.imageUrl} width={88} height={88} className="rounded-full" />
+              {!!data?.imageUrl ? (
+                <img src={data?.imageUrl} width={88} height={88} className="rounded-full" />
+              ) : (
+                <Avatar />
+              )}
               <div className="text-[#707a87] text-[16px] font-[400] font-pretendard leading-[25.6px]">
                 {data ? data?.nickname : "로그인해주세요."}
               </div>
@@ -66,7 +71,7 @@ export default function My() {
           <div className="w-[375px] px-[24px] flex flex-col gap-[40px] bg-white">
             <div className="flex-col justify-start items-start gap-[18px] inline-flex bg-white">
               <div className="self-stretch flex-col justify-start items-center gap-[18px] flex">
-                <Link href="/my/letters" className="relative h-[35px]">
+                <Link href={isSuccess ? "/my/letters" : "/"} className="relative h-[35px]">
                   <div className="flex flex-row justify-between items-center gap-[10px] mb-[9px]">
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
                       편지함
@@ -84,32 +89,34 @@ export default function My() {
                     <path d="M0.5 1L372.5 1.00003" stroke="#A8B1B9" strokeWidth="0.5" />
                   </svg>
                 </Link>
-                <Link
-                  href="/my/letters"
-                  className="flex flex-row items-center gap-[7px] self-stretch"
-                >
-                  {data?.letterResponseDtos?.map((letter, index) => (
-                    <div
-                      key={letter?.letterId}
-                      className="w-[105px] h-[130px] flex flex-col items-center gap-2"
-                    >
-                      {letter?.status === "열람 완료" ? <LetterRead /> : <LetterUnread />}
-                      <div>
-                        <div className="text-[#707A87] text-center font-pretendard text-[14px] font-[600] leading-none">
-                          {letter?.senderName}
-                        </div>
-                        <div className="text-[#707A87] text-center font-pretendard text-[12px] font-[400] leading-[19.2px]">
-                          {dayjs(letter?.createAt).format("YYYY년 M월 D일")}
+                {data?.letterResponseDtos && data.letterResponseDtos.length > 0 && (
+                  <Link
+                    href={isSuccess ? "/my/letters" : "/"}
+                    className="flex flex-row items-center gap-[7px] self-stretch"
+                  >
+                    {data?.letterResponseDtos?.map((letter, index) => (
+                      <div
+                        key={letter?.letterId}
+                        className="w-[105px] h-[130px] flex flex-col items-center gap-2"
+                      >
+                        {letter?.status === "열람 완료" ? <LetterRead /> : <LetterUnread />}
+                        <div>
+                          <div className="text-[#707A87] text-center font-pretendard text-[14px] font-[600] leading-none">
+                            {letter?.senderName}
+                          </div>
+                          <div className="text-[#707A87] text-center font-pretendard text-[12px] font-[400] leading-[19.2px]">
+                            {dayjs(letter?.createAt).format("YYYY년 M월 D일")}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </Link>
+                    ))}
+                  </Link>
+                )}
               </div>
               <div className="self-stretch h-[35px] flex-col justify-start items-center gap-[9px] flex">
                 <div className="relative h-[35px]">
                   <Link
-                    href="/my/orders"
+                    href={isSuccess ? "/my/orders" : "/"}
                     className="flex flex-row justify-between items-center gap-[10px] mb-[9px]"
                   >
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
@@ -133,7 +140,7 @@ export default function My() {
               <div className="self-stretch h-[35px] flex-col justify-start items-center gap-[9px] flex">
                 <div className="relative h-[35px]">
                   <Link
-                    href="/chefrequest"
+                    href={isSuccess ? "/chefrequest" : "/"}
                     className="flex flex-row justify-between items-center gap-[10px] mb-[9px]"
                   >
                     <div className="w-[293px] text-[#333e4e] text-[16px] font-pretendard leading-[25.6px]">
