@@ -10,10 +10,9 @@ export default function OAuthResponse() {
 
       if (token) {
         localStorage.setItem("accessToken", token as string);
-        console.log("AccessToken 저장:", token);
 
         const baseRedirectUrl =
-          window.location.hostname === "localhost"
+          process.env.NODE_ENV === "development"
             ? "http://localhost:3000"
             : "https://www.niornear.store";
 
