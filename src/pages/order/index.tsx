@@ -29,20 +29,23 @@ export default function Order() {
 
   const router = useRouter();
 
-  const { orders, store } = router.query;
+  const { storeId, orders, store } = router.query;
 
   const [decodedOrders, setDecodedOrders] = useState<DecodedOrders | null>(null);
   const [decodedStore, setDecodedStore] = useState<DecodedStore | null>(null);
 
   useEffect(() => {
-    if (orders !== undefined) {
-      setDecodedOrders(JSON.parse(Buffer.from(orders as string, "base64").toString()));
-    }
+    try {
+      if (orders !== undefined)
+        setDecodedOrders(JSON.parse(Buffer.from(orders as string, "base64").toString()));
 
-    if (store !== undefined) {
-      setDecodedStore(JSON.parse(Buffer.from(store as string, "base64").toString()));
+      if (store !== undefined)
+        setDecodedStore(JSON.parse(Buffer.from(store as string, "base64").toString()));
+    } catch (err) {
+      if (!!storeId) router.replace(`stores/${storeId}`);
+      else router.replace("/home");
     }
-  }, [orders, store]);
+  }, [router.query]);
 
   interface OptionType {
     value: string;

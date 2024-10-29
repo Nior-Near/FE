@@ -3,11 +3,12 @@ import NavigateBefore from "@/src/assets/navigate_before.svg";
 import NavigateNext from "@/src/assets/navigate_next.svg";
 import Arrow from "@/src/assets/arrow.svg";
 import { axios } from "@/src/lib/axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Title from "@/src/components/Title";
 import { useQuery } from "@tanstack/react-query";
+import LZString from "lz-string";
 
 export interface Data {
   storeId: number;
@@ -36,7 +37,7 @@ interface Menu {
 export default function Store() {
   const router = useRouter();
 
-  const { data } = useQuery<Data>({
+  const { data, error } = useQuery<Data>({
     queryKey: ["store"],
     queryFn: () =>
       axios.get(`/stores/${router.query?.id}`).then((response) => response.data?.result),
@@ -45,7 +46,13 @@ export default function Store() {
     staleTime: Infinity,
   });
 
-  const [foodBannerImage, setFoodBannerImage] = useState(data?.menus?.[0]?.menuImage);
+  if (error) router.replace("/");
+
+  useEffect(() => {
+    if (!!data?.menus && data.menus.length > 0) setFoodBannerImage(data?.menus?.[0]?.menuImage);
+  }, [data]);
+
+  const [foodBannerImage, setFoodBannerImage] = useState<string | undefined>(undefined);
 
   const [orders, setOrders] = useState<{
     [key: number]: { name: string; price: number; quantity: number };
@@ -254,6 +261,7 @@ export default function Store() {
           href={{
             pathname: "/order",
             query: {
+              storeId: data?.storeId,
               store: Buffer.from(
                 JSON.stringify({
                   storeId: data?.storeId,
