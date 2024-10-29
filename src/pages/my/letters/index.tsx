@@ -58,25 +58,29 @@ export default function Letters() {
               노인 요리사분들이 보내주신 편지를 읽고, 답장을 보내보세요!
             </span>
           </div>
-          <div className="pt-[42px] grid grid-cols-3 gap-x-[7px] gap-y-[24px]">
-            {data?.map((letter, index) => (
-              <div
-                key={letter?.letterId}
-                className="w-[105px] h-[130px] flex flex-col items-center gap-[8px]"
-                onClick={() => setLetter(letter)}
-              >
-                {letter?.status === "열람 완료" ? <LetterRead /> : <LetterUnread />}
-                <div className="flex flex-col items-center">
-                  <span className="text-[#1E2530] font-pretendard font-[600] text-[14px] leading-none">
-                    {letter?.senderName}
-                  </span>
-                  <div className="text-[#707A87] text-center font-pretendard text-[12px] font-[400] leading-[19.2px]">
-                    {dayjs(letter?.createAt).format("YYYY년 M월 D일")}
+          {!!data && data.length > 0 ? (
+            <div className="pt-[42px] grid grid-cols-3 gap-x-[7px] gap-y-[24px]">
+              {data?.map((letter, index) => (
+                <div
+                  key={letter?.letterId}
+                  className="w-[105px] h-[130px] flex flex-col items-center gap-[8px]"
+                  onClick={() => setLetter(letter)}
+                >
+                  {letter?.status === "열람 완료" ? <LetterRead /> : <LetterUnread />}
+                  <div className="flex flex-col items-center">
+                    <span className="text-[#1E2530] font-pretendard font-[600] text-[14px] leading-none">
+                      {letter?.senderName}
+                    </span>
+                    <div className="text-[#707A87] text-center font-pretendard text-[12px] font-[400] leading-[19.2px]">
+                      {dayjs(letter?.createAt).format("YYYY년 M월 D일")}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <span className="pt-[42px] block text-center">편지가 없습니다.</span>
+          )}
         </div>
       </div>
     </>
