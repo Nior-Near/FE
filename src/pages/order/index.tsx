@@ -36,13 +36,10 @@ export default function Order() {
 
   useEffect(() => {
     try {
-      if (orders !== undefined)
-        setDecodedOrders(JSON.parse(Buffer.from(orders as string, "base64").toString()));
-
-      if (store !== undefined)
-        setDecodedStore(JSON.parse(Buffer.from(store as string, "base64").toString()));
+      setDecodedOrders(JSON.parse(Buffer.from(orders as string, "base64").toString()));
+      setDecodedStore(JSON.parse(Buffer.from(store as string, "base64").toString()));
     } catch (err) {
-      if (!!storeId) router.replace(`stores/${storeId}`);
+      if (!!storeId) router.replace(`/stores/${storeId}`);
       else router.replace("/home");
     }
   }, [router.query]);
