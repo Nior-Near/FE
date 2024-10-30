@@ -1,26 +1,30 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+
 export default function OAuthResponse() {
   const router = useRouter();
+
   useEffect(() => {
     const storeAccessToken = async () => {
-      const { token } = router.query;
+      const { token, redirect } = router.query;
       if (token) {
         localStorage.setItem("accessToken", token as string);
 
-        const baseRedirectUrl = "https://www.niornear.store";
-
-        const redirectPath = (router.query.redirect as string) || "/home";
+        const baseRedirectUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.niornear.store";
+        
+        const redirectPath = (redirect as string) || "/home";
+        
         router.push(`${baseRedirectUrl}${redirectPath}`);
       } else {
         console.error("토큰이 없습니다.");
         router.push("/login");
       }
     };
-    if (router.isReady) {
+
+    if (router.isReady && router.query.token) {
       storeAccessToken();
     }
-  }, [router.isReady, router.query]);
+  }, [router.isReady, router.query.token]);
 
   return (
     <div className="flex justify-center items-center h-screen">
