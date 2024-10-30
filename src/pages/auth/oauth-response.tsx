@@ -10,10 +10,7 @@ export default function OAuthResponse() {
       if (token) {
         localStorage.setItem("accessToken", token as string);
 
-        const baseRedirectUrl =
-          process.env.NODE_ENV === "production"
-            ? "https://www.niornear.store"
-            : "http://localhost:3000";
+        const baseRedirectUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
         const redirectPath = redirect ? (redirect as string) : "/home";
         router.push(`${baseRedirectUrl}${redirectPath}`);
