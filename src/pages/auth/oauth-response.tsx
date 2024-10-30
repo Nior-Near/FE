@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 export default function OAuthResponse() {
   const router = useRouter();
+
   useEffect(() => {
     const storeAccessToken = async () => {
       const { token } = router.query;
@@ -10,7 +11,7 @@ export default function OAuthResponse() {
         localStorage.setItem("accessToken", token as string);
         console.log("AccessToken 저장:", token);
 
-        const baseRedirectUrl = process.env.NEXT_PUBLIC_BASE_URL;
+        const baseRedirectUrl = 'https://www.niornear.store';
         const redirectPath = (router.query.redirect as string) || "/home";
         router.push(`${baseRedirectUrl}${redirectPath}`);
       } else {
