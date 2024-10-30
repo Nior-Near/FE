@@ -10,7 +10,7 @@ export default function LoginModal({ isLoginRequired, dimmed }: LoginModalProps)
 
   const handleNaverLogin = () => {
 
-    const naverLoginUrl = "https://api.niornear.store/api/v1/auth/oauth2/naver";
+    const naverLoginUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth2/naver`;
     console.log("Navigating to:", naverLoginUrl);
     window.location.href = naverLoginUrl;
 
