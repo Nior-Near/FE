@@ -12,9 +12,10 @@ export default function OAuthResponse() {
         localStorage.setItem("accessToken", token as string);
 
         const baseRedirectUrl =
-          process.env.NODE_ENV === "development"
-            ? "http://localhost:3000"
-            : "https://www.niornear.store";
+        process.env.NEXT_PUBLIC_ENV === "development"
+          ? "http://localhost:3000"
+          : "https://www.niornear.store";
+
 
         const redirectPath = (router.query.redirect as string) || "/home";
         router.push(`${baseRedirectUrl}${redirectPath}`);
@@ -30,8 +31,8 @@ export default function OAuthResponse() {
   }, [router.isReady, router.query]);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <p>로그인 중...</p>
+    <div className="flex flex-col justify-center items-center h-screen">
+      <div className="w-10 h-10 border-4 border-[#638404] border-t-transparent border-solid rounded-full animate-spin"></div>
     </div>
   );
 }
