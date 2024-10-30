@@ -10,11 +10,14 @@ export default function OAuthResponse() {
       if (token) {
         localStorage.setItem("accessToken", token as string);
 
-        const baseRedirectUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-        
-        const redirectPath = redirect ? `${baseRedirectUrl}${redirect}` : `${baseRedirectUrl}/home`;
-        
-        router.push(redirectPath);
+        const baseRedirectUrl =
+          process.env.NODE_ENV === "production"
+            ? "https://www.niornear.store"
+            : "http://localhost:3000";
+
+        const redirectPath = redirect ? (redirect as string) : "/home";
+        router.push(`${baseRedirectUrl}${redirectPath}`);
+
       } else {
         console.error("토큰이 없습니다.");
         router.push("/login");
