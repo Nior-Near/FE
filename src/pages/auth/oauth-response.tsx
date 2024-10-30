@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 export default function OAuthResponse() {
   const router = useRouter();
-  
+
   useEffect(() => {
     const storeAccessToken = async () => {
       const { token, redirect } = router.query;
@@ -11,7 +11,9 @@ export default function OAuthResponse() {
         localStorage.setItem("accessToken", token as string);
 
         const redirectPath = redirect ? (redirect as string) : "/home";
-        const redirectUrl = `${window.location.origin}${redirectPath.startsWith("/") ? redirectPath : `/${redirectPath}`}`;
+        const redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${
+          redirectPath.startsWith("/") ? redirectPath : `/${redirectPath}`
+        }`;
         window.location.href = redirectUrl;
       } else {
         console.error("토큰이 없습니다.");
