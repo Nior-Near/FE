@@ -5,14 +5,14 @@ export default function OAuthResponse() {
   
   useEffect(() => {
     const storeAccessToken = async () => {
-      const { token } = router.query;
+      const { token, redirect } = router.query;
 
       if (token) {
         localStorage.setItem("accessToken", token as string);
 
-        const baseRedirectUrl = window.location.origin;
-        const redirectPath = (router.query.redirect as string) || "/home";
-        router.push(`${baseRedirectUrl}${redirectPath}`);
+        const redirectPath = redirect ? (redirect as string) : "/home";
+        const redirectUrl = `${window.location.origin}${redirectPath.startsWith("/") ? redirectPath : `/${redirectPath}`}`;
+        window.location.href = redirectUrl;
       } else {
         console.error("토큰이 없습니다.");
         router.push("/login");
