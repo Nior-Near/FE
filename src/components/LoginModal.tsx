@@ -12,13 +12,12 @@ export default function LoginModal({
   const router = useRouter();
 
   const handleNaverLogin = () => {
-    const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/oauth-response`;
 
     const naverLoginUrl = `${
-      process.env.NEXT_PUBLIC_BASE_URL === "https://www.niornear.store"
-        ? "https://server.niornear.store/api/v1/auth/oauth2/naver"
-        : "https://api.niornear.store/api/v1/auth/oauth2/naver"
-    }?redirect_uri=${redirectUri}`;
+    process.env.NEXT_PUBLIC_BASE_URL === "https://www.niornear.store"
+      ? "https://server.niornear.store/api/v1/auth/oauth2/naver"
+      : "https://api.niornear.store/api/v1/auth/oauth2/naver"
+  }`;
 
     console.log("Navigating to:", naverLoginUrl);
     window.location.href = naverLoginUrl;
