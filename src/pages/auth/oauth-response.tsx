@@ -9,9 +9,8 @@ export default function OAuthResponse() {
 
       if (token) {
         localStorage.setItem("accessToken", token as string);
-        console.log("AccessToken 저장:", token);
 
-        const baseRedirectUrl = process.env.NEXT_PUBLIC_BASE_URL;
+        const baseRedirectUrl = window.location.origin;
         const redirectPath = (router.query.redirect as string) || "/home";
         router.push(`${baseRedirectUrl}${redirectPath}`);
       } else {
