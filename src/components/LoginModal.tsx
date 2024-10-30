@@ -9,7 +9,6 @@ export default function LoginModal({ isLoginRequired, dimmed }: LoginModalProps)
   const router = useRouter();
 
   const handleNaverLogin = () => {
-    console.log("로그인 버튼 클릭");
 
     const naverLoginUrl = "https://api.niornear.store/api/v1/auth/oauth2/naver";
     console.log("Navigating to:", naverLoginUrl);
