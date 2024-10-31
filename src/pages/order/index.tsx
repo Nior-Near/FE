@@ -319,6 +319,12 @@ export default function Order() {
     case "done":
       return <Order_Done data={PaymentDonePayload} />;
     case "failed":
-      return <Order_Failed />;
+      return (
+        <Order_Failed
+          store={store as string}
+          storeId={storeId as string}
+          orders={orders as string}
+        />
+      );
   }
 }
