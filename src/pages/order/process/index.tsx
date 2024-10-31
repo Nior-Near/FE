@@ -29,7 +29,7 @@ export default function Order_Process({
         {
           pg: "html5_inicis",
           pay_method: "card",
-          merchant_uid: nanoid(),
+          merchant_uid: payload?.merchantUid || nanoid(),
           name: payload?.name,
           amount: payload?.amount,
           buyer_email: payload?.buyerEmail,
