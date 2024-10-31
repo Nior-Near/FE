@@ -37,7 +37,7 @@ export default function Order_Process({
           buyer_tel: payload?.buyerTel,
         },
         (response: RequestPayResponse) => {
-          // console.log(response);
+          console.log(response);
           checkPayment(response.success === true ? "success" : "failed");
         }
       );
