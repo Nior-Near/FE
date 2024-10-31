@@ -16,7 +16,6 @@ export default function LoginModal({
 
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-
     const naverLoginUrl = `${apiBaseUrl}/api/v1/auth/oauth2/naver?redirect_uri=${encodeURIComponent(
       redirectUri
     )}`;
