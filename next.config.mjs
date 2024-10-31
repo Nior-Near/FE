@@ -17,6 +17,12 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "ssl.pstatic.net",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
