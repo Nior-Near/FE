@@ -223,6 +223,7 @@ export default function Order() {
                         onChange(newValue?.value);
                       }}
                       ref={ref}
+                      required
                     />
                   )}
                 />
