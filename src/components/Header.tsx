@@ -1,38 +1,30 @@
 import Avatar from "../assets/avatar.svg";
 import { axios } from "../lib/axios";
-import { useEffect, useState } from "react";
-
-interface HeaderProps {
-  isLoggedIn: boolean;
-  selectedRegion: string | null;
-  onRegionSelect: () => void;
-}
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 export default function Header({
   isLoggedIn,
   selectedRegion,
   onRegionSelect,
-}: HeaderProps) {
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchProfileImage = async () => {
-      try {
-        const response = await axios.get("/users");
-        const data = response.data;
-
-        if (data.isSuccess && data.result?.image_url) {
-          setProfileImage(data.result.image_url);
-        }
-      } catch (error) {
-        console.error("프로필 이미지 로드 실패:", error);
-      }
-    };
-
-    if (isLoggedIn) {
-      fetchProfileImage();
-    }
-  }, [isLoggedIn]);
+}: {
+  isLoggedIn: boolean;
+  selectedRegion: string | null;
+  onRegionSelect: () => void;
+}) {
+  const { data, isSuccess } = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: async () => {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.get("/members", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data.result; 
+    },
+    enabled: isLoggedIn,
+  });
 
   const handleProfileClick = () => {
     window.location.href = "/my";
@@ -58,8 +50,11 @@ export default function Header({
             지역 선택
           </button>
         )}
-        <ProfileIcon onClick={handleProfileClick} imageUrl={profileImage} />
-        </div>
+        <ProfileIcon 
+          onClick={handleProfileClick} 
+          imageUrl={isSuccess && data?.imageUrl ? data.imageUrl : null} 
+        />
+      </div>
     </header>
   );
 }
@@ -70,15 +65,22 @@ const Logo = () => (
   </div>
 );
 
-interface ProfileIconProps {
+const ProfileIcon = ({
+  onClick,
+  imageUrl,
+}: {
   onClick: () => void;
   imageUrl: string | null;
-}
-
-const ProfileIcon = ({ onClick, imageUrl }: ProfileIconProps) => (
+}) => (
   <div className="ml-[21px] mr-[19px] cursor-pointer" onClick={onClick}>
     {imageUrl ? (
-      <img src={imageUrl} alt="Profile" className="h-[40px] w-[40px] rounded-full" />
+      <Image
+        src={imageUrl}
+        alt="Profile"
+        width={40}
+        height={40}
+        className="rounded-full"
+      />
     ) : (
       <Avatar className="h-[40px] w-[40px] rounded-full" />
     )}

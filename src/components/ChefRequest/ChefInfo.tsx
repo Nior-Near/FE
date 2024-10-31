@@ -70,6 +70,8 @@ const ChefInfo: FC<ChefInfoFormProps> = ({ nextStep }) => {
         return 3;
       case "5년 이상":
         return 4;
+      case "35년 이상":
+        return 5;
       default:
         return 0;
     }
