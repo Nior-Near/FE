@@ -29,7 +29,7 @@ interface Store {
   profileImage: string;
   name: string;
   tags: string[];
-  introduction: string;
+  title: string;
   temperature: number;
   reviewCount: number;
 }
@@ -187,7 +187,7 @@ export default function Main() {
                   storeId={store.storeId}
                   name={store.name}
                   tags={store.tags}
-                  description={store.introduction}
+                  title={store.title}
                   temperature={store.temperature.toString()}
                   reviews={store.reviewCount.toString()}
                   imageUrl={store.profileImage}

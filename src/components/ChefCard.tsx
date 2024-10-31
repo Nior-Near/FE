@@ -6,7 +6,7 @@ export interface CardProps {
   storeId: number;
   name: string;
   tags: string[];
-  description: string;
+  title: string;
   temperature: string;
   reviews: string;
   imageUrl: string;
@@ -16,7 +16,7 @@ const ChefCard: FC<CardProps> = ({
   storeId,
   name,
   tags,
-  description,
+  title,
   temperature,
   reviews,
   imageUrl,
@@ -40,7 +40,7 @@ const ChefCard: FC<CardProps> = ({
             className="font-pretendard font-semibold text-[16px] leading-[25px] h-[39px] overflow-hidden text-ellipsis whitespace-nowrap"
           >
 
-            {description}
+            {title}
           </div>
           <div className="flex flex-row items-center gap-[8px] mb-[12px] flex-wrap">
             {tags.map((tag, index) => (
