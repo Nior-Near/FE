@@ -125,7 +125,7 @@ export default function Store() {
       </div>
       <div className="px-[24px] py-[40px] flex flex-col items-start gap-[20px]">
         <div className="flex flex-row items-center gap-[18px]">
-          <span className="font-pretendard text-[14px] font-[700] leading-none text-[#222224]">
+          <span className="font-pretendard text-[14px] font-[700] leading-none text-[#222224] whitespace-nowrap">
             주문 가능 지역
           </span>
           <span className="font-pretendard text-[14px] font-[400] leading-none text-[#1e2530]">
@@ -135,7 +135,7 @@ export default function Store() {
           </span>
         </div>
         <div className="flex flex-row items-center gap-[18px]">
-          <span className="font-pretendard text-[14px] font-[700] leading-none text-[#222224]">
+          <span className="font-pretendard text-[14px] font-[700] leading-none text-[#222224] whitespace-nowrap">
             위치
           </span>
           <span className="font-pretendard text-[14px] font-[400] leading-none text-[#1e2530]">
@@ -189,7 +189,7 @@ export default function Store() {
           {data?.menus?.map((item, index) => (
             <div
               key={item?.menuId}
-              className="w-[184px] h-[363px] flex flex-col p-[8px] gap-[23px] rounded-[8px] bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.25)]"
+              className="w-[184px] h-[363px] mx-auto flex flex-col p-[8px] gap-[23px] rounded-[8px] bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.25)]"
             >
               <div className="w-[168px] h-[143px] rounded-[4px] overflow-hidden">
                 <img

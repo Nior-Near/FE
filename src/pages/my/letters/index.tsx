@@ -15,12 +15,12 @@ interface Data {
 }
 
 export default function Letters() {
+  const [letter, setLetter] = useState<Letter | "sent" | null>(null);
+
   const { data } = useQuery<Data["letterDTOs"]>({
     queryFn: () => axios.get("/letters").then((response) => response.data?.result),
-    queryKey: ["letters"],
+    queryKey: ["letters", !!letter],
   });
-
-  const [letter, setLetter] = useState<Letter | "sent" | null>(null);
 
   useEffect(() => {
     if (letter === "sent")
@@ -63,7 +63,7 @@ export default function Letters() {
               {data?.map((letter, index) => (
                 <div
                   key={letter?.letterId}
-                  className="w-[105px] h-[130px] flex flex-col items-center gap-[8px]"
+                  className="w-[105px] h-[130px] flex flex-col items-center gap-[8px] cursor-pointer"
                   onClick={() => setLetter(letter)}
                 >
                   {letter?.status === "열람 완료" ? <LetterRead /> : <LetterUnread />}
