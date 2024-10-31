@@ -39,7 +39,7 @@ export default function Orders() {
                       <Image
                         alt=""
                         src={order?.storeProfileImage}
-                        className="bg-neutral-100 rounded-full text-center"
+                        className="w-[68px] h-[68px] object-cover bg-neutral-100 rounded-full text-center"
                         width={68}
                         height={68}
                       />

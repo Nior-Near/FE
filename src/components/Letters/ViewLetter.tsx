@@ -52,7 +52,7 @@ export default function ViewLetter({ data, setLetter }: { data: Letter; setLette
   };
 
   return (
-    <div>
+    <div className="h-dvh">
       <Title route="편지함 상세보기" />
       <Navbar title="편지함" onClick={() => (data === null ? router.back() : setLetter(null))} />
       <form onSubmit={handleSubmit(onSubmit)} className="pt-[31px] px-[24px] flex flex-col">

@@ -13,6 +13,7 @@ import Title from "@/src/components/Title";
 import dayjs from "dayjs";
 import { Letter } from "@/src/components/Letters/ViewLetter";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 interface Data {
   memberId: number;
@@ -57,7 +58,13 @@ export default function My() {
           <div className="px-[24px] w-full self-stretch justify-between items-end gap-[40px] inline-flex">
             <div className="justify-start items-end gap-[13px] flex">
               {!!data?.imageUrl ? (
-                <img src={data?.imageUrl} width={88} height={88} className="rounded-full" />
+                <Image
+                  alt=""
+                  src={data?.imageUrl}
+                  width={88}
+                  height={88}
+                  className="w-[88px] h=[88px] object-cover rounded-full"
+                />
               ) : (
                 <Avatar />
               )}

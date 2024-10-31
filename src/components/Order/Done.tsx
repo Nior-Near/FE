@@ -43,7 +43,7 @@ export default function Order_Done({ data }: { data: Done | null }) {
           >
             <path d="M8 0L0 8H16L8 0Z" fill="#DBE8B6" />
           </svg>
-          <div className="w-[204px] h-[68px] bg-[#dbe8b6] rounded-[12px] px-[21.5px] py-[8px]">
+          <div className="w-[204px] bg-[#dbe8b6] rounded-[12px] px-[21.5px] py-[8px]">
             <p className="font-pretendard text-[16px] font-[400] leading-[25.6px] text-center text-[#222224]">
               {data?.message}
             </p>
@@ -91,7 +91,7 @@ export default function Order_Done({ data }: { data: Done | null }) {
       </div>
       <div className="w-full inline-flex items-center gap-[20px] justify-center">
         <Link
-          href="/"
+          href="/home"
           className="px-[24px] py-[10px] flex items-center justify-center h-[40px] rounded-full bg-[#97b544] font-pretendard font-[600] text-[16px] leading-[25.6px] text-white text-center"
         >
           니어니어 홈으로

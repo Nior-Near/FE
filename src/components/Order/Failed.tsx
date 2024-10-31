@@ -3,7 +3,15 @@ import ErrorCircle from "@/src/assets/error_circle.svg";
 import Navbar from "../Navbar";
 import Link from "next/link";
 
-export default function Order_Failed() {
+export default function Order_Failed({
+  storeId,
+  store,
+  orders,
+}: {
+  storeId: string;
+  store: string;
+  orders: string;
+}) {
   return (
     <div className="h-dvh">
       <Navbar title="주문 실패" destination="/" />
@@ -29,12 +37,25 @@ export default function Order_Failed() {
         </Link>
       </div>
       <div className="flex flex-row items-center justify-center gap-[20px]">
-        <button className="h-[40px] rounded-[100px] px-[24px] py-[10px] flex items-center justify-center self-stretch bg-[#97b544] font-pretendard text-[16px] font-[600] leading-[25.6px] text-center text-white">
+        <Link
+          href="/home"
+          className="h-[40px] rounded-[100px] px-[24px] py-[10px] flex items-center justify-center self-stretch bg-[#97b544] font-pretendard text-[16px] font-[600] leading-[25.6px] text-center text-white"
+        >
           니어니어 홈으로
-        </button>
-        <button className="h-[40px] rounded-[100px] px-[24px] py-[10px] flex items-center justify-center self-stretch bg-[#638404] font-pretendard text-[16px] font-[600] leading-[25.6px] text-center text-white">
+        </Link>
+        <Link
+          href={{
+            pathname: "/order",
+            query: {
+              storeId,
+              store,
+              orders,
+            },
+          }}
+          className="h-[40px] rounded-[100px] px-[24px] py-[10px] flex items-center justify-center self-stretch bg-[#638404] font-pretendard text-[16px] font-[600] leading-[25.6px] text-center text-white"
+        >
           다시 주문하기
-        </button>
+        </Link>
       </div>
     </div>
   );

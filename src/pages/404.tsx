@@ -23,7 +23,7 @@ export default function NotFound() {
       </div>
       <div className="px-[23px] pb-[40px]">
         <Link
-          href="/"
+          href="/home"
           className="h-[51px] p-[4px] flex items-center justify-center gap-[4px] self-stretch rounded-full bg-[#638404] font-pretendard font-[600] text-[18px] leading-[28.8px] text-center text-white"
         >
           홈으로 돌아가기
