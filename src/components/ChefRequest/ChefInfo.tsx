@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import {axios} from "../../lib/axios";
+import { axios } from "../../lib/axios";
 export interface ChefInfoFormData {
   name: string;
   shortIntro: string;
@@ -9,7 +9,7 @@ export interface ChefInfoFormData {
   affiliation: string;
   experience: string;
   auth: number;
-  phoneNumber: string; 
+  phoneNumber: string;
 }
 
 export interface ChefInfoFormProps {
@@ -282,7 +282,6 @@ const ChefInfo: FC<ChefInfoFormProps> = ({ nextStep }) => {
               <input
                 {...field}
                 placeholder="이름을 작성해주세요"
-
                 className="flex w-[325px] h-[40px] flex-col justify-center items-start rounded-[4px] border border-[#D1D6DB] bg-[#FFF] py-[8px] px-[16px] text-[14px] font-pretendard placeholder-[#707A87] text-[#000]"
                 style={{
                   fontFamily: "Pretendard",
@@ -478,7 +477,9 @@ const ChefInfo: FC<ChefInfoFormProps> = ({ nextStep }) => {
             />
 
             {isDropdownOpen && (
-              <div className="flex flex-col w-[321px] border border-[#D1D6DB] rounded-[4px] bg-[#FFF] mt-[8px]">
+              <div
+                className="flex flex-col w-[321px] border border-[#D1D6DB] rounded-[4px] bg-[#FFF] mt-[8px] max-h-[150px] overflow-y-auto" // 추가된 스타일
+              >
                 {["1년 이하", "1~3년", "3~5년", "5년 이상", "35년 이상"].map(
                   (experience) => (
                     <div
