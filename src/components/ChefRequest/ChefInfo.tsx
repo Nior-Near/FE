@@ -479,7 +479,7 @@ const ChefInfo: FC<ChefInfoFormProps> = ({ nextStep }) => {
 
             {isDropdownOpen && (
               <div className="flex flex-col w-[321px] border border-[#D1D6DB] rounded-[4px] bg-[#FFF] mt-[8px]">
-                {["1년 이하", "1~3년", "3~5년", "5년 이상"].map(
+                {["1년 이하", "1~3년", "3~5년", "5년 이상", "35년 이상"].map(
                   (experience) => (
                     <div
                       key={experience}
