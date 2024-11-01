@@ -4,7 +4,8 @@
 
 body {
   background: #eee;
-  width: 375px;
+  width: 100%;
+  max-width: 375px;
   min-height: 100dvh;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
