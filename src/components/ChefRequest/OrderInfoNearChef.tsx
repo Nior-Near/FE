@@ -37,7 +37,7 @@ const determinePlaceId = (place: string): number => {
       return 2;
     case "니어니어 5호점(서울특별시 강서구 목동로 789, 3층)":
       return 3;
-      case "니어니어 6호점(서울특별시 노눠구 중앙로 123, 4층 401호)":
+      case "니어니어 6호점(서울특별시 노원구 중앙로 123, 4층 401호)":
       return 7;
     default:
       return 0;
