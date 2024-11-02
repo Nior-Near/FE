@@ -1,5 +1,4 @@
 import NavigateDown from "@/src/assets/navigate_down.svg";
-import Map from "@/src/assets/map.svg";
 import RadioButtonUnchecked from "@/src/assets/radio_button_unchecked.svg";
 import RadioButtonChecked from "@/src/assets/radio_button_checked.svg";
 import { useRouter } from "next/router";
@@ -13,6 +12,7 @@ import Order_Process from "./process";
 import Title from "@/src/components/Title";
 import Navbar from "@/src/components/Navbar";
 import { Done } from "@/src/components/Order/interface";
+import NaverMapCard from "@/src/components/NaverMapCard";
 
 interface DecodedOrders {
   [key: number]: { name: string; price: number; quantity: number };
@@ -204,7 +204,15 @@ export default function Order() {
                     {decodedStore?.storePhone}
                   </div>
                 </div>
-                <Map width={327} height={178} className="rounded-[9px] shadow" />
+                {/* <Map width={327} height={178} className="rounded-[9px] shadow" /> */}
+                <NaverMapCard
+                  width="327px"
+                  height="178px"
+                  lat={37.627446}
+                  lng={127.0883737}
+                  center={[37.6275246, 127.0891554]}
+                  zoom={17}
+                />
                 <Controller
                   name="requestMessage"
                   control={control}

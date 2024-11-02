@@ -6,6 +6,7 @@ import Title from "@/src/components/Title";
 import Navbar from "@/src/components/Navbar";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
+import NaverMapCard from "@/src/components/NaverMapCard";
 
 interface Data {
   orderStatus: "CONFIRM" | "COOKING" | "PICKUP"; //TODO "DONE" 추가
@@ -135,9 +136,14 @@ export default function Order_History() {
               </div>
             </div>
           </div>
-          <div className="self-stretch h-[178px] px-6 flex-col justify-start items-start gap-1 flex">
-            <Map width={326} height={178} />
-          </div>
+          <NaverMapCard
+            width="326px"
+            height="178px"
+            lat={37.627446}
+            lng={127.0883737}
+            center={[37.6275246, 127.0891554]}
+            zoom={17}
+          />
           <div className="bg-white flex-col justify-start items-start flex">
             <div className="w-[321px] h-10 bg-white rounded border border-[#d1d6db] flex-col justify-center items-start flex">
               <div className="self-stretch px-4 py-2 justify-start items-center gap-[11px] inline-flex">
