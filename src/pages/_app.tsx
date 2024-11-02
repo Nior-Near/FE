@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import { Inter, Roboto } from "next/font/google";
 import localFont from "next/font/local";
 import { AxiosError } from "axios";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -42,6 +43,10 @@ const queryClient = new QueryClient({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
+      <Script
+        src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVERMAP_CLIENT_ID}`}
+        strategy="beforeInteractive"
+      />
       <main
         className={`relative ${pretendard.variable} ${inter.variable} ${roboto.variable} ${reeniebeanie?.variable} ${jalnan?.variable}`}
       >
