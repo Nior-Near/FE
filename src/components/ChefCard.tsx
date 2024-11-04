@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { FC, useEffect, useState } from "react";
 import Food from "../assets/mainmenu.png";
+import { FC } from "react";
 
-import { axios } from "../lib/axios";
 export interface CardProps {
   storeId: number;
   name: string;
@@ -11,8 +10,8 @@ export interface CardProps {
   temperature: string;
   reviews: string;
   imageUrl: string;
+  thumbnail: string;
 }
-
 const ChefCard: FC<CardProps> = ({
   storeId,
   name,
@@ -21,33 +20,15 @@ const ChefCard: FC<CardProps> = ({
   temperature,
   reviews,
   imageUrl,
+  thumbnail,
 }) => {
-  const [menuImage, setMenuImage] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchMenuImage = async () => {
-      try {
-        const response = await axios.get(`/stores/${storeId}`);
-        const firstMenuImage = response.data?.result?.menus[0]?.menuImage;
-        console.log("API response:", response.data);
-        if (firstMenuImage) {
-          setMenuImage(firstMenuImage);
-        }
-      } catch (error) {
-        console.error("Failed to fetch menu image", error);
-      }
-    };
-
-    fetchMenuImage();
-  }, [storeId]);
-
   return (
     <Link href={`/stores/${storeId}`} passHref>
       <div className="bg-white rounded-[12px] w-[322px] overflow-hidden shadow-md">
         <div className="relative">
           <img
-            src={menuImage || Food.src}
-            alt="가게 이미지"
+            src={thumbnail}
+            alt="메뉴 이미지"
             className="w-[322px] h-[179px] object-cover"
           />
         </div>
@@ -83,5 +64,4 @@ const ChefCard: FC<CardProps> = ({
     </Link>
   );
 };
-
 export default ChefCard;
