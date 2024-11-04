@@ -22,23 +22,23 @@ const regionOptions: string[] = [
   "니어니어 3호점(서울특별시 강남구 테헤란로 456, 10층)",
   "니어니어 4호점(서울특별시 강동구 천호대로 456, 2층)",
   "니어니어 5호점(서울특별시 강서구 목동로 789, 3층)",
-  "니어니어 6호점(서울특별시 노원구 중앙로 123, 4층 401호)"
+  "니어니어 6호점(서울특별시 노원구 중앙로 123, 4층 401호)",
 ];
 
 const determinePlaceId = (place: string): number => {
   switch (place) {
     case "니어니어 1호점(서울여자대학교 바롬인성교육관)":
-      return 7;
+      return 1;
     case "니어니어 2호점(서울특별시 강남구 삼성로 789, 7층 702호":
-      return 1;
-    case "니어니어 3호점(서울특별시 강남구 테헤란로 456, 10층)":
-      return 1;
-    case "니어니어 4호점(서울특별시 강동구 천호대로 456, 2층)":
       return 2;
-    case "니어니어 5호점(서울특별시 강서구 목동로 789, 3층)":
+    case "니어니어 3호점(서울특별시 강남구 테헤란로 456, 10층)":
       return 3;
-      case "니어니어 6호점(서울특별시 노원구 중앙로 123, 4층 401호)":
-      return 7;
+    case "니어니어 4호점(서울특별시 강동구 천호대로 456, 2층)":
+      return 4;
+    case "니어니어 5호점(서울특별시 강서구 목동로 789, 3층)":
+      return 5;
+    case "니어니어 6호점(서울특별시 노원구 중앙로 123, 4층 401호)":
+      return 6;
     default:
       return 0;
   }
@@ -84,12 +84,12 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
         auth: parsedChefInfo.auth || 0,
       });
     }
-
-    
   }, []);
 
   const letter = localStorage.getItem("letter");
-  const letterFile = letter ? new File([letter], "letter.png", { type: "image/png" }) : null;
+  const letterFile = letter
+    ? new File([letter], "letter.png", { type: "image/png" })
+    : null;
 
   // 주문가능지역
   const fetchRegionId = async (placeId: number) => {
@@ -145,7 +145,7 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
       const response = await axios.post("/stores/near-company", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -185,11 +185,12 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
     await fetchRegionId(placeId);
   };
 
-
   return (
     <div className="px-[23px] pb-[43px] h-[765px] flex flex-col justify-between">
       <div>
-        <div className="text-[20px] font-semibold mt-[44px] mb-[36px]">주문 정보</div>
+        <div className="text-[20px] font-semibold mt-[44px] mb-[36px]">
+          주문 정보
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-[20px]">
@@ -239,7 +240,9 @@ const OrderInfoNearChef: FC<OrderInfoNearChefProps> = ({ nextStep }) => {
                       key={region}
                       onClick={() => handleRegion1Select(region)}
                       className={`flex items-center justify-between px-[16px] py-[8px] gap-[23px] text-[#707A87] text-[14px] font-pretendard leading-[22px] cursor-pointer ${
-                        selectedRegion1 === region ? "bg-[#EEF3E2] text-[#333E4E]" : ""
+                        selectedRegion1 === region
+                          ? "bg-[#EEF3E2] text-[#333E4E]"
+                          : ""
                       }`}
                     >
                       <span>{region}</span>
