@@ -62,16 +62,18 @@ const ChefInfo: FC<ChefInfoFormProps> = ({ nextStep }) => {
 
   const determineAuthId = (experience: string): number => {
     switch (experience) {
-      case "1년 이하":
-        return 1;
-      case "1~3년":
-        return 2;
-      case "3~5년":
-        return 3;
       case "5년 이상":
         return 4;
-      case "35년 이상":
+      case "10년 이상":
         return 5;
+      case "15년 이상":
+        return 6;
+      case "20년 이상":
+        return 7;
+      case "25년 이상":
+        return 8;
+      case "35년 이상":
+        return 9;
       default:
         return 0;
     }
