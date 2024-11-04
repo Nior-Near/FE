@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { FC, useEffect, useState } from "react";
 import Food from "../assets/mainmenu.png";
-import { FC } from "react";
 
+import { axios } from "../lib/axios";
 export interface CardProps {
   storeId: number;
   name: string;
@@ -21,11 +22,34 @@ const ChefCard: FC<CardProps> = ({
   reviews,
   imageUrl,
 }) => {
+  const [menuImage, setMenuImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMenuImage = async () => {
+      try {
+        const response = await axios.get(`/stores/${storeId}`);
+        const firstMenuImage = response.data?.result?.menus[0]?.menuImage;
+        console.log("API response:", response.data);
+        if (firstMenuImage) {
+          setMenuImage(firstMenuImage);
+        }
+      } catch (error) {
+        console.error("Failed to fetch menu image", error);
+      }
+    };
+
+    fetchMenuImage();
+  }, [storeId]);
+
   return (
     <Link href={`/stores/${storeId}`} passHref>
       <div className="bg-white rounded-[12px] w-[322px] overflow-hidden shadow-md">
         <div className="relative">
-          <img src={Food.src} alt="이미지 들어가요" className="w-[322px] h-[179px] object-cover" />
+          <img
+            src={menuImage || Food.src}
+            alt="가게 이미지"
+            className="w-[322px] h-[179px] object-cover"
+          />
         </div>
         <div className="p-[16px]">
           <div className="flex items-center">
@@ -34,12 +58,11 @@ const ChefCard: FC<CardProps> = ({
               alt="요리사사진"
               className="h-[28px] w-[28px] rounded-full mr-[8px]"
             />
-            <div className="font-pretendard text-[14px] leading-[22px]">{name} 요리사</div>
+            <div className="font-pretendard text-[14px] leading-[22px]">
+              {name} 요리사
+            </div>
           </div>
-          <div
-            className="font-pretendard font-semibold text-[16px] leading-[25px] h-[39px] overflow-hidden text-ellipsis whitespace-nowrap"
-          >
-
+          <div className="font-pretendard font-semibold text-[16px] leading-[25px] h-[39px] overflow-hidden text-ellipsis whitespace-nowrap">
             {title}
           </div>
           <div className="flex flex-row items-center gap-[8px] mb-[12px] flex-wrap">
