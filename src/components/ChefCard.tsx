@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Food from "../assets/food.jpg";
+import Food from "../assets/mainmenu.jpg";
 import { FC } from "react";
 
 export interface CardProps {
