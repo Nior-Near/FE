@@ -1,5 +1,5 @@
 import { useState, useEffect, ChangeEvent, Suspense } from "react";
-import { axios } from "@/src/lib/axios"; 
+import { axios } from "@/src/lib/axios";
 import Header from "@/src/components/Header";
 import Banner from "@/src/components/Banner";
 import ChefCard from "@/src/components/ChefCard";
@@ -243,6 +243,13 @@ export default function Main() {
         </div>
         <p className="mt-8 p-2 text-xs text-neutral-600">
           Copyright © 2024. Dear Nior All rights reserved.
+        </p>
+        <p className="p-2 text-xs text-neutral-600 text-center">
+          414-19-02233 | 니어니어 | 이지은
+          <br />
+          대전광역시 동구 한밭대로 1237번길 52, 7동 202호
+          <br />
+          010-7251-0670
         </p>
         <a
           href="https://github.com/Nior-Near"
