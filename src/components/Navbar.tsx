@@ -3,10 +3,12 @@ import { useRouter } from "next/router";
 export default function Navbar({
   title,
   destination,
+  contrast,
   onClick,
 }: {
   title: string;
   destination?: string;
+  contrast?: boolean;
   onClick?: () => void;
 }) {
   const router = useRouter();
@@ -17,14 +19,18 @@ export default function Navbar({
         <Arrow
           width="24"
           height="24"
-          className="ml-[27px] mr-auto cursor-pointer"
+          className={`ml-[27px] mr-auto cursor-pointer ${contrast && "&_path:fill-white"}`}
           onClick={
             onClick
               ? () => onClick()
               : () => (destination ? router.push(destination) : router.back())
           }
         />
-        <span className="absolute font-pretendard text-[16px] font-[600] leading-[25.6px]">
+        <span
+          className={`absolute font-pretendard text-[16px] font-[600] leading-[25.6px] ${
+            contrast && "text-white"
+          }`}
+        >
           {title}
         </span>
       </nav>
