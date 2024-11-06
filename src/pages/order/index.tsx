@@ -8,7 +8,6 @@ import { ChangeEvent, FC, useEffect, useState } from "react";
 import { axios } from "@/src/lib/axios";
 import Order_Done from "@/src/components/Order/Done";
 import Order_Failed from "@/src/components/Order/Failed";
-import Order_Process from "./process";
 import Title from "@/src/components/Title";
 import Navbar from "@/src/components/Navbar";
 import { Done } from "@/src/components/Order/interface";
@@ -174,12 +173,16 @@ export default function Order() {
       formData.append(`menus[${index}].quantity`, menu.quantity.toString());
     });
 
-    const response = await axios.post("/orders", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    try {
+      const response = await axios.post("/orders", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-    if (response.data?.isSuccess === true) setPaymentDonePayload(response.data?.result);
-    setIndex("pending");
+      setPaymentDonePayload(response.data?.result);
+      setIndex("done");
+    } catch (err) {
+      setIndex("failed");
+    }
   };
 
   const [PaymentDonePayload, setPaymentDonePayload] = useState<Done | null>(null);
@@ -311,19 +314,26 @@ export default function Order() {
                 </div>
               </div>
             )}
+            <div className="mt-[40px] mx-[24px] font-pretendard text-[12px] font-[400] text-[#707A87]">
+              <p className="font-[800]">환불 규정 안내</p>
+              <p>
+                모든 주문은 결제 완료와 동시에 주문 확정이 됩니다. 주문 확정 이후에는 메뉴 준비가
+                이루어지므로, 주문 변경 및 취소가 어려울 수 있습니다. 이 점 유의하여 고객님의 신중한
+                주문 부탁드립니다.
+              </p>
+            </div>
             <div className="w-full py-[40px] px-[23px]">
               <button
                 type="submit"
                 className="bg-[#638404] w-[329px] h-[51px] py-[16px] px-[32px] flex flex-col items-center self-stretch rounded-[100px] font-inter text-center text-[16px] font-[600] text-white leading-[normal]"
               >
-                결제하기
+                주문하기
               </button>
             </div>
           </form>
         </>
       );
-    case "pending":
-      return <Order_Process orderId={PaymentDonePayload?.orderId} setIndex={setIndex} />;
+
     case "done":
       return <Order_Done data={PaymentDonePayload} />;
     case "failed":
