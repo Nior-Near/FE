@@ -3,10 +3,13 @@ import Link from "next/link";
 import Title from "../Title";
 import Navbar from "../Navbar";
 import { Done } from "./interface";
+import { copyToClipboard } from "@/src/lib/copyToClipboard";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Order_Done({ data }: { data: Done | null }) {
   return (
-    <div className="relative h-dvh z-0">
+    <div className="relative z-0">
+      <Toaster position="bottom-center" />
       <Title route="주문 완료" />
       <svg
         width="375"
@@ -18,7 +21,7 @@ export default function Order_Done({ data }: { data: Done | null }) {
       >
         <circle cx="187" cy="-210" r="537" fill="#486300" />
       </svg>
-      <Navbar title="주문 완료" />
+      <Navbar title="주문 완료" contrast />
       <div className="pt-[41px] flex flex-col items-center gap-[16px]">
         <span className="font-pretendard text-[20px] font-[600] leading-[32px] text-white">
           음식 주문이 완료되었습니다
@@ -50,8 +53,8 @@ export default function Order_Done({ data }: { data: Done | null }) {
           </div>
         </div>
       </div>
-      <div className="w-full h-[185px] py-4 mb-[34px] bg-[#f0f2f5] border-dashed border-[1px] border-[#d1d6db] flex-col justify-start items-start gap-1 inline-flex">
-        <div className="self-stretch h-[153px] px-6 flex-col justify-start items-start gap-3 flex">
+      <div className="w-full py-4 bg-[#f0f2f5] border-dashed border-[1px] border-[#d1d6db] flex-col justify-start items-start gap-1 inline-flex">
+        <div className="px-6 flex-col justify-start items-start gap-3 flex">
           <span className="text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
             주문 상품 총 2개
           </span>
@@ -101,9 +104,51 @@ export default function Order_Done({ data }: { data: Done | null }) {
           <span className="text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
             입금 계좌
           </span>
-          <div className="flex flex-row items-center justify-between">
-            <span className="font-pretendard text-[16px] font-[400] text-[#333E4E]">입금 계좌</span>
-            <span className="font-pretendard text-[20px] font-[600] text-[#638404]">복사하기</span>
+          <div className="w-full flex flex-row items-center justify-between">
+            <span className="font-pretendard text-[16px] font-[400] text-[#333E4E]">
+              토스뱅크 1001-5426-4716
+            </span>
+            <span
+              className="font-pretendard text-[20px] font-[600] text-[#638404] select-none cursor-pointer"
+              onClick={() =>
+                copyToClipboard("토스뱅크 1001-5426-4716", {
+                  onSuccess() {
+                    toast("계좌번호를 복사하였습니다.", {
+                      style: {
+                        padding: "8px 24px 8px 24px",
+                        borderRadius: "18px",
+                        background: "#3b3b53",
+                        fontFamily: "var(--font-pretendard), sans-serif",
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        fontWeight: 600,
+                        lineHeight: "normal",
+                        textAlign: "center",
+                        color: "#fff",
+                      },
+                    });
+                  },
+                  onError(error) {
+                    toast("계좌번호를 복사하지 못하였습니다.", {
+                      style: {
+                        padding: "8px 24px 8px 24px",
+                        borderRadius: "18px",
+                        background: "#bf3434",
+                        fontFamily: "var(--font-pretendard), sans-serif",
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        fontWeight: 600,
+                        lineHeight: "normal",
+                        textAlign: "center",
+                        color: "#fff",
+                      },
+                    });
+                  },
+                })
+              }
+            >
+              복사하기
+            </span>
           </div>
           <span className="font-pretendard text-[16px] font-[400] text-[#707A87]">
             예금주명: 조예원 (모임통장)
@@ -136,7 +181,7 @@ export default function Order_Done({ data }: { data: Done | null }) {
           </div>
         </div>
       </div>
-      <div className="w-full inline-flex items-center gap-[20px] justify-center">
+      <div className="my-[40px] w-full inline-flex items-center gap-[20px] justify-center">
         <Link
           href="/home"
           className="px-[24px] py-[10px] flex items-center justify-center h-[40px] rounded-full bg-[#97b544] font-pretendard font-[600] text-[16px] leading-[25.6px] text-white text-center"
