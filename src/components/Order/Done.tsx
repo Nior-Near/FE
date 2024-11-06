@@ -24,9 +24,9 @@ export default function Order_Done({ data }: { data: Done | null }) {
           음식 주문이 완료되었습니다
         </span>
         <span className="font-pretendard font-[400] text-[12px] leading-[19.2px] text-white text-center">
-          주문하신 음식은 선택하신 픽업장소에서
+          아래 계좌로 주문 금액을 입금해주시면
           <br />
-          상품 제작이 완료된 후 가져가실 수 있습니다.
+          주문이 확정됩니다.
         </span>
       </div>
       <div className="pb-[47px] mt-[27px] mx-auto w-[204px] flex flex-col items-center gap-[8px]">
@@ -52,9 +52,9 @@ export default function Order_Done({ data }: { data: Done | null }) {
       </div>
       <div className="w-full h-[185px] py-4 mb-[34px] bg-[#f0f2f5] border-dashed border-[1px] border-[#d1d6db] flex-col justify-start items-start gap-1 inline-flex">
         <div className="self-stretch h-[153px] px-6 flex-col justify-start items-start gap-3 flex">
-          <div className="self-stretch text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
+          <span className="text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
             주문 상품 총 2개
-          </div>
+          </span>
           {data?.orderMenus?.map((menu, index) => (
             <div
               key={menu?.menuName}
@@ -68,24 +68,71 @@ export default function Order_Done({ data }: { data: Done | null }) {
               </div>
             </div>
           ))}
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="327"
-              height="2"
-              viewBox="0 0 375 2"
-              fill="none"
-            >
-              <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
-            </svg>
-          </div>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="327"
+            height="2"
+            viewBox="0 0 375 2"
+            fill="none"
+          >
+            <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
+          </svg>
+
           <div className="w-[326px] justify-between items-center inline-flex">
-            <div className="w-[79px] text-[#333e4e] text-base font-normal font-pretendard leading-relaxed">
+            <span className="w-[79px] text-[#333e4e] text-base font-normal font-pretendard leading-relaxed">
               총 결제금액
-            </div>
+            </span>
             <div className="w-[79px] text-right text-[#638404] text-xl font-semibold font-pretendard leading-loose">
               {data?.totalPrice?.toLocaleString()}
             </div>
+          </div>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="327"
+            height="2"
+            viewBox="0 0 375 2"
+            fill="none"
+          >
+            <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
+          </svg>
+
+          <span className="text-[#222224] text-[18px] font-semibold font-pretendard leading-[28.80px]">
+            입금 계좌
+          </span>
+          <div className="flex flex-row items-center justify-between">
+            <span className="font-pretendard text-[16px] font-[400] text-[#333E4E]">입금 계좌</span>
+            <span className="font-pretendard text-[20px] font-[600] text-[#638404]">복사하기</span>
+          </div>
+          <span className="font-pretendard text-[16px] font-[400] text-[#707A87]">
+            예금주명: 조예원 (모임통장)
+          </span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="327"
+            height="2"
+            viewBox="0 0 375 2"
+            fill="none"
+          >
+            <path d="M-8 1H384" stroke="black" strokeOpacity="0.1" />
+          </svg>
+
+          <span className="font-pretendard text-[18px] font-[600] text-[#222224]">안내사항</span>
+
+          <div className="font-pretendard text-[16px] font-[400] text-[#707A87]">
+            <ol type="1">
+              <li>입금자명과 주문자명은 반드시 일치해야 합니다.</li>
+              <li>
+                입금이 완료되면 주문은 자동으로 확정이 되며, 실시간 주문 현황은 니어니어
+                마이페이지에서 확인하실 수 있습니다.
+              </li>
+              <li>
+                입금 완료 이후에는 환불이 어려우며, 주문에 문제가 있거나 잘못 주문하셨다면 니어니어
+                고객센터로 문의해 주시길 바랍니다.
+              </li>
+            </ol>
           </div>
         </div>
       </div>
