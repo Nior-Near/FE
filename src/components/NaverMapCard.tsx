@@ -16,13 +16,11 @@ export default function NaverMapCard({
   zoom?: number;
 }) {
   useEffect(() => {
-    if (!(window as any)?.navermap) {
-      (window as any).navermap = new window.naver.maps.Map("map", {
-        center: new window.naver.maps.LatLng(center[0], center[1]),
-        zoom: zoom ?? 15,
-        minZoom: 15,
-      });
-    }
+    (window as any).navermap = new window.naver.maps.Map("map", {
+      center: new window.naver.maps.LatLng(center[0], center[1]),
+      zoom: zoom ?? 15,
+      minZoom: 15,
+    });
 
     // marker
     new window.naver.maps.Marker({
