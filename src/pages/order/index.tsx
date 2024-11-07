@@ -165,8 +165,7 @@ export default function Order() {
     formData.append("storeId", storeId!.toString());
     formData.append("requestMessage", data?.requestMessage);
     formData.append("memberName", data?.memberName);
-    formData.append("memberPhone", data?.memberName);
-    formData.append("memberName", data?.memberName);
+    formData.append("memberPhone", data?.memberPhone);
 
     menus?.forEach((menu, index) => {
       formData.append(`menus[${index}].menuId`, menu.menuId.toString());
