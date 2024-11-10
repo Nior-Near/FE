@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import NaverMapCard from "@/src/components/NaverMapCard";
 
 interface Data {
-  orderStatus: "CONFIRM" | "COOKING" | "PICKUP"; //TODO "DONE" 추가
+  orderStatus: "CONFIRM" | "COOKING" | "PICKUP" | "FINISH";
   placeAddress: string;
   storePhone: string;
   requestMessage: string;
@@ -27,7 +27,7 @@ export default function Order_History() {
   const { data } = useQuery<Data>({
     queryFn: () =>
       axios.get(`/orders/${router.query?.id}`).then((response) => response.data?.result),
-    queryKey: ["order"],
+    queryKey: ["order", router.query?.id],
     enabled: !!router.query?.id,
   });
 
@@ -59,7 +59,7 @@ export default function Order_History() {
   ];
 
   const [status, setStatus] = useState<number>(
-    { CONFIRM: 0, COOKING: 1, PICKUP: 2 }?.[data?.orderStatus ?? "CONFIRM"]
+    { CONFIRM: 0, COOKING: 1, PICKUP: 2, FINISH: 3 }?.[data?.orderStatus ?? "CONFIRM"]
   );
 
   return (
