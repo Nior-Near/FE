@@ -58,9 +58,7 @@ export default function Order_History() {
     },
   ];
 
-  const [status, setStatus] = useState<number>(
-    { CONFIRM: 0, COOKING: 1, PICKUP: 2, FINISH: 3 }?.[data?.orderStatus ?? "CONFIRM"]
-  );
+  const status = { CONFIRM: 0, COOKING: 1, PICKUP: 2, FINISH: 3 }?.[data?.orderStatus ?? "CONFIRM"];
 
   return (
     <div>
@@ -69,10 +67,10 @@ export default function Order_History() {
       <div className="w-[375px] h-[163px] p-6 bg-[#638404] flex-col justify-start items-start gap-5 inline-flex">
         <div className="self-stretch h-[52px] flex-col justify-start items-start gap-1 flex">
           <div className="self-stretch text-white text-lg font-semibold font-pretendard leading-[28.80px]">
-            {list[status]?.message}
+            {list?.[status]?.message}
           </div>
           <div className="self-stretch text-white text-[12px] font-[400] font-pretendard leading-[19.2px]">
-            {list[status]?.description}
+            {list?.[status]?.description}
           </div>
         </div>
         <div className="h-[43px] flex-col justify-start items-center gap-2 flex">
@@ -93,7 +91,7 @@ export default function Order_History() {
                         value === status || (status === 3 && value === 2) ? "#354800" : "#638404",
                     }}
                   >
-                    {list[value]?.name}
+                    {list?.[value]?.name}
                   </div>
                 </div>
                 <svg
@@ -116,7 +114,7 @@ export default function Order_History() {
             <div className="w-[327px] h-2 left-0 top-0 absolute bg-[#486200] rounded-[999px]" />
             <div
               className="h-2 left-0 top-0 absolute bg-[#eef3e2] rounded-[999px] transition-all duration-500"
-              style={{ width: list[status]?.barWidth || 0 }}
+              style={{ width: list?.[status]?.barWidth || 0 }}
             />
           </div>
         </div>
