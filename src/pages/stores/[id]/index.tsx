@@ -39,7 +39,9 @@ export default function Store() {
   const { data, error } = useQuery<Data>({
     queryKey: ["store"],
     queryFn: () =>
-      axios.get(`/stores/${router.query?.id}`).then((response) => response.data?.result),
+      axios
+        .get(`/stores/${router.query?.id}`)
+        .then((response) => response.data?.result),
     enabled: !!router.query?.id,
     gcTime: 0,
     staleTime: Infinity,
@@ -48,10 +50,13 @@ export default function Store() {
   if (error) router.replace("/");
 
   useEffect(() => {
-    if (!!data?.menus && data.menus.length > 0) setFoodBannerImage(data?.menus?.[0]?.menuImage);
+    if (!!data?.menus && data.menus.length > 0)
+      setFoodBannerImage(data?.menus?.[0]?.menuImage);
   }, [data]);
 
-  const [foodBannerImage, setFoodBannerImage] = useState<string | undefined>(undefined);
+  const [foodBannerImage, setFoodBannerImage] = useState<string | undefined>(
+    undefined
+  );
 
   const [orders, setOrders] = useState<{
     [key: number]: { name: string; price: number; quantity: number };
@@ -89,9 +94,13 @@ export default function Store() {
                 onClick={() => setFoodBannerImage(menu?.menuImage)}
                 style={{
                   boxShadow:
-                    menu?.menuImage === foodBannerImage ? "0px 0px 5px 0px #638404" : undefined,
+                    menu?.menuImage === foodBannerImage
+                      ? "0px 0px 5px 0px #638404"
+                      : undefined,
                   border:
-                    menu?.menuImage === foodBannerImage ? "2px solid #97b544" : "2px solid #ffffff",
+                    menu?.menuImage === foodBannerImage
+                      ? "2px solid #97b544"
+                      : "2px solid #ffffff",
                 }}
               >
                 <img
@@ -108,7 +117,9 @@ export default function Store() {
       <div className="pt-[33px] pb-[24px] px-[24px]">
         <div className="flex flex-row items-center gap-[15px]">
           <div className="w-[90px] h-[90px] rounded-full border text-center overflow-hidden">
-            {data ? <Image src={data?.profileImage} alt="" width={90} height={90} /> : undefined}
+            {data ? (
+              <Image src={data?.profileImage} alt="" width={90} height={90} />
+            ) : undefined}
           </div>
           <span className="font-pretendard text-[24px] font-[600] leading-[13.268px] text-[#222224]">
             {data?.name} 요리사님
@@ -256,7 +267,7 @@ export default function Store() {
         </div>
       </div>
       <div className="pb-[40px]">
-        <Link
+        {/* <Link
           href={{
             pathname: "/order",
             query: {
@@ -284,6 +295,18 @@ export default function Store() {
             }, 0)
             .toLocaleString()}
           원 주문하기
+        </Link> */}
+        <Link
+          href="#"
+          onClick={(e) => e.preventDefault()}
+          style={{
+            pointerEvents: "none",
+            background: "#ddd",
+            color: "#888",
+          }}
+          className="mx-auto px-[24px] py-[4px] w-[329px] h-[51px] flex items-center justify-center font-pretendard text-[18px] font-[600] leading-[28.8px] text-center rounded-full"
+        >
+          주문이 마감되었습니다
         </Link>
       </div>
     </div>
